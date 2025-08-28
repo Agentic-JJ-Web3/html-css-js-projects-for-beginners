@@ -289,7 +289,7 @@
         }
 
         /* Forecast section */
-        .forecast-section {
+        .forecast-section, .location-info-section {
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(20px);
             border-radius: 30px;
@@ -298,7 +298,7 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .forecast-section h3 {
+        .forecast-section h3, .location-info-section h3 {
             color: white;
             font-size: 1.5rem;
             margin-bottom: 20px;
@@ -309,6 +309,65 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 15px;
+        }
+
+        .location-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .location-info-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .location-info-card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .location-info-card h4 {
+            color: white;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .location-info-card .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .location-info-card .info-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .location-info-card .info-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        .location-info-card .info-value {
+            color: white;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .flag-emoji {
+            font-size: 1.2rem;
+            margin-right: 5px;
         }
 
         .forecast-card {
@@ -425,13 +484,15 @@
 
         .dark-mode .weather-card,
         .dark-mode .forecast-section,
+        .dark-mode .location-info-section,
         .dark-mode .open-source-section {
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .dark-mode .detail-card,
-        .dark-mode .forecast-card {
+        .dark-mode .forecast-card,
+        .dark-mode .location-info-card {
             background: rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
@@ -529,6 +590,11 @@
             <div class="forecast-section" id="forecastSection" style="display: none;">
                 <h3>3-Day Forecast</h3>
                 <div class="forecast-grid" id="forecastGrid"></div>
+            </div>
+
+            <div class="location-info-section" id="locationInfoSection" style="display: none;">
+                <h3>📍 Location Information</h3>
+                <div class="location-info-grid" id="locationInfoGrid"></div>
             </div>
 
             <div class="open-source-section">
@@ -676,7 +742,7 @@
 
         function getCurrentLocation() {
             if (navigator.geolocation) {
-                showLoading();
+                showLocationPermissionRequest();
                 navigator.geolocation.getCurrentPosition(
                     position => {
                         const lat = position.coords.latitude;
@@ -685,13 +751,49 @@
                     },
                     error => {
                         console.error('Geolocation error:', error);
-                        // Fallback to a default city
-                        searchWeather('London');
+                        handleLocationError(error);
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 300000 // 5 minutes
                     }
                 );
             } else {
-                searchWeather('London');
+                showError('Geolocation is not supported by this browser. Please search for a city manually.');
             }
+        }
+
+        function showLocationPermissionRequest() {
+            const weatherCard = document.getElementById('weatherCard');
+            weatherCard.innerHTML = `
+                <div class="loading">
+                    <div style="font-size: 3rem; margin-bottom: 20px;">📍</div>
+                    <p>🔐 Requesting location permission...</p>
+                    <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-top: 10px;">
+                        Please allow location access to get weather for your current location
+                    </p>
+                </div>
+            `;
+        }
+
+        function handleLocationError(error) {
+            let errorMessage = '';
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    errorMessage = "Location access denied. Please search for a city manually or enable location permissions in your browser settings.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    errorMessage = "Location information is unavailable. Please search for a city manually.";
+                    break;
+                case error.TIMEOUT:
+                    errorMessage = "Location request timed out. Please try again or search for a city manually.";
+                    break;
+                default:
+                    errorMessage = "An unknown error occurred while retrieving location. Please search for a city manually.";
+                    break;
+            }
+            showError(errorMessage);
         }
 
         async function searchWeather(city) {
@@ -709,6 +811,9 @@
                 const data = await response.json();
                 processWeatherData(data);
                 
+                // Fetch additional location information
+                await fetchLocationInfo(data.location.name, data.location.country);
+                
             } catch (error) {
                 console.error('Weather API error:', error);
                 showError(`Unable to fetch weather data for "${city}". Please check the city name and try again.`);
@@ -725,6 +830,9 @@
                 
                 const data = await response.json();
                 processWeatherData(data);
+                
+                // Fetch additional location information
+                await fetchLocationInfo(data.location.name, data.location.country);
                 
             } catch (error) {
                 console.error('Weather API error:', error);
@@ -834,6 +942,165 @@
             document.getElementById('forecastSection').style.display = 'block';
         }
 
+        async function fetchLocationInfo(city, country) {
+            try {
+                // Use REST Countries API for country information
+                const countryResponse = await fetch(`https://restcountries.com/v3.1/name/${encodeURIComponent(country)}?fullText=true`);
+                
+                let countryData = null;
+                if (countryResponse.ok) {
+                    const countries = await countryResponse.json();
+                    countryData = countries[0];
+                }
+
+                // Use a combination of APIs for city data
+                let cityData = null;
+                try {
+                    // Try to get city data from a public API
+                    const cityResponse = await fetch(`https://api.api-ninjas.com/v1/city?name=${encodeURIComponent(city)}`, {
+                        headers: {
+                            'X-Api-Key': 'demo' // This would need a real API key for production
+                        }
+                    });
+                    if (cityResponse.ok) {
+                        cityData = await cityResponse.json();
+                    }
+                } catch (error) {
+                    console.log('City API not available, using country data only');
+                }
+
+                displayLocationInfo(city, country, countryData, cityData);
+                
+            } catch (error) {
+                console.error('Location info error:', error);
+                // Display basic location info even if APIs fail
+                displayLocationInfo(city, country, null, null);
+            }
+        }
+
+        function displayLocationInfo(city, country, countryData, cityData) {
+            const locationInfoSection = document.getElementById('locationInfoSection');
+            const locationInfoGrid = document.getElementById('locationInfoGrid');
+            
+            let locationCards = '';
+
+            // Country Information Card
+            if (countryData) {
+                const languages = countryData.languages ? Object.values(countryData.languages).join(', ') : 'N/A';
+                const currencies = countryData.currencies ? 
+                    Object.values(countryData.currencies).map(curr => `${curr.name} (${curr.symbol || 'N/A'})`).join(', ') : 'N/A';
+                const flag = countryData.flag || '🏳️';
+                
+                locationCards += `
+                    <div class="location-info-card">
+                        <h4><span class="flag-emoji">${flag}</span>Country Information</h4>
+                        <div class="info-item">
+                            <span class="info-label">Country</span>
+                            <span class="info-value">${countryData.name.common}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Capital</span>
+                            <span class="info-value">${countryData.capital ? countryData.capital[0] : 'N/A'}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Population</span>
+                            <span class="info-value">${countryData.population ? countryData.population.toLocaleString() : 'N/A'}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Languages</span>
+                            <span class="info-value">${languages}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Currency</span>
+                            <span class="info-value">${currencies}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Region</span>
+                            <span class="info-value">${countryData.region || 'N/A'}</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Geographic Information Card
+            locationCards += `
+                <div class="location-info-card">
+                    <h4>🌍 Geographic Details</h4>
+                    <div class="info-item">
+                        <span class="info-label">City</span>
+                        <span class="info-value">${city}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Country</span>
+                        <span class="info-value">${country}</span>
+                    </div>
+                    ${cityData && cityData.length > 0 ? `
+                        <div class="info-item">
+                            <span class="info-label">Population</span>
+                            <span class="info-value">${cityData[0].population ? cityData[0].population.toLocaleString() : 'N/A'}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Latitude</span>
+                            <span class="info-value">${cityData[0].latitude ? cityData[0].latitude.toFixed(4) : 'N/A'}°</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Longitude</span>
+                            <span class="info-value">${cityData[0].longitude ? cityData[0].longitude.toFixed(4) : 'N/A'}°</span>
+                        </div>
+                    ` : `
+                        <div class="info-item">
+                            <span class="info-label">Status</span>
+                            <span class="info-value">Weather Available</span>
+                        </div>
+                    `}
+                    <div class="info-item">
+                        <span class="info-label">Time Zone</span>
+                        <span class="info-value">${Intl.DateTimeFormat().resolvedOptions().timeZone}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Local Time</span>
+                        <span class="info-value">${new Date().toLocaleTimeString()}</span>
+                    </div>
+                </div>
+            `;
+
+            // Additional Info Card
+            if (countryData) {
+                locationCards += `
+                    <div class="location-info-card">
+                        <h4>📊 Additional Information</h4>
+                        <div class="info-item">
+                            <span class="info-label">Area</span>
+                            <span class="info-value">${countryData.area ? countryData.area.toLocaleString() + ' km²' : 'N/A'}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Subregion</span>
+                            <span class="info-value">${countryData.subregion || 'N/A'}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Calling Code</span>
+                            <span class="info-value">${countryData.idd && countryData.idd.root ? countryData.idd.root + (countryData.idd.suffixes ? countryData.idd.suffixes[0] : '') : 'N/A'}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Internet TLD</span>
+                            <span class="info-value">${countryData.tld ? countryData.tld[0] : 'N/A'}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Driving Side</span>
+                            <span class="info-value">${countryData.car && countryData.car.side ? countryData.car.side.charAt(0).toUpperCase() + countryData.car.side.slice(1) : 'N/A'}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">UN Member</span>
+                            <span class="info-value">${countryData.unMember ? 'Yes' : 'No'}</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            locationInfoGrid.innerHTML = locationCards;
+            locationInfoSection.style.display = 'block';
+        }
+
         function displayForecast(forecast) {
             const forecastGrid = document.getElementById('forecastGrid');
             forecastGrid.innerHTML = forecast.map(day => {
@@ -938,6 +1205,7 @@
                 </div>
             `;
             document.getElementById('forecastSection').style.display = 'none';
+            document.getElementById('locationInfoSection').style.display = 'none';
         }
 
         function showError(message) {
@@ -951,5 +1219,5 @@
             `;
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'975fc848e01d7685',t:'MTc1NjM0MTg4OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'975fce9472dbe3ca',t:'MTc1NjM0MjE0Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
