@@ -16,6 +16,8 @@
                         'bounce-slow': 'bounce 2s infinite',
                         'typing': 'typing 2s steps(20) infinite',
                         'particle': 'particle 3s ease-out forwards',
+                        'typewriter': 'typewriter 4s steps(40) 1s 1 normal both',
+                        'blink-cursor': 'blink-cursor 1s infinite',
                     },
                     keyframes: {
                         gradient: {
@@ -40,6 +42,14 @@
                         particle: {
                             '0%': { transform: 'translateY(0) scale(1)', opacity: '1' },
                             '100%': { transform: 'translateY(-100px) scale(0)', opacity: '0' },
+                        },
+                        typewriter: {
+                            'from': { width: '0' },
+                            'to': { width: '100%' }
+                        },
+                        'blink-cursor': {
+                            '0%, 50%': { opacity: '1' },
+                            '51%, 100%': { opacity: '0' }
                         }
                     }
                 }
@@ -68,8 +78,24 @@
             --bg-glass: rgba(0, 0, 0, 0.03);
             --border-color: rgba(0, 0, 0, 0.1);
             --text-primary: rgba(15, 23, 42, 0.95);
-            --text-secondary: rgba(51, 65, 85, 0.8);
-            --text-muted: rgba(100, 116, 139, 0.7);
+            --text-secondary: rgba(30, 41, 59, 0.9);
+            --text-muted: rgba(51, 65, 85, 0.8);
+        }
+
+        [data-theme="light"] .text-white {
+            color: rgba(15, 23, 42, 0.95) !important;
+        }
+
+        [data-theme="light"] .text-white\/70 {
+            color: rgba(30, 41, 59, 0.8) !important;
+        }
+
+        [data-theme="light"] .text-white\/80 {
+            color: rgba(30, 41, 59, 0.85) !important;
+        }
+
+        [data-theme="light"] .text-white\/60 {
+            color: rgba(51, 65, 85, 0.75) !important;
         }
 
         /* Responsive Design */
@@ -256,8 +282,8 @@
         <!-- Hero Section -->
         <div class="container mx-auto px-4 py-16">
             <div class="text-center mb-16">
-                <h1 class="text-6xl font-bold text-primary mb-6 animate-float">
-                    Master Your <span class="text-gradient">Typing Skills</span>
+                <h1 class="text-6xl font-bold text-primary mb-6">
+                    <span id="typewriter-text">Master Your </span><span class="text-gradient">Typing Skills</span><span id="cursor" class="animate-pulse">|</span>
                 </h1>
                 <p class="text-xl text-secondary mb-8 max-w-3xl mx-auto">
                     Track Progress, Improve Speed, Build Accuracy - Your journey to typing mastery starts here
@@ -1171,9 +1197,55 @@
             }
         };
 
+        // Typewriter effect
+        function initTypewriter() {
+            const phrases = [
+                "Master Your ",
+                "Improve Your ",
+                "Perfect Your ",
+                "Enhance Your ",
+                "Boost Your "
+            ];
+            
+            let currentPhrase = 0;
+            let currentChar = 0;
+            let isDeleting = false;
+            const typewriterElement = document.getElementById('typewriter-text');
+            const cursor = document.getElementById('cursor');
+            
+            function type() {
+                const current = phrases[currentPhrase];
+                
+                if (isDeleting) {
+                    typewriterElement.textContent = current.substring(0, currentChar - 1);
+                    currentChar--;
+                } else {
+                    typewriterElement.textContent = current.substring(0, currentChar + 1);
+                    currentChar++;
+                }
+                
+                let typeSpeed = isDeleting ? 50 : 100;
+                
+                if (!isDeleting && currentChar === current.length) {
+                    typeSpeed = 2000; // Pause at end
+                    isDeleting = true;
+                } else if (isDeleting && currentChar === 0) {
+                    isDeleting = false;
+                    currentPhrase = (currentPhrase + 1) % phrases.length;
+                    typeSpeed = 500; // Pause before next phrase
+                }
+                
+                setTimeout(type, typeSpeed);
+            }
+            
+            // Start typewriter effect
+            setTimeout(type, 1000);
+        }
+
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
             initializeTheme();
+            initTypewriter();
             
             // Load saved preferences
             const preferences = StorageManager.loadTestSettings();
@@ -1230,5 +1302,5 @@
             }
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97600dd4f6dfdacf',t:'MTc1NjM0NDczOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'976014e5b52e001a',t:'MTc1NjM0NTAyNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
