@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Periodic Table Explorer - Interactive Chemistry Learning</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .particle-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(59, 130, 246, 0.3);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
+            50% { transform: translateY(-20px) rotate(180deg); opacity: 0.8; }
+        }
+        
+        .orbital-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .orbital-bg::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .element-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .periodic-table-grid {
+            display: grid;
+            grid-template-columns: repeat(18, 60px);
+            grid-template-rows: repeat(10, 60px);
+            gap: 2px;
+            justify-content: center;
+            max-width: fit-content;
+            margin: 0 auto;
+        }
+        
+        .element-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .element-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 8px;
+            padding: 1px;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: xor;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .element-card:hover::before {
+            left: 100%;
+        }
+        
+        .element-card:hover::after {
+            opacity: 1;
+        }
+        
+        .element-card:hover {
+            transform: translateY(-8px) scale(1.15);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3), 0 0 30px currentColor;
+            z-index: 20;
+            filter: brightness(1.2);
+        }
+        
+        .element-card:active {
+            transform: translateY(-6px) scale(1.1);
+            transition: all 0.1s ease;
+        }
+        
+        .glow {
+            box-shadow: 0 0 20px currentColor;
+        }
+        
+        .molecule-animation {
+            animation: bounce 2s ease-in-out infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .modal-backdrop {
+            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        .search-glow:focus {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+        
+        /* Element group colors */
+        .alkali-metal { background: linear-gradient(135deg, #ff6b6b, #ee5a52); }
+        .alkaline-earth { background: linear-gradient(135deg, #feca57, #ff9ff3); }
+        .transition-metal { background: linear-gradient(135deg, #48dbfb, #0abde3); }
+        .post-transition { background: linear-gradient(135deg, #1dd1a1, #10ac84); }
+        .metalloid { background: linear-gradient(135deg, #ffeaa7, #fdcb6e); }
+        .nonmetal { background: linear-gradient(135deg, #a29bfe, #6c5ce7); }
+        .halogen { background: linear-gradient(135deg, #fd79a8, #e84393); }
+        .noble-gas { background: linear-gradient(135deg, #00b894, #00cec9); }
+        .lanthanide { background: linear-gradient(135deg, #e17055, #d63031); }
+        .actinide { background: linear-gradient(135deg, #00b894, #00a085); }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <!-- Particle Background -->
+    <div class="particle-bg" id="particleContainer"></div>
+    
+    <!-- Header -->
+    <header class="orbital-bg py-8 relative">
+        <div class="container mx-auto px-4 text-center">
+            <div class="glass-card rounded-2xl p-8 max-w-4xl mx-auto fade-in">
+                <h1 class="text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                    ⚗️ Periodic Table Explorer
+                </h1>
+                <p class="text-xl text-blue-100 mb-6">Interactive Chemistry Learning by JJ</p>
+                
+                <!-- Personal Story -->
+                <div class="text-left bg-white/10 rounded-xl p-6 mb-6">
+                    <h2 class="text-2xl font-semibold mb-4 text-yellow-300">Welcome to My Chemistry Journey!</h2>
+                    <p class="text-blue-100 leading-relaxed mb-4">
+                        When I was in secondary school, I had such a hard time mastering this table - lol! 
+                        The symbols seemed random, the numbers confusing, and memorizing everything felt impossible.
+                    </p>
+                    <p class="text-blue-100 leading-relaxed mb-4">
+                        Though I no longer study chemistry, I deeply respect its place as the backbone of science. 
+                        Every medicine, every material, every star in the sky - it all comes down to these fundamental building blocks.
+                    </p>
+                    <p class="text-blue-100 leading-relaxed">
+                        This interactive tool is designed to make learning the periodic table fun and engaging 
+                        for students who might struggle like I once did. Let's turn confusion into curiosity! 🧪✨
+                    </p>
+                </div>
+                
+                <!-- Motivational Quote -->
+                <div class="bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-xl p-4 mb-6">
+                    <p class="text-lg italic text-center text-purple-200">
+                        "The periodic table is the most beautiful thing in science. It's like a poem written by the universe itself."
+                    </p>
+                </div>
+                
+                <!-- Open Source Banner -->
+                <div class="bg-green-500/20 border border-green-400/30 rounded-xl p-4">
+                    <p class="text-center text-green-200">
+                        🌟 <strong>Open Source Chemistry Education</strong> 🌟<br>
+                        Built with ❤️ for aspiring chemistry students. Contribute on GitHub and help make learning accessible for everyone!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Controls -->
+    <div class="container mx-auto px-4 py-6">
+        <div class="glass-card rounded-xl p-6 mb-6">
+            <div class="flex flex-wrap gap-4 items-center justify-between">
+                <div class="flex-1 min-w-64">
+                    <input type="text" id="searchInput" placeholder="Search elements (name, symbol, or atomic number)..." 
+                           class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-300 search-glow focus:outline-none">
+                </div>
+                <div class="flex gap-2">
+                    <button id="quizMode" class="px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-semibold transition-all transform hover:scale-105">
+                        🧠 Quiz Mode
+                    </button>
+                    <button id="trendsView" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition-all transform hover:scale-105">
+                        📊 Trends
+                    </button>
+                    <button id="resetView" class="px-6 py-3 bg-gray-600 hover:bg-gray-700 rounded-lg font-semibold transition-all transform hover:scale-105">
+                        🔄 Reset
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Legend -->
+            <div class="mt-4 flex flex-wrap gap-2 text-sm">
+                <div class="flex items-center gap-2">
+                    <div class="w-4 h-4 alkali-metal rounded"></div>
+                    <span>Alkali Metals</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="w-4 h-4 alkaline-earth rounded"></div>
+                    <span>Alkaline Earth</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="w-4 h-4 transition-metal rounded"></div>
+                    <span>Transition Metals</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="w-4 h-4 nonmetal rounded"></div>
+                    <span>Nonmetals</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="w-4 h-4 noble-gas rounded"></div>
+                    <span>Noble Gases</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="w-4 h-4 halogen rounded"></div>
+                    <span>Halogens</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Periodic Table -->
+    <div class="container mx-auto px-4 pb-8">
+        <div class="glass-card rounded-2xl p-6">
+            <div id="periodicTable" class="periodic-table-grid overflow-x-auto">
+                <!-- Elements will be generated by JavaScript -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Element Modal -->
+    <div id="elementModal" class="fixed inset-0 modal-backdrop hidden items-center justify-center z-50 p-4">
+        <div class="glass-card rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <h2 id="modalTitle" class="text-3xl font-bold mb-2"></h2>
+                        <p id="modalSubtitle" class="text-gray-300"></p>
+                    </div>
+                    <button id="closeModal" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-3 text-blue-300">Basic Properties</h3>
+                        <div id="modalProperties" class="space-y-2 text-sm">
+                            <!-- Properties will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-semibold mb-3 text-green-300">Interesting Facts</h3>
+                        <div id="modalFacts" class="text-sm text-gray-300">
+                            <!-- Facts will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <h3 class="text-xl font-semibold mb-3 text-purple-300">Real-World Applications</h3>
+                    <div id="modalApplications" class="text-sm text-gray-300">
+                        <!-- Applications will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quiz Modal -->
+    <div id="quizModal" class="fixed inset-0 modal-backdrop hidden items-center justify-center z-50 p-4">
+        <div class="glass-card rounded-2xl max-w-lg w-full">
+            <div class="p-6 text-center">
+                <h2 class="text-2xl font-bold mb-4">🧠 Element Quiz</h2>
+                <div id="quizContent">
+                    <p class="text-lg mb-4">What element has the symbol:</p>
+                    <div id="quizSymbol" class="text-4xl font-bold text-blue-400 mb-6"></div>
+                    <div id="quizOptions" class="space-y-2">
+                        <!-- Quiz options will be populated by JavaScript -->
+                    </div>
+                    <div class="mt-6">
+                        <p class="text-sm text-gray-300">Score: <span id="quizScore">0</span>/10</p>
+                    </div>
+                </div>
+                <button id="closeQuiz" class="mt-4 px-6 py-2 bg-gray-600 hover:bg-gray-700 rounded-lg">Close Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Element data with comprehensive information
+        const elements = [
+            {
+                number: 1, symbol: 'H', name: 'Hydrogen', mass: 1.008, group: 'nonmetal', icon: 'fas fa-atom',
+                facts: 'Most abundant element in the universe. Powers the sun through nuclear fusion.',
+                applications: 'Fuel cells, rocket fuel, industrial processes, potential clean energy source.',
+                pronunciation: 'HY-druh-jen'
+            },
+            {
+                number: 2, symbol: 'He', name: 'Helium', mass: 4.003, group: 'noble-gas', icon: 'fas fa-wind',
+                facts: 'Second most abundant element in the universe. Never forms chemical compounds naturally.',
+                applications: 'Party balloons, medical imaging (MRI), deep-sea diving, cooling systems.',
+                pronunciation: 'HEE-lee-um'
+            },
+            {
+                number: 3, symbol: 'Li', name: 'Lithium', mass: 6.941, group: 'alkali-metal', icon: 'fas fa-battery-full',
+                facts: 'Lightest metal. Can cut with a knife. Floats on water.',
+                applications: 'Rechargeable batteries, mood stabilizing medication, ceramics.',
+                pronunciation: 'LITH-ee-um'
+            },
+            {
+                number: 4, symbol: 'Be', name: 'Beryllium', mass: 9.012, group: 'alkaline-earth', icon: 'fas fa-rocket',
+                facts: 'Extremely toxic but incredibly strong. Used in spacecraft.',
+                applications: 'Aerospace components, X-ray windows, nuclear reactors.',
+                pronunciation: 'buh-RIL-ee-um'
+            },
+            {
+                number: 5, symbol: 'B', name: 'Boron', mass: 10.811, group: 'metalloid', icon: 'fas fa-seedling',
+                facts: 'Essential for plant growth. Makes glass heat-resistant.',
+                applications: 'Fiberglass, detergents, agriculture, nuclear control rods.',
+                pronunciation: 'BOR-on'
+            },
+            {
+                number: 6, symbol: 'C', name: 'Carbon', mass: 12.011, group: 'nonmetal', icon: 'fas fa-gem',
+                facts: 'Basis of all life on Earth. Forms more compounds than any other element.',
+                applications: 'Diamonds, graphite, carbon fiber, all organic compounds.',
+                pronunciation: 'KAR-bon'
+            },
+            {
+                number: 7, symbol: 'N', name: 'Nitrogen', mass: 14.007, group: 'nonmetal', icon: 'fas fa-cloud',
+                facts: 'Makes up 78% of Earth\'s atmosphere. Essential for proteins.',
+                applications: 'Fertilizers, explosives, food preservation, liquid nitrogen cooling.',
+                pronunciation: 'NY-truh-jen'
+            },
+            {
+                number: 8, symbol: 'O', name: 'Oxygen', mass: 15.999, group: 'nonmetal', icon: 'fas fa-lungs',
+                facts: 'Essential for combustion and respiration. Most abundant element in Earth\'s crust.',
+                applications: 'Breathing, combustion, steel production, medical treatments.',
+                pronunciation: 'OK-si-jen'
+            },
+            {
+                number: 9, symbol: 'F', name: 'Fluorine', mass: 18.998, group: 'halogen', icon: 'fas fa-tooth',
+                facts: 'Most reactive element. Can react with almost anything, even noble gases.',
+                applications: 'Toothpaste, non-stick coatings, refrigerants, uranium enrichment.',
+                pronunciation: 'FLOOR-een'
+            },
+            {
+                number: 10, symbol: 'Ne', name: 'Neon', mass: 20.180, group: 'noble-gas', icon: 'fas fa-lightbulb',
+                facts: 'Gives off orange-red light when electrified. Very rare on Earth.',
+                applications: 'Neon signs, high-voltage indicators, laser technology.',
+                pronunciation: 'NEE-on'
+            },
+            {
+                number: 11, symbol: 'Na', name: 'Sodium', mass: 22.990, group: 'alkali-metal', icon: 'fas fa-fire',
+                facts: 'Explodes in water. Essential for nerve function. Symbol from Latin "natrium".',
+                applications: 'Table salt, soap, street lights, nuclear reactors.',
+                pronunciation: 'SO-dee-um'
+            },
+            {
+                number: 12, symbol: 'Mg', name: 'Magnesium', mass: 24.305, group: 'alkaline-earth', icon: 'fas fa-fire-flame-curved',
+                facts: 'Burns with brilliant white light. Essential for chlorophyll in plants.',
+                applications: 'Fireworks, lightweight alloys, medicine (antacids), photography.',
+                pronunciation: 'mag-NEE-zee-um'
+            },
+            {
+                number: 13, symbol: 'Al', name: 'Aluminum', mass: 26.982, group: 'post-transition', icon: 'fas fa-plane',
+                facts: 'Most abundant metal in Earth\'s crust. Never rusts.',
+                applications: 'Cans, foil, aircraft, construction, electrical wiring.',
+                pronunciation: 'uh-LOO-mi-num'
+            },
+            {
+                number: 14, symbol: 'Si', name: 'Silicon', mass: 28.086, group: 'metalloid', icon: 'fas fa-microchip',
+                facts: 'Second most abundant element in Earth\'s crust. Basis of computer chips.',
+                applications: 'Computer processors, glass, solar panels, silicone rubber.',
+                pronunciation: 'SIL-i-kon'
+            },
+            {
+                number: 15, symbol: 'P', name: 'Phosphorus', mass: 30.974, group: 'nonmetal', icon: 'fas fa-dna',
+                facts: 'Glows in the dark. Essential for DNA and bones.',
+                applications: 'Matches, fertilizers, detergents, DNA/RNA, bones and teeth.',
+                pronunciation: 'FOS-for-us'
+            },
+            {
+                number: 16, symbol: 'S', name: 'Sulfur', mass: 32.065, group: 'nonmetal', icon: 'fas fa-volcano',
+                facts: 'Smells like rotten eggs. Known since ancient times.',
+                applications: 'Gunpowder, rubber vulcanization, medicines, fertilizers.',
+                pronunciation: 'SUL-fur'
+            },
+            {
+                number: 17, symbol: 'Cl', name: 'Chlorine', mass: 35.453, group: 'halogen', icon: 'fas fa-swimming-pool',
+                facts: 'Deadly gas that makes swimming pools safe. Greenish-yellow color.',
+                applications: 'Water purification, bleach, PVC plastic, disinfectants.',
+                pronunciation: 'KLOR-een'
+            },
+            {
+                number: 18, symbol: 'Ar', name: 'Argon', mass: 39.948, group: 'noble-gas', icon: 'fas fa-lightbulb',
+                facts: 'Makes up 1% of Earth\'s atmosphere. Completely inert.',
+                applications: 'Light bulbs, welding, wine preservation, insulation.',
+                pronunciation: 'AR-gon'
+            }
+        ];
+
+        // Complete periodic table data with proper positioning
+        const periodicTableLayout = {
+            // Row 1
+            1: { row: 1, col: 1 }, // H
+            2: { row: 1, col: 18 }, // He
+            
+            // Row 2
+            3: { row: 2, col: 1 }, // Li
+            4: { row: 2, col: 2 }, // Be
+            5: { row: 2, col: 13 }, // B
+            6: { row: 2, col: 14 }, // C
+            7: { row: 2, col: 15 }, // N
+            8: { row: 2, col: 16 }, // O
+            9: { row: 2, col: 17 }, // F
+            10: { row: 2, col: 18 }, // Ne
+            
+            // Row 3
+            11: { row: 3, col: 1 }, // Na
+            12: { row: 3, col: 2 }, // Mg
+            13: { row: 3, col: 13 }, // Al
+            14: { row: 3, col: 14 }, // Si
+            15: { row: 3, col: 15 }, // P
+            16: { row: 3, col: 16 }, // S
+            17: { row: 3, col: 17 }, // Cl
+            18: { row: 3, col: 18 }, // Ar
+            
+            // Row 4 (adding more elements)
+            19: { row: 4, col: 1 }, // K
+            20: { row: 4, col: 2 }, // Ca
+            21: { row: 4, col: 3 }, // Sc
+            22: { row: 4, col: 4 }, // Ti
+            23: { row: 4, col: 5 }, // V
+            24: { row: 4, col: 6 }, // Cr
+            25: { row: 4, col: 7 }, // Mn
+            26: { row: 4, col: 8 }, // Fe
+            27: { row: 4, col: 9 }, // Co
+            28: { row: 4, col: 10 }, // Ni
+            29: { row: 4, col: 11 }, // Cu
+            30: { row: 4, col: 12 }, // Zn
+            31: { row: 4, col: 13 }, // Ga
+            32: { row: 4, col: 14 }, // Ge
+            33: { row: 4, col: 15 }, // As
+            34: { row: 4, col: 16 }, // Se
+            35: { row: 4, col: 17 }, // Br
+            36: { row: 4, col: 18 }, // Kr
+            
+            // Row 5 (partial)
+            37: { row: 5, col: 1 }, // Rb
+            38: { row: 5, col: 2 }, // Sr
+            47: { row: 5, col: 11 }, // Ag
+            53: { row: 5, col: 17 }, // I
+            54: { row: 5, col: 18 }, // Xe
+            
+            // Row 6 (partial)
+            55: { row: 6, col: 1 }, // Cs
+            56: { row: 6, col: 2 }, // Ba
+            79: { row: 6, col: 11 }, // Au
+            82: { row: 6, col: 14 }, // Pb
+            85: { row: 6, col: 17 }, // At
+            86: { row: 6, col: 18 }, // Rn
+        };
+        
+        // Extended elements with more complete data
+        const allElements = [
+            ...elements,
+            { number: 19, symbol: 'K', name: 'Potassium', mass: 39.098, group: 'alkali-metal', icon: 'fas fa-fire' },
+            { number: 20, symbol: 'Ca', name: 'Calcium', mass: 40.078, group: 'alkaline-earth', icon: 'fas fa-bone' },
+            { number: 21, symbol: 'Sc', name: 'Scandium', mass: 44.956, group: 'transition-metal', icon: 'fas fa-cog' },
+            { number: 22, symbol: 'Ti', name: 'Titanium', mass: 47.867, group: 'transition-metal', icon: 'fas fa-shield-alt' },
+            { number: 23, symbol: 'V', name: 'Vanadium', mass: 50.942, group: 'transition-metal', icon: 'fas fa-cog' },
+            { number: 24, symbol: 'Cr', name: 'Chromium', mass: 51.996, group: 'transition-metal', icon: 'fas fa-gem' },
+            { number: 25, symbol: 'Mn', name: 'Manganese', mass: 54.938, group: 'transition-metal', icon: 'fas fa-cog' },
+            { number: 26, symbol: 'Fe', name: 'Iron', mass: 55.845, group: 'transition-metal', icon: 'fas fa-hammer' },
+            { number: 27, symbol: 'Co', name: 'Cobalt', mass: 58.933, group: 'transition-metal', icon: 'fas fa-magnet' },
+            { number: 28, symbol: 'Ni', name: 'Nickel', mass: 58.693, group: 'transition-metal', icon: 'fas fa-coins' },
+            { number: 29, symbol: 'Cu', name: 'Copper', mass: 63.546, group: 'transition-metal', icon: 'fas fa-bolt' },
+            { number: 30, symbol: 'Zn', name: 'Zinc', mass: 65.38, group: 'transition-metal', icon: 'fas fa-shield-alt' },
+            { number: 31, symbol: 'Ga', name: 'Gallium', mass: 69.723, group: 'post-transition', icon: 'fas fa-microchip' },
+            { number: 32, symbol: 'Ge', name: 'Germanium', mass: 72.630, group: 'metalloid', icon: 'fas fa-microchip' },
+            { number: 33, symbol: 'As', name: 'Arsenic', mass: 74.922, group: 'metalloid', icon: 'fas fa-skull-crossbones' },
+            { number: 34, symbol: 'Se', name: 'Selenium', mass: 78.971, group: 'nonmetal', icon: 'fas fa-sun' },
+            { number: 35, symbol: 'Br', name: 'Bromine', mass: 79.904, group: 'halogen', icon: 'fas fa-flask' },
+            { number: 36, symbol: 'Kr', name: 'Krypton', mass: 83.798, group: 'noble-gas', icon: 'fas fa-lightbulb' },
+            { number: 37, symbol: 'Rb', name: 'Rubidium', mass: 85.468, group: 'alkali-metal', icon: 'fas fa-fire' },
+            { number: 38, symbol: 'Sr', name: 'Strontium', mass: 87.62, group: 'alkaline-earth', icon: 'fas fa-fire-flame-curved' },
+            { number: 47, symbol: 'Ag', name: 'Silver', mass: 107.868, group: 'transition-metal', icon: 'fas fa-medal' },
+            { number: 53, symbol: 'I', name: 'Iodine', mass: 126.904, group: 'halogen', icon: 'fas fa-tint' },
+            { number: 54, symbol: 'Xe', name: 'Xenon', mass: 131.293, group: 'noble-gas', icon: 'fas fa-lightbulb' },
+            { number: 55, symbol: 'Cs', name: 'Cesium', mass: 132.905, group: 'alkali-metal', icon: 'fas fa-fire' },
+            { number: 56, symbol: 'Ba', name: 'Barium', mass: 137.327, group: 'alkaline-earth', icon: 'fas fa-fire-flame-curved' },
+            { number: 79, symbol: 'Au', name: 'Gold', mass: 196.967, group: 'transition-metal', icon: 'fas fa-crown' },
+            { number: 82, symbol: 'Pb', name: 'Lead', mass: 207.2, group: 'post-transition', icon: 'fas fa-weight-hanging' },
+            { number: 85, symbol: 'At', name: 'Astatine', mass: 210, group: 'halogen', icon: 'fas fa-radiation' },
+            { number: 86, symbol: 'Rn', name: 'Radon', mass: 222, group: 'noble-gas', icon: 'fas fa-radiation' }
+        ];
+
+        let currentQuizElement = null;
+        let quizScore = 0;
+        let quizCount = 0;
+
+        // Initialize the application
+        function init() {
+            createParticles();
+            generatePeriodicTable();
+            setupEventListeners();
+        }
+
+        // Create floating particles
+        function createParticles() {
+            const container = document.getElementById('particleContainer');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Generate the periodic table
+        function generatePeriodicTable() {
+            const table = document.getElementById('periodicTable');
+            
+            // Create elements based on their proper positions
+            allElements.forEach(element => {
+                const position = periodicTableLayout[element.number];
+                if (position) {
+                    const cell = document.createElement('div');
+                    cell.className = `element-card ${element.group} text-center font-semibold text-white shadow-lg flex flex-col items-center justify-center`;
+                    cell.style.gridRow = position.row;
+                    cell.style.gridColumn = position.col;
+                    
+                    cell.innerHTML = `
+                        <div class="text-[7px] opacity-75 leading-none mb-0.5">${element.number}</div>
+                        <div class="text-lg font-bold leading-none mb-0.5">${element.symbol}</div>
+                        <div class="text-[6px] opacity-75 leading-none truncate w-full text-center px-1">${element.name}</div>
+                        <div class="text-[6px] opacity-60 leading-none">${element.mass}</div>
+                        ${element.icon ? `<i class="${element.icon} text-[8px] opacity-60 mt-0.5"></i>` : ''}
+                    `;
+                    
+                    cell.addEventListener('click', () => showElementModal(element));
+                    table.appendChild(cell);
+                }
+            });
+        }
+
+
+
+        // Show element modal
+        function showElementModal(element) {
+            const modal = document.getElementById('elementModal');
+            const title = document.getElementById('modalTitle');
+            const subtitle = document.getElementById('modalSubtitle');
+            const properties = document.getElementById('modalProperties');
+            const facts = document.getElementById('modalFacts');
+            const applications = document.getElementById('modalApplications');
+            
+            title.textContent = element.name;
+            subtitle.textContent = `${element.symbol} - Atomic Number ${element.number}`;
+            
+            properties.innerHTML = `
+                <div class="flex justify-between"><span>Symbol:</span><span class="font-semibold">${element.symbol}</span></div>
+                <div class="flex justify-between"><span>Atomic Number:</span><span class="font-semibold">${element.number}</span></div>
+                <div class="flex justify-between"><span>Atomic Mass:</span><span class="font-semibold">${element.mass}</span></div>
+                <div class="flex justify-between"><span>Group:</span><span class="font-semibold capitalize">${element.group.replace('-', ' ')}</span></div>
+                ${element.pronunciation ? `<div class="flex justify-between"><span>Pronunciation:</span><span class="font-semibold">${element.pronunciation}</span></div>` : ''}
+            `;
+            
+            facts.textContent = element.facts || 'Fascinating element with unique properties.';
+            applications.textContent = element.applications || 'Used in various industrial and scientific applications.';
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Close modal
+            document.getElementById('closeModal').addEventListener('click', () => {
+                document.getElementById('elementModal').classList.add('hidden');
+                document.getElementById('elementModal').classList.remove('flex');
+            });
+            
+            // Search functionality
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
+                const elementCards = document.querySelectorAll('.element-card');
+                
+                elementCards.forEach(card => {
+                    const text = card.textContent.toLowerCase();
+                    if (text.includes(query) || query === '') {
+                        card.style.opacity = '1';
+                        card.style.transform = 'scale(1)';
+                    } else {
+                        card.style.opacity = '0.3';
+                        card.style.transform = 'scale(0.9)';
+                    }
+                });
+            });
+            
+            // Quiz mode
+            document.getElementById('quizMode').addEventListener('click', startQuiz);
+            document.getElementById('closeQuiz').addEventListener('click', () => {
+                document.getElementById('quizModal').classList.add('hidden');
+                document.getElementById('quizModal').classList.remove('flex');
+            });
+            
+            // Reset view
+            document.getElementById('resetView').addEventListener('click', () => {
+                document.getElementById('searchInput').value = '';
+                const elementCards = document.querySelectorAll('.element-card');
+                elementCards.forEach(card => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'scale(1)';
+                });
+            });
+            
+            // Trends view (placeholder)
+            document.getElementById('trendsView').addEventListener('click', () => {
+                alert('🚀 Trends visualization coming soon! This will show atomic radius, ionization energy, and other periodic trends.');
+            });
+            
+            // Close modals when clicking outside
+            document.getElementById('elementModal').addEventListener('click', (e) => {
+                if (e.target === e.currentTarget) {
+                    e.currentTarget.classList.add('hidden');
+                    e.currentTarget.classList.remove('flex');
+                }
+            });
+            
+            document.getElementById('quizModal').addEventListener('click', (e) => {
+                if (e.target === e.currentTarget) {
+                    e.currentTarget.classList.add('hidden');
+                    e.currentTarget.classList.remove('flex');
+                }
+            });
+        }
+
+        // Start quiz
+        function startQuiz() {
+            quizScore = 0;
+            quizCount = 0;
+            document.getElementById('quizScore').textContent = '0';
+            nextQuizQuestion();
+            document.getElementById('quizModal').classList.remove('hidden');
+            document.getElementById('quizModal').classList.add('flex');
+        }
+
+        // Generate next quiz question
+        function nextQuizQuestion() {
+            if (quizCount >= 10) {
+                document.getElementById('quizContent').innerHTML = `
+                    <h3 class="text-xl font-bold mb-4">Quiz Complete! 🎉</h3>
+                    <p class="text-lg mb-4">Final Score: ${quizScore}/10</p>
+                    <p class="text-sm text-gray-300">${getScoreMessage(quizScore)}</p>
+                `;
+                return;
+            }
+            
+            currentQuizElement = allElements[Math.floor(Math.random() * allElements.length)];
+            const options = generateQuizOptions(currentQuizElement);
+            
+            document.getElementById('quizSymbol').textContent = currentQuizElement.symbol;
+            
+            const optionsContainer = document.getElementById('quizOptions');
+            optionsContainer.innerHTML = '';
+            
+            options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'w-full p-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition-all';
+                button.textContent = option;
+                button.addEventListener('click', () => checkQuizAnswer(option));
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        // Generate quiz options
+        function generateQuizOptions(correctElement) {
+            const options = [correctElement.name];
+            const otherElements = allElements.filter(e => e.number !== correctElement.number);
+            
+            while (options.length < 4) {
+                const randomElement = otherElements[Math.floor(Math.random() * otherElements.length)];
+                if (!options.includes(randomElement.name)) {
+                    options.push(randomElement.name);
+                }
+            }
+            
+            return options.sort(() => Math.random() - 0.5);
+        }
+
+        // Check quiz answer
+        function checkQuizAnswer(selectedAnswer) {
+            const buttons = document.querySelectorAll('#quizOptions button');
+            buttons.forEach(button => {
+                button.disabled = true;
+                if (button.textContent === currentQuizElement.name) {
+                    button.className = 'w-full p-3 bg-green-600 rounded-lg';
+                } else if (button.textContent === selectedAnswer && selectedAnswer !== currentQuizElement.name) {
+                    button.className = 'w-full p-3 bg-red-600 rounded-lg';
+                } else {
+                    button.className = 'w-full p-3 bg-gray-600 rounded-lg';
+                }
+            });
+            
+            if (selectedAnswer === currentQuizElement.name) {
+                quizScore++;
+                document.getElementById('quizScore').textContent = quizScore;
+            }
+            
+            quizCount++;
+            
+            setTimeout(() => {
+                nextQuizQuestion();
+            }, 1500);
+        }
+
+        // Get score message
+        function getScoreMessage(score) {
+            if (score >= 9) return "Outstanding! You're a chemistry master! 🏆";
+            if (score >= 7) return "Great job! You know your elements well! 🌟";
+            if (score >= 5) return "Good work! Keep studying and you'll improve! 📚";
+            return "Don't give up! Practice makes perfect! 💪";
+        }
+
+        // Initialize the app when page loads
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9760410735db98d9',t:'MTc1NjM0NjgzNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
