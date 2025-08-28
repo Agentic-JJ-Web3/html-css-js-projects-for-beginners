@@ -527,7 +527,7 @@
             </div>
 
             <div class="forecast-section" id="forecastSection" style="display: none;">
-                <h3>5-Day Forecast</h3>
+                <h3>3-Day Forecast</h3>
                 <div class="forecast-grid" id="forecastGrid"></div>
             </div>
 
@@ -554,20 +554,66 @@
         // Global variables
         let currentUnit = 'celsius';
         let currentWeatherData = null;
-        const API_KEY = 'demo_key'; // In real implementation, use your OpenWeatherMap API key
+        const API_KEY = 'ad3ad70e69684cf389f234922251502'; // Your WeatherAPI.com key
+        const BASE_URL = 'https://api.weatherapi.com/v1';
 
-        // Weather icons mapping
+        // WeatherAPI.com endpoints
+        const ENDPOINTS = {
+            current: `${BASE_URL}/current.json`,
+            forecast: `${BASE_URL}/forecast.json`,
+            search: `${BASE_URL}/search.json`
+        };
+
+        // Weather icons mapping for WeatherAPI conditions
         const weatherIcons = {
-            'clear sky': '☀️',
-            'few clouds': '🌤️',
-            'scattered clouds': '⛅',
-            'broken clouds': '☁️',
-            'shower rain': '🌦️',
-            'rain': '🌧️',
-            'thunderstorm': '⛈️',
-            'snow': '❄️',
-            'mist': '🌫️',
-            'default': '🌤️'
+            1000: '☀️', // Sunny
+            1003: '🌤️', // Partly cloudy
+            1006: '☁️', // Cloudy
+            1009: '☁️', // Overcast
+            1030: '🌫️', // Mist
+            1063: '🌦️', // Patchy rain possible
+            1066: '🌨️', // Patchy snow possible
+            1069: '🌨️', // Patchy sleet possible
+            1072: '🌨️', // Patchy freezing drizzle possible
+            1087: '⛈️', // Thundery outbreaks possible
+            1114: '❄️', // Blowing snow
+            1117: '❄️', // Blizzard
+            1135: '🌫️', // Fog
+            1147: '🌫️', // Freezing fog
+            1150: '🌦️', // Patchy light drizzle
+            1153: '🌦️', // Light drizzle
+            1168: '🌨️', // Freezing drizzle
+            1171: '🌨️', // Heavy freezing drizzle
+            1180: '🌦️', // Patchy light rain
+            1183: '🌧️', // Light rain
+            1186: '🌦️', // Moderate rain at times
+            1189: '🌧️', // Moderate rain
+            1192: '🌧️', // Heavy rain at times
+            1195: '🌧️', // Heavy rain
+            1198: '🌨️', // Light freezing rain
+            1201: '🌨️', // Moderate or heavy freezing rain
+            1204: '🌨️', // Light sleet
+            1207: '🌨️', // Moderate or heavy sleet
+            1210: '🌨️', // Patchy light snow
+            1213: '❄️', // Light snow
+            1216: '🌨️', // Patchy moderate snow
+            1219: '❄️', // Moderate snow
+            1222: '🌨️', // Patchy heavy snow
+            1225: '❄️', // Heavy snow
+            1237: '🌨️', // Ice pellets
+            1240: '🌦️', // Light rain shower
+            1243: '🌧️', // Moderate or heavy rain shower
+            1246: '🌧️', // Torrential rain shower
+            1249: '🌨️', // Light sleet showers
+            1252: '🌨️', // Moderate or heavy sleet showers
+            1255: '🌨️', // Light snow showers
+            1258: '❄️', // Moderate or heavy snow showers
+            1261: '🌨️', // Light showers of ice pellets
+            1264: '🌨️', // Moderate or heavy showers of ice pellets
+            1273: '⛈️', // Patchy light rain with thunder
+            1276: '⛈️', // Moderate or heavy rain with thunder
+            1279: '⛈️', // Patchy light snow with thunder
+            1282: '⛈️'  // Moderate or heavy snow with thunder
         };
 
         // Initialize app
@@ -630,68 +676,120 @@
 
         function getCurrentLocation() {
             if (navigator.geolocation) {
+                showLoading();
                 navigator.geolocation.getCurrentPosition(
                     position => {
                         const lat = position.coords.latitude;
                         const lon = position.coords.longitude;
-                        fetchWeatherData(lat, lon);
+                        fetchWeatherByCoords(lat, lon);
                     },
                     error => {
                         console.error('Geolocation error:', error);
-                        // Fallback to demo data for New York
-                        loadDemoData('New York');
+                        // Fallback to a default city
+                        searchWeather('London');
                     }
                 );
             } else {
-                loadDemoData('New York');
+                searchWeather('London');
             }
         }
 
-        function searchWeather(city) {
+        async function searchWeather(city) {
             if (!city.trim()) return;
             
             showLoading();
-            // In real implementation, geocode the city name first
-            loadDemoData(city);
+            
+            try {
+                const response = await fetch(`${ENDPOINTS.forecast}?key=${API_KEY}&q=${encodeURIComponent(city)}&days=3&aqi=yes&alerts=yes`);
+                
+                if (!response.ok) {
+                    throw new Error(`Weather data not found for "${city}"`);
+                }
+                
+                const data = await response.json();
+                processWeatherData(data);
+                
+            } catch (error) {
+                console.error('Weather API error:', error);
+                showError(`Unable to fetch weather data for "${city}". Please check the city name and try again.`);
+            }
         }
 
-        function fetchWeatherData(lat, lon) {
-            // In real implementation, use actual API calls
-            // For demo purposes, we'll use sample data
-            loadDemoData('Your Location');
+        async function fetchWeatherByCoords(lat, lon) {
+            try {
+                const response = await fetch(`${ENDPOINTS.forecast}?key=${API_KEY}&q=${lat},${lon}&days=3&aqi=yes&alerts=yes`);
+                
+                if (!response.ok) {
+                    throw new Error('Weather data not available for your location');
+                }
+                
+                const data = await response.json();
+                processWeatherData(data);
+                
+            } catch (error) {
+                console.error('Weather API error:', error);
+                showError('Unable to fetch weather data for your location. Please try searching for a city instead.');
+            }
         }
 
-        function loadDemoData(location) {
-            // Demo weather data
-            const demoData = {
-                location: location,
-                temperature: 22,
-                condition: 'few clouds',
-                description: 'Partly cloudy with gentle breeze',
-                humidity: 65,
-                windSpeed: 12,
-                uvIndex: 6,
-                airQuality: 'Good',
-                pressure: 1013,
-                visibility: 10,
-                forecast: [
-                    { day: 'Today', icon: '🌤️', high: 24, low: 18, condition: 'Partly Cloudy' },
-                    { day: 'Tomorrow', icon: '☀️', high: 26, low: 20, condition: 'Sunny' },
-                    { day: 'Wednesday', icon: '🌧️', high: 19, low: 15, condition: 'Rainy' },
-                    { day: 'Thursday', icon: '⛅', high: 21, low: 16, condition: 'Cloudy' },
-                    { day: 'Friday', icon: '🌤️', high: 23, low: 17, condition: 'Partly Cloudy' }
-                ]
+        function processWeatherData(data) {
+            // Transform WeatherAPI data to our format
+            const current = data.current;
+            const location = data.location;
+            const forecast = data.forecast.forecastday;
+            
+            const processedData = {
+                location: `${location.name}, ${location.country}`,
+                temperature: current.temp_c,
+                condition: current.condition.text.toLowerCase(),
+                conditionCode: current.condition.code,
+                description: current.condition.text,
+                humidity: current.humidity,
+                windSpeed: Math.round(current.wind_kph),
+                uvIndex: current.uv,
+                airQuality: getAirQualityText(data.current.air_quality?.['us-epa-index'] || 1),
+                pressure: current.pressure_mb,
+                visibility: current.vis_km,
+                feelsLike: current.feelslike_c,
+                forecast: forecast.map((day, index) => {
+                    const date = new Date(day.date);
+                    const dayName = index === 0 ? 'Today' : 
+                                   index === 1 ? 'Tomorrow' : 
+                                   date.toLocaleDateString('en', { weekday: 'short' });
+                    
+                    return {
+                        day: dayName,
+                        icon: weatherIcons[day.day.condition.code] || '🌤️',
+                        high: Math.round(day.day.maxtemp_c),
+                        low: Math.round(day.day.mintemp_c),
+                        condition: day.day.condition.text,
+                        conditionCode: day.day.condition.code
+                    };
+                })
             };
 
-            currentWeatherData = demoData;
-            displayWeatherData(demoData);
-            updateBackground(demoData.condition);
-            createWeatherAnimation(demoData.condition);
+            currentWeatherData = processedData;
+            displayWeatherData(processedData);
+            updateBackground(processedData.conditionCode);
+            createWeatherAnimation(processedData.conditionCode);
+        }
+
+        function getAirQualityText(index) {
+            const qualities = {
+                1: 'Good',
+                2: 'Moderate', 
+                3: 'Unhealthy for Sensitive',
+                4: 'Unhealthy',
+                5: 'Very Unhealthy',
+                6: 'Hazardous'
+            };
+            return qualities[index] || 'Unknown';
         }
 
         function displayWeatherData(data) {
             const weatherCard = document.getElementById('weatherCard');
             const temp = currentUnit === 'celsius' ? data.temperature : (data.temperature * 9/5) + 32;
+            const feelsLike = currentUnit === 'celsius' ? data.feelsLike : (data.feelsLike * 9/5) + 32;
             const unit = currentUnit === 'celsius' ? '°C' : '°F';
             
             weatherCard.innerHTML = `
@@ -700,9 +798,9 @@
                         <h2>${data.location}</h2>
                         <p>${data.description}</p>
                         <div class="temperature">${Math.round(temp)}${unit}</div>
-                        <p>Feels like ${Math.round(temp + 2)}${unit}</p>
+                        <p>Feels like ${Math.round(feelsLike)}${unit}</p>
                     </div>
-                    <div class="weather-icon">${weatherIcons[data.condition] || weatherIcons.default}</div>
+                    <div class="weather-icon">${weatherIcons[data.conditionCode] || weatherIcons[1000]}</div>
                 </div>
                 <div class="weather-details">
                     <div class="detail-card">
@@ -723,7 +821,7 @@
                     </div>
                     <div class="detail-card">
                         <h4>Pressure</h4>
-                        <p>${data.pressure} hPa</p>
+                        <p>${data.pressure} mb</p>
                     </div>
                     <div class="detail-card">
                         <h4>Visibility</h4>
@@ -754,7 +852,7 @@
             }).join('');
         }
 
-        function updateBackground(condition) {
+        function updateBackground(conditionCode) {
             const body = document.body;
             const hour = new Date().getHours();
             
@@ -763,24 +861,27 @@
             
             if (hour < 6 || hour > 20) {
                 body.classList.add('night');
-            } else if (condition.includes('rain') || condition.includes('storm')) {
+            } else if ([1063, 1150, 1153, 1180, 1183, 1186, 1189, 1192, 1195, 1240, 1243, 1246, 1273, 1276].includes(conditionCode)) {
                 body.classList.add('rainy');
-            } else if (condition.includes('cloud')) {
+            } else if ([1003, 1006, 1009, 1030, 1135, 1147].includes(conditionCode)) {
                 body.classList.add('cloudy');
-            } else if (condition.includes('clear') || condition.includes('sun')) {
+            } else if (conditionCode === 1000) {
                 body.classList.add('sunny');
             } else {
                 body.classList.add('default');
             }
         }
 
-        function createWeatherAnimation(condition) {
+        function createWeatherAnimation(conditionCode) {
             const animationContainer = document.getElementById('weatherAnimation');
             animationContainer.innerHTML = '';
 
-            if (condition.includes('rain') || condition.includes('storm')) {
+            // Rain animation for rainy conditions
+            if ([1063, 1150, 1153, 1180, 1183, 1186, 1189, 1192, 1195, 1240, 1243, 1246, 1273, 1276].includes(conditionCode)) {
                 createRainAnimation();
-            } else if (condition.includes('cloud')) {
+            } 
+            // Cloud animation for cloudy conditions
+            else if ([1003, 1006, 1009, 1030, 1135, 1147].includes(conditionCode)) {
                 createCloudAnimation();
             }
         }
@@ -817,10 +918,14 @@
             const refreshBtn = document.getElementById('refreshBtn');
             refreshBtn.classList.add('spinning');
             
-            showLoading();
+            const searchInput = document.getElementById('citySearch');
+            if (searchInput.value.trim()) {
+                searchWeather(searchInput.value);
+            } else {
+                getCurrentLocation();
+            }
             
             setTimeout(() => {
-                getCurrentLocation();
                 refreshBtn.classList.remove('spinning');
             }, 1000);
         }
@@ -829,7 +934,7 @@
             const weatherCard = document.getElementById('weatherCard');
             weatherCard.innerHTML = `
                 <div class="loading">
-                    <p>🌍 Updating weather data...</p>
+                    <p>🌍 Fetching real-time weather data...</p>
                 </div>
             `;
             document.getElementById('forecastSection').style.display = 'none';
@@ -841,11 +946,10 @@
                 <div class="error">
                     <h3>⚠️ Weather Data Unavailable</h3>
                     <p>${message}</p>
-                    <p style="margin-top: 15px; font-size: 0.9rem;">This is a demo version. In a real implementation, you would need a valid API key from OpenWeatherMap or similar service.</p>
-                    <button class="btn" onclick="getCurrentLocation()" style="margin-top: 15px;">Try Again</button>
+                    <button class="btn" onclick="getCurrentLocation()" style="margin-top: 15px;">Try My Location</button>
                 </div>
             `;
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'975fa5a45079a637',t:'MTc1NjM0MDQ3MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'975fc848e01d7685',t:'MTc1NjM0MTg4OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
