@@ -47,33 +47,105 @@
         }
     </script>
     <style>
+        :root {
+            --bg-primary: rgba(15, 23, 42, 0.95);
+            --bg-secondary: rgba(30, 41, 59, 0.8);
+            --bg-glass: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: rgba(255, 255, 255, 0.95);
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-yellow: #f59e0b;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: rgba(248, 250, 252, 0.95);
+            --bg-secondary: rgba(241, 245, 249, 0.9);
+            --bg-glass: rgba(0, 0, 0, 0.03);
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: rgba(15, 23, 42, 0.95);
+            --text-secondary: rgba(51, 65, 85, 0.8);
+            --text-muted: rgba(100, 116, 139, 0.7);
+        }
+
         .glassmorphism {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
         }
+        
         .gradient-bg {
-            background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe, #00f2fe);
+            background: linear-gradient(-45deg, #1e293b, #334155, #475569, #64748b);
             background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
+            animation: gradient 20s ease infinite;
         }
+        
+        [data-theme="light"] .gradient-bg {
+            background: linear-gradient(-45deg, #f8fafc, #e2e8f0, #cbd5e1, #94a3b8);
+        }
+        
         .text-gradient {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        .correct { color: #10b981; background-color: rgba(16, 185, 129, 0.1); }
-        .incorrect { color: #ef4444; background-color: rgba(239, 68, 68, 0.2); }
-        .current { background-color: rgba(59, 130, 246, 0.3); animation: typing 1s infinite; }
+        
+        .text-primary { color: var(--text-primary); }
+        .text-secondary { color: var(--text-secondary); }
+        .text-muted { color: var(--text-muted); }
+        
+        .correct { 
+            color: var(--accent-green); 
+            background-color: rgba(16, 185, 129, 0.1); 
+        }
+        .incorrect { 
+            color: var(--accent-red); 
+            background-color: rgba(239, 68, 68, 0.15); 
+        }
+        .current { 
+            background-color: rgba(59, 130, 246, 0.2); 
+            animation: typing 1s infinite; 
+        }
+        
         .particle {
             position: absolute;
             width: 4px;
             height: 4px;
-            background: #fbbf24;
+            background: var(--accent-yellow);
             border-radius: 50%;
             pointer-events: none;
             animation: particle 3s ease-out forwards;
+        }
+
+        .theme-toggle {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-secondary);
+        }
+
+        select, input, textarea {
+            background: var(--bg-glass) !important;
+            color: var(--text-primary) !important;
+            border-color: var(--border-color) !important;
+        }
+
+        select:focus, input:focus, textarea:focus {
+            border-color: var(--accent-blue) !important;
+            outline: none !important;
+        }
+
+        select option {
+            background: var(--bg-secondary) !important;
+            color: var(--text-primary) !important;
         }
     </style>
 </head>
@@ -87,10 +159,13 @@
                     <h1 class="text-xl font-bold text-white">TypingMaster Pro</h1>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <span class="text-white/80 text-sm">🚀 Open Source Project by JJ</span>
+                    <span class="text-secondary text-sm">🚀 Open Source Project by JJ</span>
+                    <button onclick="toggleTheme()" class="theme-toggle px-3 py-2 rounded-full transition-all duration-300 flex items-center space-x-2">
+                        <span id="themeIcon">🌙</span>
+                    </button>
                     <a href="https://github.com/Agentic-JJ-Web3/html-css-js-projects-for-beginners" 
                        target="_blank" 
-                       class="glassmorphism px-4 py-2 rounded-full text-white hover:bg-white/20 transition-all duration-300 flex items-center space-x-2">
+                       class="glassmorphism px-4 py-2 rounded-full text-primary hover:bg-white/20 transition-all duration-300 flex items-center space-x-2">
                         <span>⭐</span>
                         <span>Star on GitHub</span>
                     </a>
@@ -103,10 +178,10 @@
     <nav class="glassmorphism border-b border-white/10">
         <div class="container mx-auto px-4">
             <div class="flex space-x-8 py-4">
-                <button onclick="showSection('home')" class="nav-btn text-white hover:text-blue-300 transition-colors duration-300 font-medium">Home</button>
-                <button onclick="showSection('test')" class="nav-btn text-white hover:text-blue-300 transition-colors duration-300 font-medium">Typing Test</button>
-                <button onclick="showSection('leaderboard')" class="nav-btn text-white hover:text-blue-300 transition-colors duration-300 font-medium">Leaderboard</button>
-                <button onclick="showSection('about')" class="nav-btn text-white hover:text-blue-300 transition-colors duration-300 font-medium">About</button>
+                <button onclick="showSection('home')" class="nav-btn text-primary hover:text-blue-400 transition-colors duration-300 font-medium">Home</button>
+                <button onclick="showSection('test')" class="nav-btn text-primary hover:text-blue-400 transition-colors duration-300 font-medium">Typing Test</button>
+                <button onclick="showSection('leaderboard')" class="nav-btn text-primary hover:text-blue-400 transition-colors duration-300 font-medium">Leaderboard</button>
+                <button onclick="showSection('about')" class="nav-btn text-primary hover:text-blue-400 transition-colors duration-300 font-medium">About</button>
             </div>
         </div>
     </nav>
@@ -116,13 +191,13 @@
         <!-- Hero Section -->
         <div class="container mx-auto px-4 py-16">
             <div class="text-center mb-16">
-                <h1 class="text-6xl font-bold text-white mb-6 animate-float">
+                <h1 class="text-6xl font-bold text-primary mb-6 animate-float">
                     Master Your <span class="text-gradient">Typing Skills</span>
                 </h1>
-                <p class="text-xl text-white/80 mb-8 max-w-3xl mx-auto">
+                <p class="text-xl text-secondary mb-8 max-w-3xl mx-auto">
                     Track Progress, Improve Speed, Build Accuracy - Your journey to typing mastery starts here
                 </p>
-                <button onclick="showSection('test')" class="glassmorphism px-8 py-4 rounded-full text-white font-semibold hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
+                <button onclick="showSection('test')" class="glassmorphism px-8 py-4 rounded-full text-primary font-semibold hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
                     Start Typing Test 🚀
                 </button>
             </div>
@@ -131,18 +206,18 @@
             <div class="grid md:grid-cols-3 gap-8 mb-16">
                 <div class="glassmorphism p-8 rounded-2xl text-center transform hover:scale-105 transition-all duration-300">
                     <div class="text-4xl mb-4">💼</div>
-                    <h3 class="text-xl font-bold text-white mb-4">Career Advancement</h3>
-                    <p class="text-white/70">Boost your productivity and stand out in the digital workplace with superior typing skills</p>
+                    <h3 class="text-xl font-bold text-primary mb-4">Career Advancement</h3>
+                    <p class="text-secondary">Boost your productivity and stand out in the digital workplace with superior typing skills</p>
                 </div>
                 <div class="glassmorphism p-8 rounded-2xl text-center transform hover:scale-105 transition-all duration-300">
                     <div class="text-4xl mb-4">⚡</div>
-                    <h3 class="text-xl font-bold text-white mb-4">Productivity Boost</h3>
-                    <p class="text-white/70">Save hours every day with faster, more accurate typing across all your digital tasks</p>
+                    <h3 class="text-xl font-bold text-primary mb-4">Productivity Boost</h3>
+                    <p class="text-secondary">Save hours every day with faster, more accurate typing across all your digital tasks</p>
                 </div>
                 <div class="glassmorphism p-8 rounded-2xl text-center transform hover:scale-105 transition-all duration-300">
                     <div class="text-4xl mb-4">🎯</div>
-                    <h3 class="text-xl font-bold text-white mb-4">Digital Literacy</h3>
-                    <p class="text-white/70">Build essential 21st-century skills that are crucial in our digital-first world</p>
+                    <h3 class="text-xl font-bold text-primary mb-4">Digital Literacy</h3>
+                    <p class="text-secondary">Build essential 21st-century skills that are crucial in our digital-first world</p>
                 </div>
             </div>
 
@@ -904,8 +979,27 @@
             }
         }
 
+        // Theme functionality
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            document.getElementById('themeIcon').textContent = newTheme === 'light' ? '☀️' : '🌙';
+            
+            // Save theme preference
+            localStorage.setItem('theme', newTheme);
+        }
+
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            document.getElementById('themeIcon').textContent = savedTheme === 'light' ? '☀️' : '🌙';
+        }
+
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
+            initializeTheme();
             showSection('home');
             
             // Add smooth scrolling
@@ -947,5 +1041,5 @@
             }
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'975ff273916b9a7c',t:'MTc1NjM0MzYxNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'975ffd8352b094b4',t:'MTc1NjM0NDA2OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
