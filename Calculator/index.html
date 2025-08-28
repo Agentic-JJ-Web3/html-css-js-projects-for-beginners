@@ -17,6 +17,107 @@
             color: #e0e0e0;
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        /* Light Theme */
+        body.light-theme {
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        body.light-theme header {
+            background: rgba(255, 255, 255, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        body.light-theme .feature-card {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+
+        body.light-theme .calculator-section {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        body.light-theme .calculator {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        body.light-theme .display {
+            background: #f8f9fa;
+            color: #007bff;
+            border: 1px solid #dee2e6;
+        }
+
+        body.light-theme .display-expression {
+            color: #6c757d;
+        }
+
+        body.light-theme .display-result {
+            color: #007bff;
+        }
+
+        body.light-theme .memory-display {
+            background: #e9ecef;
+            color: #fd7e14;
+            border: 1px solid #dee2e6;
+        }
+
+        body.light-theme .btn-number {
+            background: #f8f9fa;
+            color: #333;
+            border: 1px solid #dee2e6;
+        }
+
+        body.light-theme .btn-operator {
+            background: #007bff;
+            border: 1px solid #0056b3;
+        }
+
+        body.light-theme .btn-equals {
+            background: #28a745;
+            border: 1px solid #1e7e34;
+        }
+
+        body.light-theme .btn-clear {
+            background: #dc3545;
+            border: 1px solid #c82333;
+        }
+
+        body.light-theme .btn-memory {
+            background: #6f42c1;
+            border: 1px solid #59359a;
+        }
+
+        body.light-theme .history-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        body.light-theme .history-title {
+            color: #333;
+        }
+
+        body.light-theme .history-item {
+            border-bottom: 1px solid #dee2e6;
+            color: #495057;
+        }
+
+        body.light-theme .history-item:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        body.light-theme .clear-history {
+            background: #6c757d;
+            border: 1px solid #545b62;
+        }
+
+        body.light-theme .shortcuts {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .container {
@@ -48,9 +149,32 @@
             color: white;
         }
 
+        .nav-center {
+            display: flex;
+            gap: 2rem;
+        }
+
         .nav-links {
             display: flex;
             gap: 2rem;
+        }
+
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
 
         .nav-links a {
@@ -392,25 +516,134 @@
         }
 
         /* Responsive Design */
+        @media (max-width: 1024px) {
+            .calculator-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+        }
+
         @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+
             .hero-title {
                 font-size: 2.5rem;
             }
 
-            .calculator-container {
-                grid-template-columns: 1fr;
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .nav-center {
+                display: none;
             }
 
             .nav-links {
                 display: none;
             }
 
+            .home-section {
+                padding: 2rem 0;
+            }
+
+            .calculator-section {
+                padding: 2rem 0;
+            }
+
+            .calculator {
+                padding: 1.5rem;
+            }
+
             .button-grid {
                 grid-template-columns: repeat(4, 1fr);
+                gap: 8px;
+            }
+
+            .btn {
+                padding: 0.8rem;
+                font-size: 1rem;
             }
 
             .btn-memory {
+                font-size: 0.7rem;
+                padding: 0.6rem;
+            }
+
+            .display {
+                font-size: 1.5rem;
+                padding: 1rem;
+                min-height: 80px;
+            }
+
+            .display-result {
+                font-size: 1.8rem;
+            }
+
+            .shortcuts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .calculator {
+                padding: 1rem;
+            }
+
+            .btn {
+                padding: 0.6rem;
+                font-size: 0.9rem;
+            }
+
+            .btn-memory {
+                font-size: 0.6rem;
+                padding: 0.5rem;
+            }
+
+            .display {
+                font-size: 1.2rem;
+                padding: 0.8rem;
+            }
+
+            .display-result {
+                font-size: 1.5rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-card {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .button-grid {
+                gap: 6px;
+            }
+
+            .btn {
+                padding: 0.5rem;
                 font-size: 0.8rem;
+            }
+
+            .btn-memory {
+                font-size: 0.5rem;
             }
         }
     </style>
@@ -419,11 +652,17 @@
     <header>
         <nav class="container">
             <div class="logo">🧮 JJSolve</div>
-            <div class="nav-links">
-                <a href="#home">Home</a>
-                <a href="#calculator">Calculator</a>
-                <a href="#about">About</a>
+            <div class="nav-center">
+                <div class="nav-links">
+                    <a href="#home">Home</a>
+                    <a href="#calculator">Calculator</a>
+                    <a href="#about">About</a>
+                </div>
             </div>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <span id="themeIcon">🌙</span>
+                <span id="themeText">Dark</span>
+            </button>
         </nav>
     </header>
 
@@ -463,7 +702,10 @@
                 <div class="calculator-container">
                     <div class="calculator">
                         <div class="memory-display" id="memoryDisplay">Memory: 0</div>
-                        <div class="display" id="display">0</div>
+                        <div class="display" id="display">
+                            <div class="display-expression" id="displayExpression"></div>
+                            <div class="display-result" id="displayResult">0</div>
+                        </div>
                         
                         <div class="button-grid">
                             <!-- Memory Functions -->
@@ -510,6 +752,45 @@
                             <div class="history-item">Welcome! Start calculating...</div>
                         </div>
                         <button class="clear-history" onclick="clearHistory()">Clear History</button>
+                    </div>
+                </div>
+
+                <!-- Mini Guide Section -->
+                <div class="shortcuts">
+                    <h3 class="shortcuts-title">📖 Basic Functions Guide</h3>
+                    <div class="shortcuts-grid">
+                        <div class="shortcut-item">
+                            <span><strong>AC (All Clear)</strong></span>
+                            <span>Resets calculator completely</span>
+                        </div>
+                        <div class="shortcut-item">
+                            <span><strong>CE (Clear Entry)</strong></span>
+                            <span>Clears current number only</span>
+                        </div>
+                        <div class="shortcut-item">
+                            <span><strong>⌫ (Backspace)</strong></span>
+                            <span>Deletes last digit entered</span>
+                        </div>
+                        <div class="shortcut-item">
+                            <span><strong>MC (Memory Clear)</strong></span>
+                            <span>Clears stored memory value</span>
+                        </div>
+                        <div class="shortcut-item">
+                            <span><strong>MR (Memory Recall)</strong></span>
+                            <span>Shows stored memory value</span>
+                        </div>
+                        <div class="shortcut-item">
+                            <span><strong>M+ (Memory Add)</strong></span>
+                            <span>Adds current number to memory</span>
+                        </div>
+                        <div class="shortcut-item">
+                            <span><strong>M- (Memory Subtract)</strong></span>
+                            <span>Subtracts current number from memory</span>
+                        </div>
+                        <div class="shortcut-item">
+                            <span><strong>% (Percentage)</strong></span>
+                            <span>Calculates percentage of first number</span>
+                        </div>
                     </div>
                 </div>
 
@@ -589,7 +870,8 @@
     </footer>
 
     <script>
-        let display = document.getElementById('display');
+        let displayExpression = document.getElementById('displayExpression');
+        let displayResult = document.getElementById('displayResult');
         let memoryDisplay = document.getElementById('memoryDisplay');
         let historyList = document.getElementById('historyList');
         
@@ -599,9 +881,47 @@
         let waitingForOperand = false;
         let memory = 0;
         let history = [];
+        let expression = '';
+
+        // Theme functionality
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.getElementById('themeIcon');
+            const themeText = document.getElementById('themeText');
+            
+            body.classList.toggle('light-theme');
+            
+            if (body.classList.contains('light-theme')) {
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Light';
+                localStorage.setItem('theme', 'light');
+            } else {
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Dark';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Load saved theme
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const body = document.body;
+            const themeIcon = document.getElementById('themeIcon');
+            const themeText = document.getElementById('themeText');
+            
+            if (savedTheme === 'light') {
+                body.classList.add('light-theme');
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Light';
+            } else {
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Dark';
+            }
+        }
 
         function updateDisplay() {
-            display.textContent = formatNumber(currentInput);
+            displayResult.textContent = formatNumber(currentInput);
+            displayExpression.textContent = expression;
         }
 
         function updateMemoryDisplay() {
@@ -640,18 +960,21 @@
 
             if (previousInput === null) {
                 previousInput = inputValue;
+                expression = formatNumber(inputValue) + ' ' + getOperatorSymbol(nextOperator) + ' ';
             } else if (operator) {
                 const currentValue = previousInput || 0;
                 const newValue = performCalculation(currentValue, inputValue, operator);
 
                 if (newValue === 'Error') {
                     currentInput = 'Error';
+                    expression = 'Error';
                     updateDisplay();
                     return;
                 }
 
                 currentInput = String(newValue);
                 previousInput = newValue;
+                expression = formatNumber(newValue) + ' ' + getOperatorSymbol(nextOperator) + ' ';
                 updateDisplay();
             }
 
@@ -668,6 +991,7 @@
 
                 if (newValue === 'Error') {
                     currentInput = 'Error';
+                    expression = 'Error';
                     updateDisplay();
                     return;
                 }
@@ -677,6 +1001,7 @@
                 addToHistory(calculation);
 
                 currentInput = String(newValue);
+                expression = '';
                 previousInput = null;
                 operator = null;
                 waitingForOperand = true;
@@ -722,6 +1047,7 @@
 
         function clearAll() {
             currentInput = '0';
+            expression = '';
             previousInput = null;
             operator = null;
             waitingForOperand = false;
@@ -819,6 +1145,7 @@
         });
 
         // Initialize
+        loadTheme();
         updateDisplay();
         updateMemoryDisplay();
         updateHistoryDisplay();
@@ -837,5 +1164,5 @@
             });
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'975f7534e32a9563',t:'MTc1NjMzODQ4Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'975f82919647ef3b',t:'MTc1NjMzOTAzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
