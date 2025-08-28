@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alex Chen - Building Things & Making Stuff</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --accent-primary: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --shadow-light: rgba(0, 0, 0, 0.05);
+            --shadow-medium: rgba(0, 0, 0, 0.1);
+            --shadow-heavy: rgba(0, 0, 0, 0.15);
+        }
+        
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --accent-primary: #818cf8;
+            --accent-secondary: #a78bfa;
+            --shadow-light: rgba(0, 0, 0, 0.2);
+            --shadow-medium: rgba(0, 0, 0, 0.3);
+            --shadow-heavy: rgba(0, 0, 0, 0.4);
+        }
+        
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        
+        .aurora-bg {
+            background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe, #00f2fe);
+            background-size: 400% 400%;
+            animation: aurora 15s ease infinite;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .aurora-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+            animation: aurora-overlay 20s ease infinite;
+        }
+        
+        @keyframes aurora {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes aurora-overlay {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        .hero-text {
+            animation: heroFloat 6s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+        }
+        
+        @keyframes heroFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        [data-theme="dark"] .card-hover {
+            background: rgba(30, 41, 59, 0.9);
+            border: 1px solid rgba(51, 65, 85, 0.3);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 25px 50px var(--shadow-medium);
+        }
+        
+        .skill-tag {
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+        
+        .skill-tag:hover {
+            transform: scale(1.1) rotate(2deg);
+            box-shadow: 0 8px 25px var(--shadow-light);
+        }
+        
+        .smooth-scroll {
+            scroll-behavior: smooth;
+        }
+        
+        .project-card {
+            opacity: 1;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .project-card.hidden {
+            opacity: 0;
+            transform: scale(0.8) translateY(20px);
+            pointer-events: none;
+        }
+        
+        .filter-btn {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .filter-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .filter-btn:hover::before {
+            left: 100%;
+        }
+        
+        .filter-btn.active {
+            background: var(--accent-primary);
+            color: white;
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+        }
+        
+        .glass-nav {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        [data-theme="dark"] .glass-nav {
+            background: rgba(15, 23, 42, 0.8);
+            border-bottom: 1px solid rgba(51, 65, 85, 0.3);
+        }
+        
+        .theme-toggle {
+            width: 60px;
+            height: 30px;
+            background: var(--bg-tertiary);
+            border-radius: 15px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid var(--border-color);
+        }
+        
+        .theme-toggle::before {
+            content: '🌙';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 22px;
+            height: 22px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        [data-theme="dark"] .theme-toggle::before {
+            content: '☀️';
+            transform: translateX(30px);
+        }
+        
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .floating-elements::before,
+        .floating-elements::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+        
+        .floating-elements::before {
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .floating-elements::after {
+            top: 60%;
+            right: 10%;
+            animation-delay: -10s;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+            100% { transform: translateY(0px) rotate(360deg); }
+        }
+        
+        .glow-button {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .glow-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .glow-button:hover::before {
+            left: 100%;
+        }
+        
+        .section-bg {
+            background: var(--bg-secondary);
+        }
+        
+        .card-bg {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+        }
+        
+        .text-primary { color: var(--text-primary); }
+        .text-secondary { color: var(--text-secondary); }
+        .text-muted { color: var(--text-muted); }
+    </style>
+</head>
+<body class="bg-gray-50 smooth-scroll">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full glass-nav z-50">
+        <div class="max-w-6xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="text-xl font-semibold text-primary">Alex Chen</div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="text-secondary hover:text-primary transition-colors">Home</a>
+                    <a href="#about" class="text-secondary hover:text-primary transition-colors">About</a>
+                    <a href="#philosophy" class="text-secondary hover:text-primary transition-colors">Philosophy</a>
+                    <a href="#skills" class="text-secondary hover:text-primary transition-colors">Skills</a>
+                    <a href="#projects" class="text-secondary hover:text-primary transition-colors">Projects</a>
+                    <a href="#contact" class="text-secondary hover:text-primary transition-colors">Contact</a>
+                    <div class="theme-toggle" id="theme-toggle"></div>
+                </div>
+                <div class="flex items-center space-x-4 md:hidden">
+                    <div class="theme-toggle" id="theme-toggle-mobile"></div>
+                    <button id="mobile-menu-btn" class="p-2 text-primary">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="fixed inset-0 glass-nav z-40 transform translate-x-full transition-transform md:hidden">
+        <div class="flex flex-col items-center justify-center h-full space-y-8 text-xl">
+            <a href="#home" class="mobile-link text-primary hover:text-accent-primary transition-colors">Home</a>
+            <a href="#about" class="mobile-link text-primary hover:text-accent-primary transition-colors">About</a>
+            <a href="#philosophy" class="mobile-link text-primary hover:text-accent-primary transition-colors">Philosophy</a>
+            <a href="#skills" class="mobile-link text-primary hover:text-accent-primary transition-colors">Skills</a>
+            <a href="#projects" class="mobile-link text-primary hover:text-accent-primary transition-colors">Projects</a>
+            <a href="#contact" class="mobile-link text-primary hover:text-accent-primary transition-colors">Contact</a>
+        </div>
+    </div>
+
+    <!-- Home Section -->
+    <section id="home" class="min-h-screen flex items-center aurora-bg relative">
+        <div class="floating-elements"></div>
+        <div class="max-w-6xl mx-auto px-6 py-20 relative z-10">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="text-white scroll-reveal">
+                    <h1 class="hero-text text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                        Hey there! I'm Alex 👋
+                    </h1>
+                    <p class="text-xl md:text-2xl mb-8 text-white/90 leading-relaxed">
+                        I build things, create stuff, and generally try to make the internet a little more interesting. 
+                        Currently obsessed with clean code and good coffee ☕
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#projects" class="glow-button bg-white/20 backdrop-blur-sm text-white px-8 py-4 rounded-2xl font-semibold hover:bg-white/30 transition-all border border-white/30">
+                            See My Work
+                        </a>
+                        <a href="#contact" class="glow-button border-2 border-white/50 text-white px-8 py-4 rounded-2xl font-semibold hover:bg-white/20 backdrop-blur-sm transition-all">
+                            Let's Chat
+                        </a>
+                    </div>
+                </div>
+                <div class="flex justify-center scroll-reveal">
+                    <div class="w-80 h-80 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/20 card-hover">
+                        <div class="text-8xl animate-pulse">🚀</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 section-bg min-h-screen flex items-center">
+        <div class="max-w-6xl mx-auto px-6 w-full">
+            <h2 class="scroll-reveal text-4xl md:text-5xl font-bold text-center mb-20 text-primary">Who I Actually Am</h2>
+            
+            <div class="grid lg:grid-cols-2 gap-16 items-start max-w-5xl mx-auto">
+                <div class="scroll-reveal card-hover p-8 rounded-2xl">
+                    <h3 class="text-2xl font-semibold mb-6 text-primary flex items-center">
+                        <span class="text-3xl mr-3">📖</span>
+                        The Real Story
+                    </h3>
+                    <div class="space-y-5 text-secondary leading-relaxed">
+                        <p>
+                            Started coding because I wanted to build a website for my band (spoiler: the band didn't make it, but I fell in love with development). 
+                            Three years later, I'm still here, still learning, and definitely still drinking too much coffee.
+                        </p>
+                        <p>
+                            I genuinely love solving problems and building things that people actually want to use. 
+                            There's something magical about turning an idea into something real that lives on the internet.
+                        </p>
+                        <p>
+                            When I'm not coding, you'll find me hiking, trying new coffee shops, or getting way too invested in sci-fi novels.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="scroll-reveal card-hover p-8 rounded-2xl">
+                    <h3 class="text-2xl font-semibold mb-6 text-primary flex items-center">
+                        <span class="text-3xl mr-3">💭</span>
+                        What I Love & Hate
+                    </h3>
+                    
+                    <div class="mb-8">
+                        <h4 class="text-lg font-medium mb-4 text-green-500 flex items-center">
+                            <span class="text-xl mr-2">❤️</span>
+                            Love
+                        </h4>
+                        <ul class="space-y-3 text-secondary">
+                            <li class="flex items-start">
+                                <span class="text-green-400 mr-3 mt-1">•</span>
+                                Clean, readable code that makes sense
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-green-400 mr-3 mt-1">•</span>
+                                Projects that solve real problems
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-green-400 mr-3 mt-1">•</span>
+                                Learning new technologies (currently obsessing over React)
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-green-400 mr-3 mt-1">•</span>
+                                Good design that doesn't try too hard
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-green-400 mr-3 mt-1">•</span>
+                                Honest feedback and genuine collaboration
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-lg font-medium mb-4 text-red-500 flex items-center">
+                            <span class="text-xl mr-2">😤</span>
+                            Not a Fan Of
+                        </h4>
+                        <ul class="space-y-3 text-secondary">
+                            <li class="flex items-start">
+                                <span class="text-red-400 mr-3 mt-1">•</span>
+                                Fake networking events with forced small talk
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-red-400 mr-3 mt-1">•</span>
+                                Code that works but nobody knows why
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-red-400 mr-3 mt-1">•</span>
+                                "Synergy" and other corporate buzzwords
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-red-400 mr-3 mt-1">•</span>
+                                Meetings that could've been emails
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-red-400 mr-3 mt-1">•</span>
+                                Websites that take forever to load
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Philosophy Section -->
+    <section id="philosophy" class="py-24 card-bg min-h-screen flex items-center">
+        <div class="max-w-4xl mx-auto px-6 w-full">
+            <h2 class="scroll-reveal text-4xl md:text-5xl font-bold text-center mb-20 text-primary">What I Actually Believe</h2>
+            
+            <div class="space-y-16">
+                <!-- Open Source Advocacy -->
+                <div class="scroll-reveal card-hover p-10 rounded-2xl text-center">
+                    <div class="text-6xl mb-6">🌍</div>
+                    <h3 class="text-2xl font-semibold mb-6 text-primary">Open Source Advocate</h3>
+                    <p class="text-lg text-secondary leading-relaxed max-w-3xl mx-auto">
+                        I'm a huge believer in open source. There's something beautiful about building things together, 
+                        sharing knowledge freely, and making technology accessible to everyone. The best innovations 
+                        happen when brilliant minds collaborate without barriers.
+                    </p>
+                </div>
+
+                <!-- Real Talent Philosophy -->
+                <div class="scroll-reveal card-hover p-10 rounded-2xl text-center">
+                    <div class="text-6xl mb-6">💎</div>
+                    <h3 class="text-2xl font-semibold mb-6 text-primary">The Real Talents Are Unseen</h3>
+                    <p class="text-lg text-secondary leading-relaxed max-w-3xl mx-auto mb-6">
+                        Here's what I've learned: the most talented people rarely brag about it. They're too busy 
+                        actually building things, solving problems, and helping others. While some people are busy 
+                        talking about what they can do, the real talents are quietly doing incredible work.
+                    </p>
+                    <p class="text-lg text-secondary leading-relaxed max-w-3xl mx-auto">
+                        They contribute to open source projects without expecting credit. They answer questions on forums 
+                        at 2 AM. They write documentation that saves thousands of hours for other developers. 
+                        These are the people who truly move the industry forward.
+                    </p>
+                </div>
+
+                <!-- The Awkward Truth -->
+                <div class="scroll-reveal card-hover p-10 rounded-2xl text-center border-2 border-dashed border-gray-300">
+                    <div class="text-6xl mb-6">🤝</div>
+                    <h3 class="text-2xl font-semibold mb-6 text-primary">The Awkward Truth</h3>
+                    <p class="text-lg text-secondary leading-relaxed max-w-3xl mx-auto mb-4">
+                        Okay, this might sound weird, but... I genuinely wish I could work with more of these 
+                        "invisible" talented people. You know, the ones who don't have flashy portfolios or 
+                        thousands of followers, but who write the most elegant code you've ever seen.
+                    </p>
+                    <p class="text-lg text-secondary leading-relaxed max-w-3xl mx-auto">
+                        If you're reading this and you're one of those people who just quietly builds amazing things 
+                        without making a big deal about it... hi! Let's chat. I promise I won't ask you to 
+                        "leverage synergies" or "disrupt the paradigm." ✨
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-20 section-bg">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="scroll-reveal text-4xl font-bold text-center mb-16 text-primary">What I'm Good At</h2>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Web Development -->
+                <div class="scroll-reveal card-hover p-8 rounded-2xl">
+                    <div class="text-4xl mb-4">💻</div>
+                    <h3 class="text-xl font-semibold mb-4 text-primary">Web Development</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="skill-tag bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">JavaScript</span>
+                        <span class="skill-tag bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">React</span>
+                        <span class="skill-tag bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">Node.js</span>
+                        <span class="skill-tag bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">HTML/CSS</span>
+                        <span class="skill-tag bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">Tailwind</span>
+                        <span class="skill-tag bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">Git</span>
+                    </div>
+                    <p class="text-secondary mt-4 text-sm">Pretty solid with these. Still learning every day though!</p>
+                </div>
+
+                <!-- Design -->
+                <div class="scroll-reveal card-hover p-8 rounded-2xl">
+                    <div class="text-4xl mb-4">🎨</div>
+                    <h3 class="text-xl font-semibold mb-4 text-primary">Design & Creative</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="skill-tag bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">Figma</span>
+                        <span class="skill-tag bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">Photoshop</span>
+                        <span class="skill-tag bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">UI/UX</span>
+                        <span class="skill-tag bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">Branding</span>
+                        <span class="skill-tag bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">Typography</span>
+                    </div>
+                    <p class="text-secondary mt-4 text-sm">Good eye for design, but I know when to call in the pros!</p>
+                </div>
+
+                <!-- Content -->
+                <div class="scroll-reveal card-hover p-8 rounded-2xl">
+                    <div class="text-4xl mb-4">✍️</div>
+                    <h3 class="text-xl font-semibold mb-4 text-primary">Content & Communication</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="skill-tag bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">Technical Writing</span>
+                        <span class="skill-tag bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">Documentation</span>
+                        <span class="skill-tag bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">Social Media</span>
+                        <span class="skill-tag bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">Blogging</span>
+                    </div>
+                    <p class="text-secondary mt-4 text-sm">I can explain complex stuff in simple terms (most of the time).</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-20 section-bg">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="scroll-reveal text-4xl font-bold text-center mb-8 text-primary">Stuff I've Built</h2>
+            <p class="scroll-reveal text-center text-secondary mb-12 max-w-2xl mx-auto">
+                Here's some of the work I'm actually proud of. Each project taught me something new, 
+                and a few of them even work exactly as intended!
+            </p>
+
+            <!-- Filter Buttons -->
+            <div class="scroll-reveal flex flex-wrap justify-center gap-4 mb-12">
+                <button class="filter-btn active px-6 py-3 rounded-full border border-gray-300 text-secondary hover:bg-gray-100 transition-colors" data-filter="all">
+                    All Projects
+                </button>
+                <button class="filter-btn px-6 py-3 rounded-full border border-gray-300 text-secondary hover:bg-gray-100 transition-colors" data-filter="web">
+                    Web Development
+                </button>
+                <button class="filter-btn px-6 py-3 rounded-full border border-gray-300 text-secondary hover:bg-gray-100 transition-colors" data-filter="design">
+                    Design
+                </button>
+                <button class="filter-btn px-6 py-3 rounded-full border border-gray-300 text-secondary hover:bg-gray-100 transition-colors" data-filter="content">
+                    Content
+                </button>
+            </div>
+
+            <!-- Projects Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Project 1 -->
+                <div class="project-card card-hover rounded-2xl overflow-hidden" data-category="web">
+                    <div class="h-48 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+                        <div class="text-white text-6xl">🌟</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2 text-primary">Task Manager App</h3>
+                        <p class="text-secondary mb-4">
+                            A clean, simple to-do app that actually helps you get things done. Built because I was tired of overcomplicated task managers.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">React</span>
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">Local Storage</span>
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">CSS Grid</span>
+                        </div>
+                        <div class="flex gap-3">
+                            <a href="#" class="glow-button text-blue-600 hover:text-blue-800 font-medium text-sm">Live Demo</a>
+                            <a href="#" class="glow-button text-secondary hover:text-primary font-medium text-sm">GitHub</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="project-card card-hover rounded-2xl overflow-hidden" data-category="web">
+                    <div class="h-48 bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
+                        <div class="text-white text-6xl">☕</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2 text-primary">Coffee Shop Finder</h3>
+                        <p class="text-secondary mb-4">
+                            Find great coffee shops near you. Started as a personal project because I move around a lot and need my caffeine fix.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">JavaScript</span>
+                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">Maps API</span>
+                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">Responsive</span>
+                        </div>
+                        <div class="flex gap-3">
+                            <a href="#" class="glow-button text-blue-600 hover:text-blue-800 font-medium text-sm">Live Demo</a>
+                            <a href="#" class="glow-button text-secondary hover:text-primary font-medium text-sm">GitHub</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="project-card card-hover rounded-2xl overflow-hidden" data-category="design">
+                    <div class="h-48 bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center">
+                        <div class="text-white text-6xl">🎨</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2 text-primary">Local Band Branding</h3>
+                        <p class="text-secondary mb-4">
+                            Complete visual identity for a local indie band. Logo, posters, social media templates - the whole package.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">Figma</span>
+                            <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">Branding</span>
+                            <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">Print Design</span>
+                        </div>
+                        <div class="flex gap-3">
+                            <a href="#" class="glow-button text-blue-600 hover:text-blue-800 font-medium text-sm">View Project</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 4 -->
+                <div class="project-card card-hover rounded-2xl overflow-hidden" data-category="web">
+                    <div class="h-48 bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center">
+                        <div class="text-white text-6xl">📊</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2 text-primary">Expense Tracker</h3>
+                        <p class="text-secondary mb-4">
+                            Simple expense tracking with charts and categories. Built to help me figure out where all my money goes (spoiler: coffee).
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs">React</span>
+                            <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs">Chart.js</span>
+                            <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs">Firebase</span>
+                        </div>
+                        <div class="flex gap-3">
+                            <a href="#" class="glow-button text-blue-600 hover:text-blue-800 font-medium text-sm">Live Demo</a>
+                            <a href="#" class="glow-button text-secondary hover:text-primary font-medium text-sm">GitHub</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 5 -->
+                <div class="project-card card-hover rounded-2xl overflow-hidden" data-category="content">
+                    <div class="h-48 bg-gradient-to-br from-teal-400 to-blue-500 flex items-center justify-center">
+                        <div class="text-white text-6xl">📝</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2 text-primary">Tech Blog</h3>
+                        <p class="text-secondary mb-4">
+                            Writing about web development, productivity tips, and the occasional coffee review. Surprisingly therapeutic.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-teal-100 text-teal-800 px-2 py-1 rounded text-xs">Technical Writing</span>
+                            <span class="bg-teal-100 text-teal-800 px-2 py-1 rounded text-xs">SEO</span>
+                            <span class="bg-teal-100 text-teal-800 px-2 py-1 rounded text-xs">Content Strategy</span>
+                        </div>
+                        <div class="flex gap-3">
+                            <a href="#" class="glow-button text-blue-600 hover:text-blue-800 font-medium text-sm">Read Blog</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 6 -->
+                <div class="project-card card-hover rounded-2xl overflow-hidden" data-category="design">
+                    <div class="h-48 bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center">
+                        <div class="text-white text-6xl">📱</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2 text-primary">Mobile App Mockups</h3>
+                        <p class="text-secondary mb-4">
+                            UI/UX design for a fitness tracking app. Clean, motivating interface that doesn't make you feel guilty about skipping the gym.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-indigo-100 text-indigo-800 px-2 py-1 rounded text-xs">Figma</span>
+                            <span class="bg-indigo-100 text-indigo-800 px-2 py-1 rounded text-xs">UI/UX</span>
+                            <span class="bg-indigo-100 text-indigo-800 px-2 py-1 rounded text-xs">Prototyping</span>
+                        </div>
+                        <div class="flex gap-3">
+                            <a href="#" class="glow-button text-blue-600 hover:text-blue-800 font-medium text-sm">View Design</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 card-bg">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h2 class="scroll-reveal text-4xl font-bold mb-8 text-primary">Let's Build Something Together</h2>
+            <p class="scroll-reveal text-xl text-secondary mb-12 max-w-2xl mx-auto">
+                Got a project in mind? Want to chat about code, coffee, or life in general? 
+                I'm always up for a good conversation. No corporate speak required!
+            </p>
+
+            <div class="grid md:grid-cols-3 gap-8 mb-12">
+                <div class="scroll-reveal card-hover p-6 rounded-2xl">
+                    <div class="text-3xl mb-4">📧</div>
+                    <h3 class="font-semibold mb-2 text-primary">Email</h3>
+                    <a href="mailto:alex@example.com" class="glow-button text-blue-600 hover:text-blue-800">alex@example.com</a>
+                </div>
+                
+                <div class="scroll-reveal card-hover p-6 rounded-2xl">
+                    <div class="text-3xl mb-4">💼</div>
+                    <h3 class="font-semibold mb-2 text-primary">LinkedIn</h3>
+                    <a href="#" class="glow-button text-blue-600 hover:text-blue-800">Connect with me</a>
+                </div>
+                
+                <div class="scroll-reveal card-hover p-6 rounded-2xl">
+                    <div class="text-3xl mb-4">🐙</div>
+                    <h3 class="font-semibold mb-2 text-primary">GitHub</h3>
+                    <a href="#" class="glow-button text-blue-600 hover:text-blue-800">Check out my code</a>
+                </div>
+            </div>
+
+            <div class="scroll-reveal card-hover p-8 rounded-2xl max-w-2xl mx-auto">
+                <h3 class="text-xl font-semibold mb-6 text-primary">Quick Message</h3>
+                <form class="space-y-4">
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <input type="text" placeholder="Your Name" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-transparent text-primary">
+                        <input type="email" placeholder="Your Email" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-transparent text-primary">
+                    </div>
+                    <textarea placeholder="What's on your mind?" rows="4" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-transparent text-primary"></textarea>
+                    <button type="submit" class="glow-button w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                        Send Message
+                    </button>
+                </form>
+                <p class="text-sm text-muted mt-4">
+                    <strong>Demo Note:</strong> This is a sample contact form. In a real portfolio, this would connect to a backend service to actually send emails.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-900/20 to-purple-900/20"></div>
+        <div class="max-w-6xl mx-auto px-6 text-center relative z-10">
+            <div class="mb-8">
+                <h3 class="text-2xl font-semibold mb-4">Alex Chen</h3>
+                <p class="text-gray-300 max-w-md mx-auto">
+                    Building things, creating stuff, and making the internet a little more interesting, one project at a time.
+                </p>
+            </div>
+            
+            <div class="flex justify-center space-x-6 mb-8">
+                <a href="#" class="glow-button text-gray-300 hover:text-white transition-colors">GitHub</a>
+                <a href="#" class="glow-button text-gray-300 hover:text-white transition-colors">LinkedIn</a>
+                <a href="#" class="glow-button text-gray-300 hover:text-white transition-colors">Twitter</a>
+                <a href="#" class="glow-button text-gray-300 hover:text-white transition-colors">Blog</a>
+            </div>
+            
+            <div class="border-t border-gray-700 pt-8">
+                <p class="text-gray-400 text-sm">
+                    © 2024 Alex Chen. Made with ☕ and probably too much attention to detail.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeToggleMobile = document.getElementById('theme-toggle-mobile');
+        const html = document.documentElement;
+
+        function toggleTheme() {
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Initialize theme from localStorage
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            html.setAttribute('data-theme', 'dark');
+        }
+
+        themeToggle.addEventListener('click', toggleTheme);
+        themeToggleMobile.addEventListener('click', toggleTheme);
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('translate-x-full');
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('translate-x-full');
+            });
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Scroll reveal animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.scroll-reveal').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Project filtering
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const projectCards = document.querySelectorAll('.project-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Update active button
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const filter = btn.getAttribute('data-filter');
+
+                // Filter projects with stagger effect
+                projectCards.forEach((card, index) => {
+                    const category = card.getAttribute('data-category');
+                    
+                    setTimeout(() => {
+                        if (filter === 'all' || category === filter) {
+                            card.classList.remove('hidden');
+                        } else {
+                            card.classList.add('hidden');
+                        }
+                    }, index * 50);
+                });
+            });
+        });
+
+        // Form submission (demo)
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thanks for the message! In a real portfolio, this would actually send an email. 😊');
+        });
+
+        // Add scroll effect to navigation
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 100) {
+                nav.classList.add('shadow-lg');
+            } else {
+                nav.classList.remove('shadow-lg');
+            }
+        });
+
+        // Parallax effect for hero section
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.aurora-bg');
+            const speed = scrolled * 0.5;
+            
+            if (parallax) {
+                parallax.style.transform = `translateY(${speed}px)`;
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'973a993992affd7e',t:'MTc1NTk1MTk4OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
