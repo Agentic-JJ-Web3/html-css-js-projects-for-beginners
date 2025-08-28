@@ -72,6 +72,71 @@
             --text-muted: rgba(100, 116, 139, 0.7);
         }
 
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            
+            .text-6xl {
+                font-size: 2.5rem;
+            }
+            
+            .text-4xl {
+                font-size: 2rem;
+            }
+            
+            .text-3xl {
+                font-size: 1.5rem;
+            }
+            
+            .grid-cols-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .md\\:grid-cols-3 {
+                grid-template-columns: 1fr;
+            }
+            
+            .md\\:grid-cols-2 {
+                grid-template-columns: 1fr;
+            }
+            
+            .lg\\:grid-cols-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .grid-cols-4 {
+                grid-template-columns: 1fr;
+            }
+            
+            .flex-wrap {
+                flex-direction: column;
+            }
+            
+            .space-x-4 > * + * {
+                margin-left: 0;
+                margin-top: 0.5rem;
+            }
+            
+            .text-xl {
+                font-size: 1.125rem;
+            }
+            
+            .px-8 {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            
+            .py-16 {
+                padding-top: 2rem;
+                padding-bottom: 2rem;
+            }
+        }
+
         .glassmorphism {
             background: var(--bg-glass);
             backdrop-filter: blur(20px);
@@ -153,21 +218,21 @@
     <!-- Open Source Header -->
     <header class="glassmorphism border-b border-white/20 sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3">
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between flex-wrap gap-2">
                 <div class="flex items-center space-x-3">
                     <div class="text-2xl">⚡</div>
                     <h1 class="text-xl font-bold text-white">TypingMaster Pro</h1>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <span class="text-secondary text-sm">🚀 Open Source Project by JJ</span>
+                <div class="flex items-center space-x-2 md:space-x-4 flex-wrap">
+                    <span class="text-secondary text-xs md:text-sm hidden sm:block">🚀 Open Source Project by JJ</span>
                     <button onclick="toggleTheme()" class="theme-toggle px-3 py-2 rounded-full transition-all duration-300 flex items-center space-x-2">
                         <span id="themeIcon">🌙</span>
                     </button>
                     <a href="https://github.com/Agentic-JJ-Web3/html-css-js-projects-for-beginners" 
                        target="_blank" 
-                       class="glassmorphism px-4 py-2 rounded-full text-primary hover:bg-white/20 transition-all duration-300 flex items-center space-x-2">
+                       class="glassmorphism px-3 md:px-4 py-2 rounded-full text-primary hover:bg-white/20 transition-all duration-300 flex items-center space-x-2">
                         <span>⭐</span>
-                        <span>Star on GitHub</span>
+                        <span class="hidden sm:inline">Star on GitHub</span>
                     </a>
                 </div>
             </div>
@@ -177,11 +242,11 @@
     <!-- Navigation -->
     <nav class="glassmorphism border-b border-white/10">
         <div class="container mx-auto px-4">
-            <div class="flex space-x-8 py-4">
-                <button onclick="showSection('home')" class="nav-btn text-primary hover:text-blue-400 transition-colors duration-300 font-medium">Home</button>
-                <button onclick="showSection('test')" class="nav-btn text-primary hover:text-blue-400 transition-colors duration-300 font-medium">Typing Test</button>
-                <button onclick="showSection('leaderboard')" class="nav-btn text-primary hover:text-blue-400 transition-colors duration-300 font-medium">Leaderboard</button>
-                <button onclick="showSection('about')" class="nav-btn text-primary hover:text-blue-400 transition-colors duration-300 font-medium">About</button>
+            <div class="flex flex-wrap justify-center sm:justify-start space-x-4 sm:space-x-8 py-4">
+                <button onclick="showSection('home')" class="nav-btn text-primary hover:text-blue-400 transition-colors duration-300 font-medium text-sm sm:text-base">Home</button>
+                <button onclick="showSection('test')" class="nav-btn text-primary hover:text-blue-400 transition-colors duration-300 font-medium text-sm sm:text-base">Test</button>
+                <button onclick="showSection('leaderboard')" class="nav-btn text-primary hover:text-blue-400 transition-colors duration-300 font-medium text-sm sm:text-base">Leaderboard</button>
+                <button onclick="showSection('about')" class="nav-btn text-primary hover:text-blue-400 transition-colors duration-300 font-medium text-sm sm:text-base">About</button>
             </div>
         </div>
     </nav>
@@ -294,35 +359,35 @@
     <section id="test" class="section-content hidden">
         <div class="container mx-auto px-4 py-8">
             <!-- Test Configuration -->
-            <div class="glassmorphism p-6 rounded-2xl mb-8">
-                <div class="grid md:grid-cols-4 gap-4">
+            <div class="glassmorphism p-4 sm:p-6 rounded-2xl mb-8">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div>
-                        <label class="block text-white font-semibold mb-2">Duration</label>
-                        <select id="duration" class="w-full p-3 rounded-lg bg-white/10 text-white border border-white/20 focus:border-blue-400 focus:outline-none">
+                        <label class="block text-white font-semibold mb-2 text-sm sm:text-base">Duration</label>
+                        <select id="duration" class="w-full p-3 rounded-lg bg-white/10 text-white border border-white/20 focus:border-blue-400 focus:outline-none text-sm sm:text-base">
                             <option value="30">30 seconds</option>
                             <option value="60" selected>60 seconds</option>
                             <option value="120">120 seconds</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-white font-semibold mb-2">Difficulty</label>
-                        <select id="difficulty" class="w-full p-3 rounded-lg bg-white/10 text-white border border-white/20 focus:border-blue-400 focus:outline-none">
+                        <label class="block text-white font-semibold mb-2 text-sm sm:text-base">Difficulty</label>
+                        <select id="difficulty" class="w-full p-3 rounded-lg bg-white/10 text-white border border-white/20 focus:border-blue-400 focus:outline-none text-sm sm:text-base">
                             <option value="beginner">Beginner</option>
                             <option value="intermediate" selected>Intermediate</option>
                             <option value="advanced">Advanced</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-white font-semibold mb-2">Category</label>
-                        <select id="category" class="w-full p-3 rounded-lg bg-white/10 text-white border border-white/20 focus:border-blue-400 focus:outline-none">
+                        <label class="block text-white font-semibold mb-2 text-sm sm:text-base">Category</label>
+                        <select id="category" class="w-full p-3 rounded-lg bg-white/10 text-white border border-white/20 focus:border-blue-400 focus:outline-none text-sm sm:text-base">
                             <option value="quotes" selected>Quotes</option>
                             <option value="literature">Literature</option>
                             <option value="news">News</option>
                             <option value="programming">Programming</option>
                         </select>
                     </div>
-                    <div class="flex items-end">
-                        <button id="startBtn" onclick="startTest()" class="w-full glassmorphism px-6 py-3 rounded-lg text-white font-semibold hover:bg-white/20 transition-all duration-300">
+                    <div class="flex items-end sm:col-span-2 lg:col-span-1">
+                        <button id="startBtn" onclick="startTest()" class="w-full glassmorphism px-6 py-3 rounded-lg text-white font-semibold hover:bg-white/20 transition-all duration-300 text-sm sm:text-base">
                             Start Test
                         </button>
                     </div>
@@ -330,22 +395,22 @@
             </div>
 
             <!-- Stats Display -->
-            <div class="grid md:grid-cols-4 gap-4 mb-8">
-                <div class="glassmorphism p-6 rounded-2xl text-center">
-                    <div class="text-3xl font-bold text-blue-400" id="wpmDisplay">0</div>
-                    <div class="text-white/70">WPM</div>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <div class="glassmorphism p-4 sm:p-6 rounded-2xl text-center">
+                    <div class="text-2xl sm:text-3xl font-bold text-blue-400" id="wpmDisplay">0</div>
+                    <div class="text-white/70 text-sm sm:text-base">WPM</div>
                 </div>
-                <div class="glassmorphism p-6 rounded-2xl text-center">
-                    <div class="text-3xl font-bold text-green-400" id="accuracyDisplay">100%</div>
-                    <div class="text-white/70">Accuracy</div>
+                <div class="glassmorphism p-4 sm:p-6 rounded-2xl text-center">
+                    <div class="text-2xl sm:text-3xl font-bold text-green-400" id="accuracyDisplay">100%</div>
+                    <div class="text-white/70 text-sm sm:text-base">Accuracy</div>
                 </div>
-                <div class="glassmorphism p-6 rounded-2xl text-center">
-                    <div class="text-3xl font-bold text-yellow-400" id="timeDisplay">60</div>
-                    <div class="text-white/70">Time Left</div>
+                <div class="glassmorphism p-4 sm:p-6 rounded-2xl text-center">
+                    <div class="text-2xl sm:text-3xl font-bold text-yellow-400" id="timeDisplay">60</div>
+                    <div class="text-white/70 text-sm sm:text-base">Time Left</div>
                 </div>
-                <div class="glassmorphism p-6 rounded-2xl text-center">
-                    <div class="text-3xl font-bold text-purple-400" id="errorsDisplay">0</div>
-                    <div class="text-white/70">Errors</div>
+                <div class="glassmorphism p-4 sm:p-6 rounded-2xl text-center">
+                    <div class="text-2xl sm:text-3xl font-bold text-purple-400" id="errorsDisplay">0</div>
+                    <div class="text-white/70 text-sm sm:text-base">Errors</div>
                 </div>
             </div>
 
@@ -361,13 +426,13 @@
             </div>
 
             <!-- Typing Area -->
-            <div class="glassmorphism p-8 rounded-2xl mb-8">
-                <div id="textDisplay" class="text-xl leading-relaxed text-white/90 mb-6 font-mono min-h-32 select-none">
+            <div class="glassmorphism p-4 sm:p-8 rounded-2xl mb-8">
+                <div id="textDisplay" class="text-base sm:text-xl leading-relaxed text-white/90 mb-6 font-mono min-h-24 sm:min-h-32 select-none">
                     Click "Start Test" to begin your typing challenge!
                 </div>
                 <textarea id="textInput" 
-                         class="w-full p-4 rounded-lg bg-white/10 text-white border border-white/20 focus:border-blue-400 focus:outline-none text-lg font-mono resize-none" 
-                         rows="4" 
+                         class="w-full p-3 sm:p-4 rounded-lg bg-white/10 text-white border border-white/20 focus:border-blue-400 focus:outline-none text-base sm:text-lg font-mono resize-none" 
+                         rows="3" 
                          placeholder="Your typing will appear here..."
                          disabled></textarea>
             </div>
@@ -884,6 +949,15 @@
             scores.push(score);
             localStorage.setItem('typingScores', JSON.stringify(scores));
             
+            // Update user statistics
+            StorageManager.updateUserStats({
+                wpm: wpm,
+                accuracy: accuracy,
+                errors: currentTest.errors,
+                duration: elapsed,
+                characters: currentTest.correctChars
+            });
+            
             closeResults();
             showSection('leaderboard');
         }
@@ -989,6 +1063,9 @@
             
             // Save theme preference
             localStorage.setItem('theme', newTheme);
+            
+            // Update preferences
+            StorageManager.saveTestSettings();
         }
 
         function initializeTheme() {
@@ -997,10 +1074,122 @@
             document.getElementById('themeIcon').textContent = savedTheme === 'light' ? '☀️' : '🌙';
         }
 
+        // Enhanced Local Storage Management
+        const StorageManager = {
+            // Save user preferences
+            savePreferences: function(preferences) {
+                localStorage.setItem('typingPreferences', JSON.stringify(preferences));
+            },
+            
+            // Load user preferences
+            loadPreferences: function() {
+                const saved = localStorage.getItem('typingPreferences');
+                return saved ? JSON.parse(saved) : {
+                    duration: '60',
+                    difficulty: 'intermediate',
+                    category: 'quotes',
+                    theme: 'dark'
+                };
+            },
+            
+            // Save test settings
+            saveTestSettings: function() {
+                const preferences = {
+                    duration: document.getElementById('duration').value,
+                    difficulty: document.getElementById('difficulty').value,
+                    category: document.getElementById('category').value,
+                    theme: document.documentElement.getAttribute('data-theme') || 'dark'
+                };
+                this.savePreferences(preferences);
+            },
+            
+            // Load test settings
+            loadTestSettings: function() {
+                const preferences = this.loadPreferences();
+                document.getElementById('duration').value = preferences.duration;
+                document.getElementById('difficulty').value = preferences.difficulty;
+                document.getElementById('category').value = preferences.category;
+                return preferences;
+            },
+            
+            // Save user statistics
+            saveUserStats: function(stats) {
+                localStorage.setItem('userStats', JSON.stringify(stats));
+            },
+            
+            // Load user statistics
+            loadUserStats: function() {
+                const saved = localStorage.getItem('userStats');
+                return saved ? JSON.parse(saved) : {
+                    totalTests: 0,
+                    totalTime: 0,
+                    bestWPM: 0,
+                    averageWPM: 0,
+                    bestAccuracy: 0,
+                    averageAccuracy: 0,
+                    totalCharacters: 0,
+                    totalErrors: 0
+                };
+            },
+            
+            // Update user statistics
+            updateUserStats: function(testResult) {
+                const stats = this.loadUserStats();
+                stats.totalTests++;
+                stats.totalTime += testResult.duration;
+                stats.bestWPM = Math.max(stats.bestWPM, testResult.wpm);
+                stats.averageWPM = Math.round(((stats.averageWPM * (stats.totalTests - 1)) + testResult.wpm) / stats.totalTests);
+                stats.bestAccuracy = Math.max(stats.bestAccuracy, testResult.accuracy);
+                stats.averageAccuracy = Math.round(((stats.averageAccuracy * (stats.totalTests - 1)) + testResult.accuracy) / stats.totalTests);
+                stats.totalCharacters += testResult.characters;
+                stats.totalErrors += testResult.errors;
+                this.saveUserStats(stats);
+                return stats;
+            },
+            
+            // Export all data
+            exportData: function() {
+                return {
+                    preferences: this.loadPreferences(),
+                    scores: JSON.parse(localStorage.getItem('typingScores') || '[]'),
+                    stats: this.loadUserStats(),
+                    exportDate: new Date().toISOString()
+                };
+            },
+            
+            // Import data
+            importData: function(data) {
+                try {
+                    if (data.preferences) this.savePreferences(data.preferences);
+                    if (data.scores) localStorage.setItem('typingScores', JSON.stringify(data.scores));
+                    if (data.stats) this.saveUserStats(data.stats);
+                    return true;
+                } catch (error) {
+                    console.error('Import failed:', error);
+                    return false;
+                }
+            }
+        };
+
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
             initializeTheme();
+            
+            // Load saved preferences
+            const preferences = StorageManager.loadTestSettings();
+            
+            // Set theme from preferences
+            if (preferences.theme) {
+                document.documentElement.setAttribute('data-theme', preferences.theme);
+                document.getElementById('themeIcon').textContent = preferences.theme === 'light' ? '☀️' : '🌙';
+            }
+            
             showSection('home');
+            
+            // Save settings when changed
+            document.getElementById('duration').addEventListener('change', StorageManager.saveTestSettings);
+            document.getElementById('difficulty').addEventListener('change', StorageManager.saveTestSettings);
+            document.getElementById('category').addEventListener('change', StorageManager.saveTestSettings);
             
             // Add smooth scrolling
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -1041,5 +1230,5 @@
             }
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'975ffd8352b094b4',t:'MTc1NjM0NDA2OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97600dd4f6dfdacf',t:'MTc1NjM0NDczOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
