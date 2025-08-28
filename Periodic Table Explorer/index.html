@@ -13,6 +13,21 @@
             font-family: 'Inter', sans-serif;
         }
         
+        .section {
+            display: none;
+            min-height: 100vh;
+        }
+        
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
         .particle-bg {
             position: fixed;
             top: 0;
@@ -170,28 +185,6 @@
             transition: all 0.1s ease;
         }
         
-        .glow {
-            box-shadow: 0 0 20px currentColor;
-        }
-        
-        .molecule-animation {
-            animation: bounce 2s ease-in-out infinite;
-        }
-        
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        .fade-in {
-            animation: fadeIn 0.8s ease-out;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
         .modal-backdrop {
             backdrop-filter: blur(5px);
             background: rgba(0, 0, 0, 0.5);
@@ -212,126 +205,231 @@
         .noble-gas { background: linear-gradient(135deg, #00b894, #00cec9); }
         .lanthanide { background: linear-gradient(135deg, #e17055, #d63031); }
         .actinide { background: linear-gradient(135deg, #00b894, #00a085); }
+        
+        /* Trend visualization colors */
+        .trend-low { background: linear-gradient(135deg, #74b9ff, #0984e3); }
+        .trend-medium { background: linear-gradient(135deg, #fdcb6e, #e17055); }
+        .trend-high { background: linear-gradient(135deg, #fd79a8, #e84393); }
+        .trend-very-high { background: linear-gradient(135deg, #a29bfe, #6c5ce7); }
+        
+        .cta-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
+        }
+        
+        .nav-button {
+            transition: all 0.3s ease;
+        }
+        
+        .nav-button:hover {
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
     <!-- Particle Background -->
     <div class="particle-bg" id="particleContainer"></div>
     
-    <!-- Header -->
-    <header class="orbital-bg py-4 md:py-8 relative">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-md border-b border-gray-700">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                    ⚗️ Periodic Explorer
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="showSection('home')" class="nav-button px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-sm">
+                        🏠 Home
+                    </button>
+                    <button onclick="showSection('table')" class="nav-button px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-sm">
+                        ⚗️ Table
+                    </button>
+                    <button onclick="showSection('trends')" class="nav-button px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-sm">
+                        📊 Trends
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Home Section -->
+    <section id="homeSection" class="section active orbital-bg min-h-screen flex items-center justify-center py-20">
         <div class="container mx-auto px-4 text-center">
-            <div class="glass-card rounded-xl md:rounded-2xl p-4 md:p-8 max-w-4xl mx-auto fade-in">
-                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            <div class="glass-card rounded-xl md:rounded-2xl p-6 md:p-12 max-w-4xl mx-auto">
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                     ⚗️ Periodic Table Explorer
                 </h1>
-                <p class="text-lg md:text-xl text-blue-100 mb-6">Interactive Chemistry Learning by JJ</p>
+                <p class="text-xl md:text-2xl text-blue-100 mb-8">Interactive Chemistry Learning by JJ</p>
                 
                 <!-- Personal Story -->
-                <div class="text-left bg-white/10 rounded-xl p-4 md:p-6 mb-6">
-                    <h2 class="text-xl md:text-2xl font-semibold mb-4 text-yellow-300">Welcome to My Chemistry Journey!</h2>
-                    <p class="text-sm md:text-base text-blue-100 leading-relaxed mb-4">
-                        When I was in secondary school, I had such a hard time mastering this table - lol! 
-                        The symbols seemed random, the numbers confusing, and memorizing everything felt impossible.
-                    </p>
-                    <p class="text-sm md:text-base text-blue-100 leading-relaxed mb-4">
-                        Though I no longer study chemistry, I deeply respect its place as the backbone of science. 
-                        Every medicine, every material, every star in the sky - it all comes down to these fundamental building blocks.
-                    </p>
-                    <p class="text-sm md:text-base text-blue-100 leading-relaxed">
-                        This interactive tool is designed to make learning the periodic table fun and engaging 
-                        for students who might struggle like I once did. Let's turn confusion into curiosity! 🧪✨
-                    </p>
+                <div class="text-left bg-white/10 rounded-xl p-6 md:p-8 mb-8">
+                    <h2 class="text-2xl md:text-3xl font-semibold mb-6 text-yellow-300 text-center">My Chemistry Journey 🧪</h2>
+                    <div class="space-y-4 text-base md:text-lg text-blue-100 leading-relaxed">
+                        <p>
+                            When I was in secondary school, I had such a hard time mastering this table - lol! 
+                            The symbols seemed random, the numbers confusing, and memorizing everything felt impossible.
+                        </p>
+                        <p>
+                            Though I no longer study chemistry, I deeply respect its place as the backbone of science. 
+                            Every medicine, every material, every star in the sky - it all comes down to these fundamental building blocks.
+                        </p>
+                        <p>
+                            This interactive tool is designed to make learning the periodic table fun and engaging 
+                            for students who might struggle like I once did. Let's turn confusion into curiosity! 🧪✨
+                        </p>
+                    </div>
                 </div>
                 
                 <!-- Motivational Quote -->
-                <div class="bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-xl p-4 mb-6">
-                    <p class="text-sm md:text-lg italic text-center text-purple-200">
+                <div class="bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-xl p-6 mb-8">
+                    <p class="text-lg md:text-xl italic text-center text-purple-200">
                         "The periodic table is the most beautiful thing in science. It's like a poem written by the universe itself."
                     </p>
                 </div>
                 
-                <!-- Open Source Banner -->
-                <div class="bg-green-500/20 border border-green-400/30 rounded-xl p-4">
-                    <p class="text-center text-green-200 mb-3 text-sm md:text-base">
-                        🌟 <strong>Open Source Chemistry Education</strong> 🌟<br>
-                        Built with ❤️ for aspiring chemistry students. Contribute on GitHub and help make learning accessible for everyone!
-                    </p>
-                    <div class="text-center">
-                        <a href="https://github.com/Agentic-JJ-Web3/html-css-js-projects-for-beginners" 
-                           target="_blank" 
-                           class="inline-flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-lg font-semibold transition-all transform hover:scale-105 border border-gray-600 text-sm md:text-base">
-                            <i class="fab fa-github text-lg md:text-xl"></i>
-                            <span class="hidden sm:inline">View on GitHub</span>
-                            <span class="sm:hidden">GitHub</span>
-                        </a>
+                <!-- GitHub Link -->
+                <div class="mb-8">
+                    <a href="https://github.com/Agentic-JJ-Web3/html-css-js-projects-for-beginners" 
+                       target="_blank" 
+                       class="inline-flex items-center gap-3 px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-xl font-semibold transition-all transform hover:scale-105 border border-gray-600">
+                        <i class="fab fa-github text-2xl"></i>
+                        <span>View on GitHub</span>
+                    </a>
+                </div>
+                
+                <!-- CTA Button -->
+                <button onclick="showSection('table')" class="cta-button px-12 py-4 text-xl font-bold text-white rounded-2xl shadow-2xl">
+                    🚀 Explore the Periodic Table
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Periodic Table Section -->
+    <section id="tableSection" class="section bg-gray-900 min-h-screen pt-20">
+        <!-- Controls -->
+        <div class="container mx-auto px-4 py-6">
+            <div class="glass-card rounded-xl p-4 md:p-6 mb-6">
+                <div class="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
+                    <div class="flex-1 min-w-0">
+                        <input type="text" id="searchInput" placeholder="Search elements..." 
+                               class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-300 search-glow focus:outline-none text-sm md:text-base">
+                    </div>
+                    <div class="flex flex-wrap gap-2 justify-center lg:justify-end">
+                        <button id="quizMode" class="px-4 py-2 md:px-6 md:py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-semibold transition-all transform hover:scale-105 text-sm md:text-base">
+                            🧠 Quiz
+                        </button>
+                        <button id="resetView" class="px-4 py-2 md:px-6 md:py-3 bg-gray-600 hover:bg-gray-700 rounded-lg font-semibold transition-all transform hover:scale-105 text-sm md:text-base">
+                            🔄 Reset
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Legend -->
+                <div class="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 text-xs md:text-sm">
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 md:w-4 md:h-4 alkali-metal rounded"></div>
+                        <span class="truncate">Alkali Metals</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 md:w-4 md:h-4 alkaline-earth rounded"></div>
+                        <span class="truncate">Alkaline Earth</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 md:w-4 md:h-4 transition-metal rounded"></div>
+                        <span class="truncate">Transition Metals</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 md:w-4 md:h-4 nonmetal rounded"></div>
+                        <span class="truncate">Nonmetals</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 md:w-4 md:h-4 noble-gas rounded"></div>
+                        <span class="truncate">Noble Gases</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 md:w-4 md:h-4 halogen rounded"></div>
+                        <span class="truncate">Halogens</span>
                     </div>
                 </div>
             </div>
         </div>
-    </header>
-    
-    <!-- Controls -->
-    <div class="container mx-auto px-4 py-6">
-        <div class="glass-card rounded-xl p-4 md:p-6 mb-6">
-            <div class="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
-                <div class="flex-1 min-w-0">
-                    <input type="text" id="searchInput" placeholder="Search elements..." 
-                           class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-300 search-glow focus:outline-none text-sm md:text-base">
+        
+        <!-- Periodic Table -->
+        <div class="container mx-auto px-2 md:px-4 pb-8">
+            <div class="glass-card rounded-xl md:rounded-2xl p-2 md:p-6">
+                <div class="overflow-x-auto">
+                    <div id="periodicTable" class="periodic-table-grid">
+                        <!-- Elements will be generated by JavaScript -->
+                    </div>
                 </div>
-                <div class="flex flex-wrap gap-2 justify-center lg:justify-end">
-                    <button id="quizMode" class="px-4 py-2 md:px-6 md:py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-semibold transition-all transform hover:scale-105 text-sm md:text-base">
-                        🧠 Quiz
+            </div>
+        </div>
+    </section>
+    
+    <!-- Trends Section -->
+    <section id="trendsSection" class="section bg-gray-900 min-h-screen pt-20">
+        <div class="container mx-auto px-4 py-6">
+            <div class="glass-card rounded-xl p-6 mb-6">
+                <h2 class="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                    📊 Periodic Trends Visualization
+                </h2>
+                
+                <!-- Trend Controls -->
+                <div class="flex flex-wrap gap-4 justify-center mb-6">
+                    <button onclick="showTrend('atomic-radius')" class="trend-btn px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition-all">
+                        📏 Atomic Radius
                     </button>
-                    <button id="trendsView" class="px-4 py-2 md:px-6 md:py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition-all transform hover:scale-105 text-sm md:text-base">
-                        📊 Trends
+                    <button onclick="showTrend('ionization-energy')" class="trend-btn px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-semibold transition-all">
+                        ⚡ Ionization Energy
                     </button>
-                    <button id="resetView" class="px-4 py-2 md:px-6 md:py-3 bg-gray-600 hover:bg-gray-700 rounded-lg font-semibold transition-all transform hover:scale-105 text-sm md:text-base">
-                        🔄 Reset
+                    <button onclick="showTrend('electronegativity')" class="trend-btn px-6 py-3 bg-green-600 hover:bg-green-700 rounded-lg font-semibold transition-all">
+                        🧲 Electronegativity
                     </button>
+                </div>
+                
+                <!-- Trend Legend -->
+                <div id="trendLegend" class="flex justify-center gap-4 mb-6 text-sm">
+                    <div class="flex items-center gap-2">
+                        <div class="w-4 h-4 trend-low rounded"></div>
+                        <span>Low</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-4 h-4 trend-medium rounded"></div>
+                        <span>Medium</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-4 h-4 trend-high rounded"></div>
+                        <span>High</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-4 h-4 trend-very-high rounded"></div>
+                        <span>Very High</span>
+                    </div>
+                </div>
+                
+                <!-- Trend Explanation -->
+                <div id="trendExplanation" class="bg-white/10 rounded-xl p-4 mb-6 text-center">
+                    <p class="text-gray-300">Select a trend above to see how properties change across the periodic table</p>
                 </div>
             </div>
             
-            <!-- Legend -->
-            <div class="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 text-xs md:text-sm">
-                <div class="flex items-center gap-2">
-                    <div class="w-3 h-3 md:w-4 md:h-4 alkali-metal rounded"></div>
-                    <span class="truncate">Alkali Metals</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <div class="w-3 h-3 md:w-4 md:h-4 alkaline-earth rounded"></div>
-                    <span class="truncate">Alkaline Earth</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <div class="w-3 h-3 md:w-4 md:h-4 transition-metal rounded"></div>
-                    <span class="truncate">Transition Metals</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <div class="w-3 h-3 md:w-4 md:h-4 nonmetal rounded"></div>
-                    <span class="truncate">Nonmetals</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <div class="w-3 h-3 md:w-4 md:h-4 noble-gas rounded"></div>
-                    <span class="truncate">Noble Gases</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <div class="w-3 h-3 md:w-4 md:h-4 halogen rounded"></div>
-                    <span class="truncate">Halogens</span>
+            <!-- Trends Table -->
+            <div class="glass-card rounded-xl p-6">
+                <div class="overflow-x-auto">
+                    <div id="trendsTable" class="periodic-table-grid">
+                        <!-- Trend visualization will be generated by JavaScript -->
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    
-    <!-- Periodic Table -->
-    <div class="container mx-auto px-2 md:px-4 pb-8">
-        <div class="glass-card rounded-xl md:rounded-2xl p-2 md:p-6">
-            <div class="overflow-x-auto">
-                <div id="periodicTable" class="periodic-table-grid">
-                    <!-- Elements will be generated by JavaScript -->
-                </div>
-            </div>
-        </div>
-    </div>
+    </section>
     
     <!-- Element Modal -->
     <div id="elementModal" class="fixed inset-0 modal-backdrop hidden items-center justify-center z-50 p-4">
@@ -392,223 +490,175 @@
     </div>
 
     <script>
-        // Element data with comprehensive information
+        // Element data with comprehensive information including trend data
         const elements = [
             {
                 number: 1, symbol: 'H', name: 'Hydrogen', mass: 1.008, group: 'nonmetal', icon: 'fas fa-atom',
                 facts: 'Most abundant element in the universe. Powers the sun through nuclear fusion.',
                 applications: 'Fuel cells, rocket fuel, industrial processes, potential clean energy source.',
-                pronunciation: 'HY-druh-jen'
+                pronunciation: 'HY-druh-jen',
+                atomicRadius: 25, ionizationEnergy: 1312, electronegativity: 2.2
             },
             {
                 number: 2, symbol: 'He', name: 'Helium', mass: 4.003, group: 'noble-gas', icon: 'fas fa-wind',
                 facts: 'Second most abundant element in the universe. Never forms chemical compounds naturally.',
                 applications: 'Party balloons, medical imaging (MRI), deep-sea diving, cooling systems.',
-                pronunciation: 'HEE-lee-um'
+                pronunciation: 'HEE-lee-um',
+                atomicRadius: 31, ionizationEnergy: 2372, electronegativity: null
             },
             {
                 number: 3, symbol: 'Li', name: 'Lithium', mass: 6.941, group: 'alkali-metal', icon: 'fas fa-battery-full',
                 facts: 'Lightest metal. Can cut with a knife. Floats on water.',
                 applications: 'Rechargeable batteries, mood stabilizing medication, ceramics.',
-                pronunciation: 'LITH-ee-um'
+                pronunciation: 'LITH-ee-um',
+                atomicRadius: 145, ionizationEnergy: 520, electronegativity: 0.98
             },
             {
                 number: 4, symbol: 'Be', name: 'Beryllium', mass: 9.012, group: 'alkaline-earth', icon: 'fas fa-rocket',
                 facts: 'Extremely toxic but incredibly strong. Used in spacecraft.',
                 applications: 'Aerospace components, X-ray windows, nuclear reactors.',
-                pronunciation: 'buh-RIL-ee-um'
+                pronunciation: 'buh-RIL-ee-um',
+                atomicRadius: 105, ionizationEnergy: 899, electronegativity: 1.57
             },
             {
                 number: 5, symbol: 'B', name: 'Boron', mass: 10.811, group: 'metalloid', icon: 'fas fa-seedling',
                 facts: 'Essential for plant growth. Makes glass heat-resistant.',
                 applications: 'Fiberglass, detergents, agriculture, nuclear control rods.',
-                pronunciation: 'BOR-on'
+                pronunciation: 'BOR-on',
+                atomicRadius: 85, ionizationEnergy: 801, electronegativity: 2.04
             },
             {
                 number: 6, symbol: 'C', name: 'Carbon', mass: 12.011, group: 'nonmetal', icon: 'fas fa-gem',
                 facts: 'Basis of all life on Earth. Forms more compounds than any other element.',
                 applications: 'Diamonds, graphite, carbon fiber, all organic compounds.',
-                pronunciation: 'KAR-bon'
+                pronunciation: 'KAR-bon',
+                atomicRadius: 70, ionizationEnergy: 1086, electronegativity: 2.55
             },
             {
                 number: 7, symbol: 'N', name: 'Nitrogen', mass: 14.007, group: 'nonmetal', icon: 'fas fa-cloud',
                 facts: 'Makes up 78% of Earth\'s atmosphere. Essential for proteins.',
                 applications: 'Fertilizers, explosives, food preservation, liquid nitrogen cooling.',
-                pronunciation: 'NY-truh-jen'
+                pronunciation: 'NY-truh-jen',
+                atomicRadius: 65, ionizationEnergy: 1402, electronegativity: 3.04
             },
             {
                 number: 8, symbol: 'O', name: 'Oxygen', mass: 15.999, group: 'nonmetal', icon: 'fas fa-lungs',
                 facts: 'Essential for combustion and respiration. Most abundant element in Earth\'s crust.',
                 applications: 'Breathing, combustion, steel production, medical treatments.',
-                pronunciation: 'OK-si-jen'
+                pronunciation: 'OK-si-jen',
+                atomicRadius: 60, ionizationEnergy: 1314, electronegativity: 3.44
             },
             {
                 number: 9, symbol: 'F', name: 'Fluorine', mass: 18.998, group: 'halogen', icon: 'fas fa-tooth',
                 facts: 'Most reactive element. Can react with almost anything, even noble gases.',
                 applications: 'Toothpaste, non-stick coatings, refrigerants, uranium enrichment.',
-                pronunciation: 'FLOOR-een'
+                pronunciation: 'FLOOR-een',
+                atomicRadius: 50, ionizationEnergy: 1681, electronegativity: 3.98
             },
             {
                 number: 10, symbol: 'Ne', name: 'Neon', mass: 20.180, group: 'noble-gas', icon: 'fas fa-lightbulb',
                 facts: 'Gives off orange-red light when electrified. Very rare on Earth.',
                 applications: 'Neon signs, high-voltage indicators, laser technology.',
-                pronunciation: 'NEE-on'
+                pronunciation: 'NEE-on',
+                atomicRadius: 38, ionizationEnergy: 2081, electronegativity: null
             },
             {
                 number: 11, symbol: 'Na', name: 'Sodium', mass: 22.990, group: 'alkali-metal', icon: 'fas fa-fire',
                 facts: 'Explodes in water. Essential for nerve function. Symbol from Latin "natrium".',
                 applications: 'Table salt, soap, street lights, nuclear reactors.',
-                pronunciation: 'SO-dee-um'
+                pronunciation: 'SO-dee-um',
+                atomicRadius: 180, ionizationEnergy: 496, electronegativity: 0.93
             },
             {
                 number: 12, symbol: 'Mg', name: 'Magnesium', mass: 24.305, group: 'alkaline-earth', icon: 'fas fa-fire-flame-curved',
                 facts: 'Burns with brilliant white light. Essential for chlorophyll in plants.',
                 applications: 'Fireworks, lightweight alloys, medicine (antacids), photography.',
-                pronunciation: 'mag-NEE-zee-um'
+                pronunciation: 'mag-NEE-zee-um',
+                atomicRadius: 150, ionizationEnergy: 738, electronegativity: 1.31
             },
             {
                 number: 13, symbol: 'Al', name: 'Aluminum', mass: 26.982, group: 'post-transition', icon: 'fas fa-plane',
                 facts: 'Most abundant metal in Earth\'s crust. Never rusts.',
                 applications: 'Cans, foil, aircraft, construction, electrical wiring.',
-                pronunciation: 'uh-LOO-mi-num'
+                pronunciation: 'uh-LOO-mi-num',
+                atomicRadius: 125, ionizationEnergy: 578, electronegativity: 1.61
             },
             {
                 number: 14, symbol: 'Si', name: 'Silicon', mass: 28.086, group: 'metalloid', icon: 'fas fa-microchip',
                 facts: 'Second most abundant element in Earth\'s crust. Basis of computer chips.',
                 applications: 'Computer processors, glass, solar panels, silicone rubber.',
-                pronunciation: 'SIL-i-kon'
+                pronunciation: 'SIL-i-kon',
+                atomicRadius: 110, ionizationEnergy: 787, electronegativity: 1.90
             },
             {
                 number: 15, symbol: 'P', name: 'Phosphorus', mass: 30.974, group: 'nonmetal', icon: 'fas fa-dna',
                 facts: 'Glows in the dark. Essential for DNA and bones.',
                 applications: 'Matches, fertilizers, detergents, DNA/RNA, bones and teeth.',
-                pronunciation: 'FOS-for-us'
+                pronunciation: 'FOS-for-us',
+                atomicRadius: 100, ionizationEnergy: 1012, electronegativity: 2.19
             },
             {
                 number: 16, symbol: 'S', name: 'Sulfur', mass: 32.065, group: 'nonmetal', icon: 'fas fa-volcano',
                 facts: 'Smells like rotten eggs. Known since ancient times.',
                 applications: 'Gunpowder, rubber vulcanization, medicines, fertilizers.',
-                pronunciation: 'SUL-fur'
+                pronunciation: 'SUL-fur',
+                atomicRadius: 100, ionizationEnergy: 1000, electronegativity: 2.58
             },
             {
                 number: 17, symbol: 'Cl', name: 'Chlorine', mass: 35.453, group: 'halogen', icon: 'fas fa-swimming-pool',
                 facts: 'Deadly gas that makes swimming pools safe. Greenish-yellow color.',
                 applications: 'Water purification, bleach, PVC plastic, disinfectants.',
-                pronunciation: 'KLOR-een'
+                pronunciation: 'KLOR-een',
+                atomicRadius: 100, ionizationEnergy: 1251, electronegativity: 3.16
             },
             {
                 number: 18, symbol: 'Ar', name: 'Argon', mass: 39.948, group: 'noble-gas', icon: 'fas fa-lightbulb',
                 facts: 'Makes up 1% of Earth\'s atmosphere. Completely inert.',
                 applications: 'Light bulbs, welding, wine preservation, insulation.',
-                pronunciation: 'AR-gon'
+                pronunciation: 'AR-gon',
+                atomicRadius: 71, ionizationEnergy: 1521, electronegativity: null
             }
         ];
 
         // Complete periodic table data with proper positioning
         const periodicTableLayout = {
-            // Row 1
-            1: { row: 1, col: 1 }, // H
-            2: { row: 1, col: 18 }, // He
-            
-            // Row 2
-            3: { row: 2, col: 1 }, // Li
-            4: { row: 2, col: 2 }, // Be
-            5: { row: 2, col: 13 }, // B
-            6: { row: 2, col: 14 }, // C
-            7: { row: 2, col: 15 }, // N
-            8: { row: 2, col: 16 }, // O
-            9: { row: 2, col: 17 }, // F
-            10: { row: 2, col: 18 }, // Ne
-            
-            // Row 3
-            11: { row: 3, col: 1 }, // Na
-            12: { row: 3, col: 2 }, // Mg
-            13: { row: 3, col: 13 }, // Al
-            14: { row: 3, col: 14 }, // Si
-            15: { row: 3, col: 15 }, // P
-            16: { row: 3, col: 16 }, // S
-            17: { row: 3, col: 17 }, // Cl
-            18: { row: 3, col: 18 }, // Ar
-            
-            // Row 4 (adding more elements)
-            19: { row: 4, col: 1 }, // K
-            20: { row: 4, col: 2 }, // Ca
-            21: { row: 4, col: 3 }, // Sc
-            22: { row: 4, col: 4 }, // Ti
-            23: { row: 4, col: 5 }, // V
-            24: { row: 4, col: 6 }, // Cr
-            25: { row: 4, col: 7 }, // Mn
-            26: { row: 4, col: 8 }, // Fe
-            27: { row: 4, col: 9 }, // Co
-            28: { row: 4, col: 10 }, // Ni
-            29: { row: 4, col: 11 }, // Cu
-            30: { row: 4, col: 12 }, // Zn
-            31: { row: 4, col: 13 }, // Ga
-            32: { row: 4, col: 14 }, // Ge
-            33: { row: 4, col: 15 }, // As
-            34: { row: 4, col: 16 }, // Se
-            35: { row: 4, col: 17 }, // Br
-            36: { row: 4, col: 18 }, // Kr
-            
-            // Row 5 (partial)
-            37: { row: 5, col: 1 }, // Rb
-            38: { row: 5, col: 2 }, // Sr
-            47: { row: 5, col: 11 }, // Ag
-            53: { row: 5, col: 17 }, // I
-            54: { row: 5, col: 18 }, // Xe
-            
-            // Row 6 (partial)
-            55: { row: 6, col: 1 }, // Cs
-            56: { row: 6, col: 2 }, // Ba
-            79: { row: 6, col: 11 }, // Au
-            82: { row: 6, col: 14 }, // Pb
-            85: { row: 6, col: 17 }, // At
-            86: { row: 6, col: 18 }, // Rn
+            1: { row: 1, col: 1 }, 2: { row: 1, col: 18 },
+            3: { row: 2, col: 1 }, 4: { row: 2, col: 2 }, 5: { row: 2, col: 13 }, 6: { row: 2, col: 14 }, 7: { row: 2, col: 15 }, 8: { row: 2, col: 16 }, 9: { row: 2, col: 17 }, 10: { row: 2, col: 18 },
+            11: { row: 3, col: 1 }, 12: { row: 3, col: 2 }, 13: { row: 3, col: 13 }, 14: { row: 3, col: 14 }, 15: { row: 3, col: 15 }, 16: { row: 3, col: 16 }, 17: { row: 3, col: 17 }, 18: { row: 3, col: 18 }
         };
         
-        // Extended elements with more complete data
+        // Extended elements with trend data
         const allElements = [
             ...elements,
-            { number: 19, symbol: 'K', name: 'Potassium', mass: 39.098, group: 'alkali-metal', icon: 'fas fa-fire' },
-            { number: 20, symbol: 'Ca', name: 'Calcium', mass: 40.078, group: 'alkaline-earth', icon: 'fas fa-bone' },
-            { number: 21, symbol: 'Sc', name: 'Scandium', mass: 44.956, group: 'transition-metal', icon: 'fas fa-cog' },
-            { number: 22, symbol: 'Ti', name: 'Titanium', mass: 47.867, group: 'transition-metal', icon: 'fas fa-shield-alt' },
-            { number: 23, symbol: 'V', name: 'Vanadium', mass: 50.942, group: 'transition-metal', icon: 'fas fa-cog' },
-            { number: 24, symbol: 'Cr', name: 'Chromium', mass: 51.996, group: 'transition-metal', icon: 'fas fa-gem' },
-            { number: 25, symbol: 'Mn', name: 'Manganese', mass: 54.938, group: 'transition-metal', icon: 'fas fa-cog' },
-            { number: 26, symbol: 'Fe', name: 'Iron', mass: 55.845, group: 'transition-metal', icon: 'fas fa-hammer' },
-            { number: 27, symbol: 'Co', name: 'Cobalt', mass: 58.933, group: 'transition-metal', icon: 'fas fa-magnet' },
-            { number: 28, symbol: 'Ni', name: 'Nickel', mass: 58.693, group: 'transition-metal', icon: 'fas fa-coins' },
-            { number: 29, symbol: 'Cu', name: 'Copper', mass: 63.546, group: 'transition-metal', icon: 'fas fa-bolt' },
-            { number: 30, symbol: 'Zn', name: 'Zinc', mass: 65.38, group: 'transition-metal', icon: 'fas fa-shield-alt' },
-            { number: 31, symbol: 'Ga', name: 'Gallium', mass: 69.723, group: 'post-transition', icon: 'fas fa-microchip' },
-            { number: 32, symbol: 'Ge', name: 'Germanium', mass: 72.630, group: 'metalloid', icon: 'fas fa-microchip' },
-            { number: 33, symbol: 'As', name: 'Arsenic', mass: 74.922, group: 'metalloid', icon: 'fas fa-skull-crossbones' },
-            { number: 34, symbol: 'Se', name: 'Selenium', mass: 78.971, group: 'nonmetal', icon: 'fas fa-sun' },
-            { number: 35, symbol: 'Br', name: 'Bromine', mass: 79.904, group: 'halogen', icon: 'fas fa-flask' },
-            { number: 36, symbol: 'Kr', name: 'Krypton', mass: 83.798, group: 'noble-gas', icon: 'fas fa-lightbulb' },
-            { number: 37, symbol: 'Rb', name: 'Rubidium', mass: 85.468, group: 'alkali-metal', icon: 'fas fa-fire' },
-            { number: 38, symbol: 'Sr', name: 'Strontium', mass: 87.62, group: 'alkaline-earth', icon: 'fas fa-fire-flame-curved' },
-            { number: 47, symbol: 'Ag', name: 'Silver', mass: 107.868, group: 'transition-metal', icon: 'fas fa-medal' },
-            { number: 53, symbol: 'I', name: 'Iodine', mass: 126.904, group: 'halogen', icon: 'fas fa-tint' },
-            { number: 54, symbol: 'Xe', name: 'Xenon', mass: 131.293, group: 'noble-gas', icon: 'fas fa-lightbulb' },
-            { number: 55, symbol: 'Cs', name: 'Cesium', mass: 132.905, group: 'alkali-metal', icon: 'fas fa-fire' },
-            { number: 56, symbol: 'Ba', name: 'Barium', mass: 137.327, group: 'alkaline-earth', icon: 'fas fa-fire-flame-curved' },
-            { number: 79, symbol: 'Au', name: 'Gold', mass: 196.967, group: 'transition-metal', icon: 'fas fa-crown' },
-            { number: 82, symbol: 'Pb', name: 'Lead', mass: 207.2, group: 'post-transition', icon: 'fas fa-weight-hanging' },
-            { number: 85, symbol: 'At', name: 'Astatine', mass: 210, group: 'halogen', icon: 'fas fa-radiation' },
-            { number: 86, symbol: 'Rn', name: 'Radon', mass: 222, group: 'noble-gas', icon: 'fas fa-radiation' }
+            { number: 19, symbol: 'K', name: 'Potassium', mass: 39.098, group: 'alkali-metal', icon: 'fas fa-fire', atomicRadius: 220, ionizationEnergy: 419, electronegativity: 0.82 },
+            { number: 20, symbol: 'Ca', name: 'Calcium', mass: 40.078, group: 'alkaline-earth', icon: 'fas fa-bone', atomicRadius: 180, ionizationEnergy: 590, electronegativity: 1.00 }
         ];
 
         let currentQuizElement = null;
         let quizScore = 0;
         let quizCount = 0;
+        let currentTrend = null;
 
         // Initialize the application
         function init() {
             createParticles();
             generatePeriodicTable();
+            generateTrendsTable();
             setupEventListeners();
+        }
+
+        // Section management
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            const targetSection = document.getElementById(sectionName + 'Section');
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
         }
 
         // Create floating particles
@@ -629,7 +679,6 @@
         function generatePeriodicTable() {
             const table = document.getElementById('periodicTable');
             
-            // Create elements based on their proper positions
             allElements.forEach(element => {
                 const position = periodicTableLayout[element.number];
                 if (position) {
@@ -652,7 +701,98 @@
             });
         }
 
+        // Generate trends table
+        function generateTrendsTable() {
+            const table = document.getElementById('trendsTable');
+            
+            allElements.forEach(element => {
+                const position = periodicTableLayout[element.number];
+                if (position) {
+                    const cell = document.createElement('div');
+                    cell.className = `element-card text-center font-semibold text-white shadow-lg flex flex-col items-center justify-center`;
+                    cell.style.gridRow = position.row;
+                    cell.style.gridColumn = position.col;
+                    cell.id = `trend-${element.number}`;
+                    
+                    cell.innerHTML = `
+                        <div class="text-[6px] md:text-[7px] opacity-75 leading-none mb-0.5">${element.number}</div>
+                        <div class="text-sm md:text-lg font-bold leading-none mb-0.5">${element.symbol}</div>
+                        <div class="text-[5px] md:text-[6px] opacity-75 leading-none truncate w-full text-center px-0.5">${element.name}</div>
+                        <div id="trend-value-${element.number}" class="text-[5px] md:text-[6px] opacity-60 leading-none"></div>
+                    `;
+                    
+                    cell.addEventListener('click', () => showElementModal(element));
+                    table.appendChild(cell);
+                }
+            });
+        }
 
+        // Show periodic trends
+        function showTrend(trendType) {
+            currentTrend = trendType;
+            const explanations = {
+                'atomic-radius': {
+                    title: 'Atomic Radius Trends',
+                    description: 'Atomic radius decreases across a period (left to right) due to increasing nuclear charge, and increases down a group due to additional electron shells.',
+                    unit: 'pm'
+                },
+                'ionization-energy': {
+                    title: 'Ionization Energy Trends', 
+                    description: 'Ionization energy increases across a period and decreases down a group. It represents the energy needed to remove an electron.',
+                    unit: 'kJ/mol'
+                },
+                'electronegativity': {
+                    title: 'Electronegativity Trends',
+                    description: 'Electronegativity increases across a period and decreases down a group. It measures how strongly atoms attract electrons in bonds.',
+                    unit: 'Pauling scale'
+                }
+            };
+            
+            const explanation = explanations[trendType];
+            document.getElementById('trendExplanation').innerHTML = `
+                <h3 class="text-lg font-semibold mb-2 text-blue-300">${explanation.title}</h3>
+                <p class="text-gray-300">${explanation.description}</p>
+            `;
+            
+            // Update trend visualization
+            allElements.forEach(element => {
+                const cell = document.getElementById(`trend-${element.number}`);
+                const valueElement = document.getElementById(`trend-value-${element.number}`);
+                
+                if (cell && valueElement) {
+                    let value = element[trendType.replace('-', '')];
+                    let trendClass = 'trend-low';
+                    
+                    if (value === null || value === undefined) {
+                        valueElement.textContent = 'N/A';
+                        cell.className = cell.className.replace(/trend-\w+/g, '') + ' trend-low';
+                        return;
+                    }
+                    
+                    valueElement.textContent = value + (explanation.unit === 'Pauling scale' ? '' : ' ' + explanation.unit);
+                    
+                    // Determine trend class based on value ranges
+                    if (trendType === 'atomic-radius') {
+                        if (value < 75) trendClass = 'trend-low';
+                        else if (value < 125) trendClass = 'trend-medium';
+                        else if (value < 175) trendClass = 'trend-high';
+                        else trendClass = 'trend-very-high';
+                    } else if (trendType === 'ionization-energy') {
+                        if (value < 600) trendClass = 'trend-low';
+                        else if (value < 1000) trendClass = 'trend-medium';
+                        else if (value < 1500) trendClass = 'trend-high';
+                        else trendClass = 'trend-very-high';
+                    } else if (trendType === 'electronegativity') {
+                        if (value < 1.5) trendClass = 'trend-low';
+                        else if (value < 2.5) trendClass = 'trend-medium';
+                        else if (value < 3.5) trendClass = 'trend-high';
+                        else trendClass = 'trend-very-high';
+                    }
+                    
+                    cell.className = cell.className.replace(/trend-\w+/g, '') + ' ' + trendClass;
+                }
+            });
+        }
 
         // Show element modal
         function showElementModal(element) {
@@ -672,6 +812,9 @@
                 <div class="flex justify-between"><span>Atomic Mass:</span><span class="font-semibold">${element.mass}</span></div>
                 <div class="flex justify-between"><span>Group:</span><span class="font-semibold capitalize">${element.group.replace('-', ' ')}</span></div>
                 ${element.pronunciation ? `<div class="flex justify-between"><span>Pronunciation:</span><span class="font-semibold">${element.pronunciation}</span></div>` : ''}
+                ${element.atomicRadius ? `<div class="flex justify-between"><span>Atomic Radius:</span><span class="font-semibold">${element.atomicRadius} pm</span></div>` : ''}
+                ${element.ionizationEnergy ? `<div class="flex justify-between"><span>Ionization Energy:</span><span class="font-semibold">${element.ionizationEnergy} kJ/mol</span></div>` : ''}
+                ${element.electronegativity ? `<div class="flex justify-between"><span>Electronegativity:</span><span class="font-semibold">${element.electronegativity}</span></div>` : ''}
             `;
             
             facts.textContent = element.facts || 'Fascinating element with unique properties.';
@@ -692,7 +835,7 @@
             // Search functionality
             document.getElementById('searchInput').addEventListener('input', (e) => {
                 const query = e.target.value.toLowerCase();
-                const elementCards = document.querySelectorAll('.element-card');
+                const elementCards = document.querySelectorAll('#periodicTable .element-card');
                 
                 elementCards.forEach(card => {
                     const text = card.textContent.toLowerCase();
@@ -716,16 +859,11 @@
             // Reset view
             document.getElementById('resetView').addEventListener('click', () => {
                 document.getElementById('searchInput').value = '';
-                const elementCards = document.querySelectorAll('.element-card');
+                const elementCards = document.querySelectorAll('#periodicTable .element-card');
                 elementCards.forEach(card => {
                     card.style.opacity = '1';
                     card.style.transform = 'scale(1)';
                 });
-            });
-            
-            // Trends view (placeholder)
-            document.getElementById('trendsView').addEventListener('click', () => {
-                alert('🚀 Trends visualization coming soon! This will show atomic radius, ionization energy, and other periodic trends.');
             });
             
             // Close modals when clicking outside
@@ -834,5 +972,5 @@
         // Initialize the app when page loads
         document.addEventListener('DOMContentLoaded', init);
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9760486d246857a5',t:'MTc1NjM0NzEzOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97605086565e770b',t:'MTc1NjM0NzQ2OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
