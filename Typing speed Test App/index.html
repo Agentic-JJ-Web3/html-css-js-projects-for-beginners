@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TypingMaster Pro - Master Your Typing Skills</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    animation: {
+                        'gradient': 'gradient 15s ease infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-slow': 'bounce 2s infinite',
+                        'typing': 'typing 2s steps(20) infinite',
+                        'particle': 'particle 3s ease-out forwards',
+                    },
+                    keyframes: {
+                        gradient: {
+                            '0%, 100%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'left center'
+                            },
+                            '50%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'right center'
+                            },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        typing: {
+                            '0%': { opacity: '1' },
+                            '50%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        particle: {
+                            '0%': { transform: 'translateY(0) scale(1)', opacity: '1' },
+                            '100%': { transform: 'translateY(-100px) scale(0)', opacity: '0' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .gradient-bg {
+            background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe, #00f2fe);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .correct { color: #10b981; background-color: rgba(16, 185, 129, 0.1); }
+        .incorrect { color: #ef4444; background-color: rgba(239, 68, 68, 0.2); }
+        .current { background-color: rgba(59, 130, 246, 0.3); animation: typing 1s infinite; }
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #fbbf24;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: particle 3s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen gradient-bg">
+    <!-- Open Source Header -->
+    <header class="glassmorphism border-b border-white/20 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="text-2xl">⚡</div>
+                    <h1 class="text-xl font-bold text-white">TypingMaster Pro</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-white/80 text-sm">🚀 Open Source Project by JJ</span>
+                    <a href="https://github.com/Agentic-JJ-Web3/html-css-js-projects-for-beginners" 
+                       target="_blank" 
+                       class="glassmorphism px-4 py-2 rounded-full text-white hover:bg-white/20 transition-all duration-300 flex items-center space-x-2">
+                        <span>⭐</span>
+                        <span>Star on GitHub</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="glassmorphism border-b border-white/10">
+        <div class="container mx-auto px-4">
+            <div class="flex space-x-8 py-4">
+                <button onclick="showSection('home')" class="nav-btn text-white hover:text-blue-300 transition-colors duration-300 font-medium">Home</button>
+                <button onclick="showSection('test')" class="nav-btn text-white hover:text-blue-300 transition-colors duration-300 font-medium">Typing Test</button>
+                <button onclick="showSection('leaderboard')" class="nav-btn text-white hover:text-blue-300 transition-colors duration-300 font-medium">Leaderboard</button>
+                <button onclick="showSection('about')" class="nav-btn text-white hover:text-blue-300 transition-colors duration-300 font-medium">About</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Section -->
+    <section id="home" class="section-content">
+        <!-- Hero Section -->
+        <div class="container mx-auto px-4 py-16">
+            <div class="text-center mb-16">
+                <h1 class="text-6xl font-bold text-white mb-6 animate-float">
+                    Master Your <span class="text-gradient">Typing Skills</span>
+                </h1>
+                <p class="text-xl text-white/80 mb-8 max-w-3xl mx-auto">
+                    Track Progress, Improve Speed, Build Accuracy - Your journey to typing mastery starts here
+                </p>
+                <button onclick="showSection('test')" class="glassmorphism px-8 py-4 rounded-full text-white font-semibold hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
+                    Start Typing Test 🚀
+                </button>
+            </div>
+
+            <!-- Benefits Grid -->
+            <div class="grid md:grid-cols-3 gap-8 mb-16">
+                <div class="glassmorphism p-8 rounded-2xl text-center transform hover:scale-105 transition-all duration-300">
+                    <div class="text-4xl mb-4">💼</div>
+                    <h3 class="text-xl font-bold text-white mb-4">Career Advancement</h3>
+                    <p class="text-white/70">Boost your productivity and stand out in the digital workplace with superior typing skills</p>
+                </div>
+                <div class="glassmorphism p-8 rounded-2xl text-center transform hover:scale-105 transition-all duration-300">
+                    <div class="text-4xl mb-4">⚡</div>
+                    <h3 class="text-xl font-bold text-white mb-4">Productivity Boost</h3>
+                    <p class="text-white/70">Save hours every day with faster, more accurate typing across all your digital tasks</p>
+                </div>
+                <div class="glassmorphism p-8 rounded-2xl text-center transform hover:scale-105 transition-all duration-300">
+                    <div class="text-4xl mb-4">🎯</div>
+                    <h3 class="text-xl font-bold text-white mb-4">Digital Literacy</h3>
+                    <p class="text-white/70">Build essential 21st-century skills that are crucial in our digital-first world</p>
+                </div>
+            </div>
+
+            <!-- Testimonials -->
+            <div class="mb-16">
+                <h2 class="text-3xl font-bold text-white text-center mb-12">What Our Users Say</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="glassmorphism p-6 rounded-2xl">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold">A</div>
+                            <div class="ml-4">
+                                <h4 class="text-white font-semibold">Alex Chen</h4>
+                                <p class="text-white/60 text-sm">Software Developer</p>
+                            </div>
+                        </div>
+                        <p class="text-white/80">"Improved my typing speed from 45 to 85 WPM in just 3 months! The real-time feedback is incredible."</p>
+                        <div class="flex text-yellow-400 mt-4">⭐⭐⭐⭐⭐</div>
+                    </div>
+                    <div class="glassmorphism p-6 rounded-2xl">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center text-white font-bold">S</div>
+                            <div class="ml-4">
+                                <h4 class="text-white font-semibold">Sarah Johnson</h4>
+                                <p class="text-white/60 text-sm">Content Writer</p>
+                            </div>
+                        </div>
+                        <p class="text-white/80">"The variety of text categories keeps practice engaging. My accuracy went from 92% to 98%!"</p>
+                        <div class="flex text-yellow-400 mt-4">⭐⭐⭐⭐⭐</div>
+                    </div>
+                    <div class="glassmorphism p-6 rounded-2xl">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">M</div>
+                            <div class="ml-4">
+                                <h4 class="text-white font-semibold">Mike Rodriguez</h4>
+                                <p class="text-white/60 text-sm">Student</p>
+                            </div>
+                        </div>
+                        <p class="text-white/80">"Perfect for preparing for typing tests. The leaderboard motivates me to keep improving!"</p>
+                        <div class="flex text-yellow-400 mt-4">⭐⭐⭐⭐⭐</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Learning Methodology -->
+            <div class="glassmorphism p-12 rounded-3xl">
+                <h2 class="text-3xl font-bold text-white text-center mb-8">Our Learning Methodology</h2>
+                <div class="grid md:grid-cols-4 gap-8">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">1</div>
+                        <h3 class="text-white font-semibold mb-2">Assess</h3>
+                        <p class="text-white/70 text-sm">Start with a baseline test to understand your current typing level</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">2</div>
+                        <h3 class="text-white font-semibold mb-2">Practice</h3>
+                        <p class="text-white/70 text-sm">Regular practice with varied content and real-time feedback</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gradient-to-r from-pink-500 to-red-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">3</div>
+                        <h3 class="text-white font-semibold mb-2">Track</h3>
+                        <p class="text-white/70 text-sm">Monitor your progress with detailed analytics and leaderboards</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gradient-to-r from-red-500 to-orange-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">4</div>
+                        <h3 class="text-white font-semibold mb-2">Master</h3>
+                        <p class="text-white/70 text-sm">Achieve your typing goals and maintain peak performance</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Typing Test Section -->
+    <section id="test" class="section-content hidden">
+        <div class="container mx-auto px-4 py-8">
+            <!-- Test Configuration -->
+            <div class="glassmorphism p-6 rounded-2xl mb-8">
+                <div class="grid md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-white font-semibold mb-2">Duration</label>
+                        <select id="duration" class="w-full p-3 rounded-lg bg-white/10 text-white border border-white/20 focus:border-blue-400 focus:outline-none">
+                            <option value="30">30 seconds</option>
+                            <option value="60" selected>60 seconds</option>
+                            <option value="120">120 seconds</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-white font-semibold mb-2">Difficulty</label>
+                        <select id="difficulty" class="w-full p-3 rounded-lg bg-white/10 text-white border border-white/20 focus:border-blue-400 focus:outline-none">
+                            <option value="beginner">Beginner</option>
+                            <option value="intermediate" selected>Intermediate</option>
+                            <option value="advanced">Advanced</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-white font-semibold mb-2">Category</label>
+                        <select id="category" class="w-full p-3 rounded-lg bg-white/10 text-white border border-white/20 focus:border-blue-400 focus:outline-none">
+                            <option value="quotes" selected>Quotes</option>
+                            <option value="literature">Literature</option>
+                            <option value="news">News</option>
+                            <option value="programming">Programming</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end">
+                        <button id="startBtn" onclick="startTest()" class="w-full glassmorphism px-6 py-3 rounded-lg text-white font-semibold hover:bg-white/20 transition-all duration-300">
+                            Start Test
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Display -->
+            <div class="grid md:grid-cols-4 gap-4 mb-8">
+                <div class="glassmorphism p-6 rounded-2xl text-center">
+                    <div class="text-3xl font-bold text-blue-400" id="wpmDisplay">0</div>
+                    <div class="text-white/70">WPM</div>
+                </div>
+                <div class="glassmorphism p-6 rounded-2xl text-center">
+                    <div class="text-3xl font-bold text-green-400" id="accuracyDisplay">100%</div>
+                    <div class="text-white/70">Accuracy</div>
+                </div>
+                <div class="glassmorphism p-6 rounded-2xl text-center">
+                    <div class="text-3xl font-bold text-yellow-400" id="timeDisplay">60</div>
+                    <div class="text-white/70">Time Left</div>
+                </div>
+                <div class="glassmorphism p-6 rounded-2xl text-center">
+                    <div class="text-3xl font-bold text-purple-400" id="errorsDisplay">0</div>
+                    <div class="text-white/70">Errors</div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="glassmorphism p-4 rounded-2xl mb-8">
+                <div class="flex justify-between text-white/70 text-sm mb-2">
+                    <span>Progress</span>
+                    <span id="progressText">0%</span>
+                </div>
+                <div class="w-full bg-white/10 rounded-full h-3">
+                    <div id="progressBar" class="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Typing Area -->
+            <div class="glassmorphism p-8 rounded-2xl mb-8">
+                <div id="textDisplay" class="text-xl leading-relaxed text-white/90 mb-6 font-mono min-h-32 select-none">
+                    Click "Start Test" to begin your typing challenge!
+                </div>
+                <textarea id="textInput" 
+                         class="w-full p-4 rounded-lg bg-white/10 text-white border border-white/20 focus:border-blue-400 focus:outline-none text-lg font-mono resize-none" 
+                         rows="4" 
+                         placeholder="Your typing will appear here..."
+                         disabled></textarea>
+            </div>
+
+            <!-- Results Modal -->
+            <div id="resultsModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
+                <div class="glassmorphism p-8 rounded-3xl max-w-md w-full mx-4 text-center">
+                    <div class="text-6xl mb-4">🎉</div>
+                    <h2 class="text-2xl font-bold text-white mb-6">Test Complete!</h2>
+                    <div class="space-y-4 mb-6">
+                        <div class="flex justify-between">
+                            <span class="text-white/70">WPM:</span>
+                            <span class="text-blue-400 font-bold" id="finalWPM">0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-white/70">Accuracy:</span>
+                            <span class="text-green-400 font-bold" id="finalAccuracy">0%</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-white/70">Errors:</span>
+                            <span class="text-red-400 font-bold" id="finalErrors">0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-white/70">Characters:</span>
+                            <span class="text-purple-400 font-bold" id="finalChars">0</span>
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <input type="text" id="playerName" placeholder="Enter your name for leaderboard" 
+                               class="w-full p-3 rounded-lg bg-white/10 text-white border border-white/20 focus:border-blue-400 focus:outline-none">
+                    </div>
+                    <div class="flex space-x-4">
+                        <button onclick="saveScore()" class="flex-1 glassmorphism px-6 py-3 rounded-lg text-white font-semibold hover:bg-white/20 transition-all duration-300">
+                            Save Score
+                        </button>
+                        <button onclick="closeResults()" class="flex-1 glassmorphism px-6 py-3 rounded-lg text-white font-semibold hover:bg-white/20 transition-all duration-300">
+                            Try Again
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leaderboard Section -->
+    <section id="leaderboard" class="section-content hidden">
+        <div class="container mx-auto px-4 py-8">
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold text-white mb-4">🏆 Leaderboard</h1>
+                <p class="text-white/70">Top performers and their amazing achievements</p>
+            </div>
+
+            <!-- Leaderboard Controls -->
+            <div class="glassmorphism p-6 rounded-2xl mb-8">
+                <div class="flex flex-wrap gap-4 items-center justify-between">
+                    <div class="flex space-x-4">
+                        <select id="sortBy" onchange="updateLeaderboard()" class="p-3 rounded-lg bg-white/10 text-white border border-white/20 focus:border-blue-400 focus:outline-none">
+                            <option value="wpm">Sort by WPM</option>
+                            <option value="accuracy">Sort by Accuracy</option>
+                            <option value="date">Sort by Date</option>
+                        </select>
+                        <select id="filterDuration" onchange="updateLeaderboard()" class="p-3 rounded-lg bg-white/10 text-white border border-white/20 focus:border-blue-400 focus:outline-none">
+                            <option value="all">All Durations</option>
+                            <option value="30">30 seconds</option>
+                            <option value="60">60 seconds</option>
+                            <option value="120">120 seconds</option>
+                        </select>
+                    </div>
+                    <button onclick="clearLeaderboard()" class="glassmorphism px-6 py-3 rounded-lg text-white font-semibold hover:bg-red-500/20 transition-all duration-300">
+                        Clear All
+                    </button>
+                </div>
+            </div>
+
+            <!-- Leaderboard Table -->
+            <div class="glassmorphism rounded-2xl overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-white/10">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-white font-semibold">Rank</th>
+                                <th class="px-6 py-4 text-left text-white font-semibold">Player</th>
+                                <th class="px-6 py-4 text-left text-white font-semibold">WPM</th>
+                                <th class="px-6 py-4 text-left text-white font-semibold">Accuracy</th>
+                                <th class="px-6 py-4 text-left text-white font-semibold">Duration</th>
+                                <th class="px-6 py-4 text-left text-white font-semibold">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboardBody">
+                            <tr>
+                                <td colspan="6" class="px-6 py-8 text-center text-white/70">
+                                    No scores yet. Complete a typing test to see your results here!
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Stats Charts -->
+            <div class="grid md:grid-cols-2 gap-8 mt-8">
+                <div class="glassmorphism p-6 rounded-2xl">
+                    <h3 class="text-xl font-bold text-white mb-4">Your Progress</h3>
+                    <div id="progressChart" class="h-48 flex items-center justify-center text-white/70">
+                        Complete more tests to see your progress chart
+                    </div>
+                </div>
+                <div class="glassmorphism p-6 rounded-2xl">
+                    <h3 class="text-xl font-bold text-white mb-4">Performance Stats</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between">
+                            <span class="text-white/70">Average WPM:</span>
+                            <span class="text-blue-400 font-bold" id="avgWPM">-</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-white/70">Best WPM:</span>
+                            <span class="text-green-400 font-bold" id="bestWPM">-</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-white/70">Average Accuracy:</span>
+                            <span class="text-purple-400 font-bold" id="avgAccuracy">-</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-white/70">Tests Completed:</span>
+                            <span class="text-yellow-400 font-bold" id="testsCompleted">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section-content hidden">
+        <div class="container mx-auto px-4 py-8">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-white mb-4">About TypingMaster Pro</h1>
+                <p class="text-xl text-white/70 max-w-3xl mx-auto">
+                    An open-source typing speed test application designed to help you master your typing skills
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-12">
+                <div class="glassmorphism p-8 rounded-2xl">
+                    <h2 class="text-2xl font-bold text-white mb-6">🚀 Open Source Project</h2>
+                    <p class="text-white/80 mb-6">
+                        TypingMaster Pro is proudly open source and part of JJ's collection of beginner-friendly web development projects. 
+                        We believe in the power of community-driven development and learning.
+                    </p>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-green-400">✓</span>
+                            <span class="text-white/80">100% Free and Open Source</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="text-green-400">✓</span>
+                            <span class="text-white/80">Community Contributions Welcome</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="text-green-400">✓</span>
+                            <span class="text-white/80">Educational Purpose</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="text-green-400">✓</span>
+                            <span class="text-white/80">Modern Web Technologies</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glassmorphism p-8 rounded-2xl">
+                    <h2 class="text-2xl font-bold text-white mb-6">🛠️ Technologies Used</h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-white/10 p-4 rounded-lg text-center">
+                            <div class="text-2xl mb-2">🌐</div>
+                            <div class="text-white font-semibold">HTML5</div>
+                        </div>
+                        <div class="bg-white/10 p-4 rounded-lg text-center">
+                            <div class="text-2xl mb-2">🎨</div>
+                            <div class="text-white font-semibold">Tailwind CSS</div>
+                        </div>
+                        <div class="bg-white/10 p-4 rounded-lg text-center">
+                            <div class="text-2xl mb-2">⚡</div>
+                            <div class="text-white font-semibold">JavaScript</div>
+                        </div>
+                        <div class="bg-white/10 p-4 rounded-lg text-center">
+                            <div class="text-2xl mb-2">💾</div>
+                            <div class="text-white font-semibold">Local Storage</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contribution Guidelines -->
+            <div class="glassmorphism p-8 rounded-2xl mb-8">
+                <h2 class="text-2xl font-bold text-white mb-6">🤝 How to Contribute</h2>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">1</div>
+                        <h3 class="text-white font-semibold mb-2">Fork & Clone</h3>
+                        <p class="text-white/70 text-sm">Fork the repository and clone it to your local machine</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">2</div>
+                        <h3 class="text-white font-semibold mb-2">Make Changes</h3>
+                        <p class="text-white/70 text-sm">Add features, fix bugs, or improve documentation</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gradient-to-r from-pink-500 to-red-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">3</div>
+                        <h3 class="text-white font-semibold mb-2">Submit PR</h3>
+                        <p class="text-white/70 text-sm">Create a pull request with your improvements</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Community Call-to-Action -->
+            <div class="text-center glassmorphism p-8 rounded-2xl">
+                <h2 class="text-2xl font-bold text-white mb-4">Join Our Community</h2>
+                <p class="text-white/80 mb-6">
+                    Help us make TypingMaster Pro even better! Whether you're a beginner or expert, 
+                    your contributions are valuable and welcome.
+                </p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="https://github.com/Agentic-JJ-Web3/html-css-js-projects-for-beginners" 
+                       target="_blank" 
+                       class="glassmorphism px-6 py-3 rounded-lg text-white font-semibold hover:bg-white/20 transition-all duration-300">
+                        View on GitHub
+                    </a>
+                    <a href="https://github.com/Agentic-JJ-Web3/html-css-js-projects-for-beginners/issues" 
+                       target="_blank" 
+                       class="glassmorphism px-6 py-3 rounded-lg text-white font-semibold hover:bg-white/20 transition-all duration-300">
+                        Report Issues
+                    </a>
+                    <a href="https://github.com/Agentic-JJ-Web3/html-css-js-projects-for-beginners/discussions" 
+                       target="_blank" 
+                       class="glassmorphism px-6 py-3 rounded-lg text-white font-semibold hover:bg-white/20 transition-all duration-300">
+                        Join Discussion
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Text samples for different categories and difficulties
+        const textSamples = {
+            quotes: {
+                beginner: [
+                    "The only way to do great work is to love what you do.",
+                    "Life is what happens to you while you are busy making other plans.",
+                    "The future belongs to those who believe in the beauty of their dreams."
+                ],
+                intermediate: [
+                    "Success is not final, failure is not fatal: it is the courage to continue that counts.",
+                    "The only impossible journey is the one you never begin. Take the first step today.",
+                    "Innovation distinguishes between a leader and a follower in every field of endeavor."
+                ],
+                advanced: [
+                    "The pessimist sees difficulty in every opportunity. The optimist sees opportunity in every difficulty, and that makes all the difference in achieving success.",
+                    "It is during our darkest moments that we must focus to see the light, for it is in these times that our true character is revealed and tested.",
+                    "The greatest glory in living lies not in never falling, but in rising every time we fall with renewed determination and unwavering spirit."
+                ]
+            },
+            literature: {
+                beginner: [
+                    "It was the best of times, it was the worst of times.",
+                    "To be or not to be, that is the question.",
+                    "All that glitters is not gold, but dreams can be."
+                ],
+                intermediate: [
+                    "In the beginning was the Word, and the Word was with God, and the Word was God.",
+                    "Call me Ishmael. Some years ago, never mind how long precisely, having little or no money in my purse.",
+                    "It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife."
+                ],
+                advanced: [
+                    "It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity.",
+                    "In a hole in the ground there lived a hobbit. Not a nasty, dirty, wet hole, filled with the ends of worms and an oozy smell, nor yet a dry, bare, sandy hole with nothing in it to sit down on or to eat.",
+                    "Last night I dreamt I went to Manderley again. It seemed to me I stood by the iron gate leading to the drive, and for a while I could not enter, for the way was barred to me."
+                ]
+            },
+            news: {
+                beginner: [
+                    "Today marks a new chapter in technology advancement.",
+                    "Scientists discover new ways to help the environment.",
+                    "Local community comes together to support education."
+                ],
+                intermediate: [
+                    "Researchers at the university have developed a breakthrough technology that could revolutionize renewable energy production.",
+                    "The global economy shows signs of recovery as markets respond positively to new trade agreements and policy changes.",
+                    "Climate change initiatives gain momentum as world leaders commit to ambitious carbon reduction targets for the next decade."
+                ],
+                advanced: [
+                    "The unprecedented collaboration between international space agencies has resulted in groundbreaking discoveries about exoplanets that could potentially harbor life, fundamentally changing our understanding of the universe.",
+                    "Artificial intelligence continues to transform industries at an exponential rate, with machine learning algorithms now capable of performing complex tasks that were previously thought to require human intuition and creativity.",
+                    "The intersection of biotechnology and quantum computing promises to unlock new frontiers in medical research, potentially leading to personalized treatments that could revolutionize healthcare delivery systems worldwide."
+                ]
+            },
+            programming: {
+                beginner: [
+                    "function hello() { return 'Hello World'; }",
+                    "const name = 'JavaScript'; console.log(name);",
+                    "if (true) { alert('This works!'); }"
+                ],
+                intermediate: [
+                    "const fetchData = async () => { const response = await fetch('/api/data'); return response.json(); };",
+                    "class Calculator { constructor() { this.result = 0; } add(num) { this.result += num; return this; } }",
+                    "const numbers = [1, 2, 3, 4, 5]; const doubled = numbers.map(n => n * 2).filter(n => n > 5);"
+                ],
+                advanced: [
+                    "const memoize = (fn) => { const cache = new Map(); return (...args) => { const key = JSON.stringify(args); return cache.has(key) ? cache.get(key) : cache.set(key, fn(...args)).get(key); }; };",
+                    "function* fibonacci() { let [a, b] = [0, 1]; while (true) { yield a; [a, b] = [b, a + b]; } } const fib = fibonacci(); console.log([...Array(10)].map(() => fib.next().value));",
+                    "const createObservable = (producer) => ({ subscribe: (observer) => { producer(observer); return { unsubscribe: () => console.log('Unsubscribed') }; } });"
+                ]
+            }
+        };
+
+        // Global variables
+        let currentTest = {
+            text: '',
+            startTime: null,
+            endTime: null,
+            duration: 60,
+            isActive: false,
+            currentIndex: 0,
+            errors: 0,
+            correctChars: 0,
+            timer: null
+        };
+
+        // Navigation
+        function showSection(sectionName) {
+            document.querySelectorAll('.section-content').forEach(section => {
+                section.classList.add('hidden');
+            });
+            document.getElementById(sectionName).classList.remove('hidden');
+            
+            if (sectionName === 'leaderboard') {
+                updateLeaderboard();
+                updateStats();
+            }
+        }
+
+        // Test functionality
+        function startTest() {
+            const duration = parseInt(document.getElementById('duration').value);
+            const difficulty = document.getElementById('difficulty').value;
+            const category = document.getElementById('category').value;
+            
+            // Get random text sample
+            const samples = textSamples[category][difficulty];
+            const randomText = samples[Math.floor(Math.random() * samples.length)];
+            
+            // Initialize test
+            currentTest = {
+                text: randomText,
+                startTime: Date.now(),
+                endTime: null,
+                duration: duration,
+                isActive: true,
+                currentIndex: 0,
+                errors: 0,
+                correctChars: 0,
+                timer: null
+            };
+            
+            // Setup UI
+            document.getElementById('textDisplay').innerHTML = formatText(randomText);
+            document.getElementById('textInput').value = '';
+            document.getElementById('textInput').disabled = false;
+            document.getElementById('textInput').focus();
+            document.getElementById('startBtn').textContent = 'Test in Progress...';
+            document.getElementById('startBtn').disabled = true;
+            
+            // Start timer
+            updateTimer();
+            currentTest.timer = setInterval(updateTimer, 100);
+            
+            // Add input listener
+            document.getElementById('textInput').addEventListener('input', handleInput);
+        }
+
+        function formatText(text) {
+            return text.split('').map((char, index) => {
+                let className = '';
+                if (index < currentTest.currentIndex) {
+                    className = 'correct';
+                } else if (index === currentTest.currentIndex) {
+                    className = 'current';
+                }
+                return `<span class="${className}">${char === ' ' ? '&nbsp;' : char}</span>`;
+            }).join('');
+        }
+
+        function handleInput(e) {
+            if (!currentTest.isActive) return;
+            
+            const input = e.target.value;
+            const currentChar = currentTest.text[currentTest.currentIndex];
+            const inputChar = input[input.length - 1];
+            
+            if (input.length > currentTest.currentIndex + 1) {
+                e.target.value = input.slice(0, currentTest.currentIndex + 1);
+                return;
+            }
+            
+            if (inputChar === currentChar) {
+                currentTest.correctChars++;
+                currentTest.currentIndex++;
+                createParticle();
+            } else if (inputChar !== undefined) {
+                currentTest.errors++;
+                currentTest.currentIndex++;
+            }
+            
+            // Update display
+            document.getElementById('textDisplay').innerHTML = formatText(currentTest.text);
+            updateStats();
+            
+            // Check if test is complete
+            if (currentTest.currentIndex >= currentTest.text.length) {
+                endTest();
+            }
+        }
+
+        function updateTimer() {
+            const elapsed = (Date.now() - currentTest.startTime) / 1000;
+            const remaining = Math.max(0, currentTest.duration - elapsed);
+            
+            document.getElementById('timeDisplay').textContent = Math.ceil(remaining);
+            
+            if (remaining <= 0) {
+                endTest();
+            }
+        }
+
+        function updateStats() {
+            const elapsed = (Date.now() - currentTest.startTime) / 1000;
+            const minutes = elapsed / 60;
+            
+            // Calculate WPM (assuming 5 characters per word)
+            const wpm = Math.round((currentTest.correctChars / 5) / minutes) || 0;
+            
+            // Calculate accuracy
+            const totalTyped = currentTest.correctChars + currentTest.errors;
+            const accuracy = totalTyped > 0 ? Math.round((currentTest.correctChars / totalTyped) * 100) : 100;
+            
+            // Calculate progress
+            const progress = Math.round((currentTest.currentIndex / currentTest.text.length) * 100);
+            
+            // Update displays
+            document.getElementById('wpmDisplay').textContent = wpm;
+            document.getElementById('accuracyDisplay').textContent = accuracy + '%';
+            document.getElementById('errorsDisplay').textContent = currentTest.errors;
+            document.getElementById('progressText').textContent = progress + '%';
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function endTest() {
+            currentTest.isActive = false;
+            currentTest.endTime = Date.now();
+            
+            clearInterval(currentTest.timer);
+            document.getElementById('textInput').disabled = true;
+            document.getElementById('startBtn').textContent = 'Start Test';
+            document.getElementById('startBtn').disabled = false;
+            
+            // Calculate final stats
+            const elapsed = (currentTest.endTime - currentTest.startTime) / 1000;
+            const minutes = elapsed / 60;
+            const wpm = Math.round((currentTest.correctChars / 5) / minutes) || 0;
+            const totalTyped = currentTest.correctChars + currentTest.errors;
+            const accuracy = totalTyped > 0 ? Math.round((currentTest.correctChars / totalTyped) * 100) : 100;
+            
+            // Show results modal
+            document.getElementById('finalWPM').textContent = wpm;
+            document.getElementById('finalAccuracy').textContent = accuracy + '%';
+            document.getElementById('finalErrors').textContent = currentTest.errors;
+            document.getElementById('finalChars').textContent = currentTest.correctChars;
+            document.getElementById('resultsModal').classList.remove('hidden');
+            document.getElementById('resultsModal').classList.add('flex');
+        }
+
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * window.innerWidth + 'px';
+            particle.style.top = Math.random() * window.innerHeight + 'px';
+            document.body.appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+            }, 3000);
+        }
+
+        function saveScore() {
+            const playerName = document.getElementById('playerName').value.trim() || 'Anonymous';
+            const elapsed = (currentTest.endTime - currentTest.startTime) / 1000;
+            const minutes = elapsed / 60;
+            const wpm = Math.round((currentTest.correctChars / 5) / minutes) || 0;
+            const totalTyped = currentTest.correctChars + currentTest.errors;
+            const accuracy = totalTyped > 0 ? Math.round((currentTest.correctChars / totalTyped) * 100) : 100;
+            
+            const score = {
+                name: playerName,
+                wpm: wpm,
+                accuracy: accuracy,
+                errors: currentTest.errors,
+                duration: currentTest.duration,
+                date: new Date().toISOString(),
+                characters: currentTest.correctChars
+            };
+            
+            // Save to localStorage
+            let scores = JSON.parse(localStorage.getItem('typingScores') || '[]');
+            scores.push(score);
+            localStorage.setItem('typingScores', JSON.stringify(scores));
+            
+            closeResults();
+            showSection('leaderboard');
+        }
+
+        function closeResults() {
+            document.getElementById('resultsModal').classList.add('hidden');
+            document.getElementById('resultsModal').classList.remove('flex');
+            document.getElementById('playerName').value = '';
+        }
+
+        // Leaderboard functionality
+        function updateLeaderboard() {
+            const scores = JSON.parse(localStorage.getItem('typingScores') || '[]');
+            const sortBy = document.getElementById('sortBy').value;
+            const filterDuration = document.getElementById('filterDuration').value;
+            
+            // Filter scores
+            let filteredScores = scores;
+            if (filterDuration !== 'all') {
+                filteredScores = scores.filter(score => score.duration === parseInt(filterDuration));
+            }
+            
+            // Sort scores
+            filteredScores.sort((a, b) => {
+                switch (sortBy) {
+                    case 'wpm':
+                        return b.wpm - a.wpm;
+                    case 'accuracy':
+                        return b.accuracy - a.accuracy;
+                    case 'date':
+                        return new Date(b.date) - new Date(a.date);
+                    default:
+                        return b.wpm - a.wpm;
+                }
+            });
+            
+            // Update table
+            const tbody = document.getElementById('leaderboardBody');
+            if (filteredScores.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="px-6 py-8 text-center text-white/70">
+                            No scores found for the selected criteria.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = filteredScores.map((score, index) => {
+                const date = new Date(score.date).toLocaleDateString();
+                const rankEmoji = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
+                
+                return `
+                    <tr class="border-b border-white/10 hover:bg-white/5 transition-colors duration-200">
+                        <td class="px-6 py-4 text-white font-semibold">${rankEmoji} #${index + 1}</td>
+                        <td class="px-6 py-4 text-white">${score.name}</td>
+                        <td class="px-6 py-4 text-blue-400 font-bold">${score.wpm}</td>
+                        <td class="px-6 py-4 text-green-400 font-bold">${score.accuracy}%</td>
+                        <td class="px-6 py-4 text-white/70">${score.duration}s</td>
+                        <td class="px-6 py-4 text-white/70">${date}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function updateStats() {
+            const scores = JSON.parse(localStorage.getItem('typingScores') || '[]');
+            
+            if (scores.length === 0) {
+                document.getElementById('avgWPM').textContent = '-';
+                document.getElementById('bestWPM').textContent = '-';
+                document.getElementById('avgAccuracy').textContent = '-';
+                document.getElementById('testsCompleted').textContent = '0';
+                return;
+            }
+            
+            const avgWPM = Math.round(scores.reduce((sum, score) => sum + score.wpm, 0) / scores.length);
+            const bestWPM = Math.max(...scores.map(score => score.wpm));
+            const avgAccuracy = Math.round(scores.reduce((sum, score) => sum + score.accuracy, 0) / scores.length);
+            
+            document.getElementById('avgWPM').textContent = avgWPM;
+            document.getElementById('bestWPM').textContent = bestWPM;
+            document.getElementById('avgAccuracy').textContent = avgAccuracy + '%';
+            document.getElementById('testsCompleted').textContent = scores.length;
+        }
+
+        function clearLeaderboard() {
+            if (confirm('Are you sure you want to clear all scores? This action cannot be undone.')) {
+                localStorage.removeItem('typingScores');
+                updateLeaderboard();
+                updateStats();
+            }
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            showSection('home');
+            
+            // Add smooth scrolling
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch (e.key) {
+                    case '1':
+                        e.preventDefault();
+                        showSection('home');
+                        break;
+                    case '2':
+                        e.preventDefault();
+                        showSection('test');
+                        break;
+                    case '3':
+                        e.preventDefault();
+                        showSection('leaderboard');
+                        break;
+                    case '4':
+                        e.preventDefault();
+                        showSection('about');
+                        break;
+                }
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'975ff273916b9a7c',t:'MTc1NjM0MzYxNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
