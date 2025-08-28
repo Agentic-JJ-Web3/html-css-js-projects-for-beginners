@@ -622,16 +622,98 @@
 
         // Complete periodic table data with proper positioning
         const periodicTableLayout = {
-            1: { row: 1, col: 1 }, 2: { row: 1, col: 18 },
-            3: { row: 2, col: 1 }, 4: { row: 2, col: 2 }, 5: { row: 2, col: 13 }, 6: { row: 2, col: 14 }, 7: { row: 2, col: 15 }, 8: { row: 2, col: 16 }, 9: { row: 2, col: 17 }, 10: { row: 2, col: 18 },
-            11: { row: 3, col: 1 }, 12: { row: 3, col: 2 }, 13: { row: 3, col: 13 }, 14: { row: 3, col: 14 }, 15: { row: 3, col: 15 }, 16: { row: 3, col: 16 }, 17: { row: 3, col: 17 }, 18: { row: 3, col: 18 }
+            // Row 1
+            1: { row: 1, col: 1 }, // H
+            2: { row: 1, col: 18 }, // He
+            
+            // Row 2
+            3: { row: 2, col: 1 }, // Li
+            4: { row: 2, col: 2 }, // Be
+            5: { row: 2, col: 13 }, // B
+            6: { row: 2, col: 14 }, // C
+            7: { row: 2, col: 15 }, // N
+            8: { row: 2, col: 16 }, // O
+            9: { row: 2, col: 17 }, // F
+            10: { row: 2, col: 18 }, // Ne
+            
+            // Row 3
+            11: { row: 3, col: 1 }, // Na
+            12: { row: 3, col: 2 }, // Mg
+            13: { row: 3, col: 13 }, // Al
+            14: { row: 3, col: 14 }, // Si
+            15: { row: 3, col: 15 }, // P
+            16: { row: 3, col: 16 }, // S
+            17: { row: 3, col: 17 }, // Cl
+            18: { row: 3, col: 18 }, // Ar
+            
+            // Row 4 (adding more elements)
+            19: { row: 4, col: 1 }, // K
+            20: { row: 4, col: 2 }, // Ca
+            21: { row: 4, col: 3 }, // Sc
+            22: { row: 4, col: 4 }, // Ti
+            23: { row: 4, col: 5 }, // V
+            24: { row: 4, col: 6 }, // Cr
+            25: { row: 4, col: 7 }, // Mn
+            26: { row: 4, col: 8 }, // Fe
+            27: { row: 4, col: 9 }, // Co
+            28: { row: 4, col: 10 }, // Ni
+            29: { row: 4, col: 11 }, // Cu
+            30: { row: 4, col: 12 }, // Zn
+            31: { row: 4, col: 13 }, // Ga
+            32: { row: 4, col: 14 }, // Ge
+            33: { row: 4, col: 15 }, // As
+            34: { row: 4, col: 16 }, // Se
+            35: { row: 4, col: 17 }, // Br
+            36: { row: 4, col: 18 }, // Kr
+            
+            // Row 5 (partial)
+            37: { row: 5, col: 1 }, // Rb
+            38: { row: 5, col: 2 }, // Sr
+            47: { row: 5, col: 11 }, // Ag
+            53: { row: 5, col: 17 }, // I
+            54: { row: 5, col: 18 }, // Xe
+            
+            // Row 6 (partial)
+            55: { row: 6, col: 1 }, // Cs
+            56: { row: 6, col: 2 }, // Ba
+            79: { row: 6, col: 11 }, // Au
+            82: { row: 6, col: 14 }, // Pb
+            85: { row: 6, col: 17 }, // At
+            86: { row: 6, col: 18 }, // Rn
         };
         
-        // Extended elements with trend data
+        // Extended elements with more complete data and trend values
         const allElements = [
             ...elements,
             { number: 19, symbol: 'K', name: 'Potassium', mass: 39.098, group: 'alkali-metal', icon: 'fas fa-fire', atomicRadius: 220, ionizationEnergy: 419, electronegativity: 0.82 },
-            { number: 20, symbol: 'Ca', name: 'Calcium', mass: 40.078, group: 'alkaline-earth', icon: 'fas fa-bone', atomicRadius: 180, ionizationEnergy: 590, electronegativity: 1.00 }
+            { number: 20, symbol: 'Ca', name: 'Calcium', mass: 40.078, group: 'alkaline-earth', icon: 'fas fa-bone', atomicRadius: 180, ionizationEnergy: 590, electronegativity: 1.00 },
+            { number: 21, symbol: 'Sc', name: 'Scandium', mass: 44.956, group: 'transition-metal', icon: 'fas fa-cog', atomicRadius: 160, ionizationEnergy: 633, electronegativity: 1.36 },
+            { number: 22, symbol: 'Ti', name: 'Titanium', mass: 47.867, group: 'transition-metal', icon: 'fas fa-shield-alt', atomicRadius: 140, ionizationEnergy: 658, electronegativity: 1.54 },
+            { number: 23, symbol: 'V', name: 'Vanadium', mass: 50.942, group: 'transition-metal', icon: 'fas fa-cog', atomicRadius: 135, ionizationEnergy: 650, electronegativity: 1.63 },
+            { number: 24, symbol: 'Cr', name: 'Chromium', mass: 51.996, group: 'transition-metal', icon: 'fas fa-gem', atomicRadius: 140, ionizationEnergy: 653, electronegativity: 1.66 },
+            { number: 25, symbol: 'Mn', name: 'Manganese', mass: 54.938, group: 'transition-metal', icon: 'fas fa-cog', atomicRadius: 140, ionizationEnergy: 717, electronegativity: 1.55 },
+            { number: 26, symbol: 'Fe', name: 'Iron', mass: 55.845, group: 'transition-metal', icon: 'fas fa-hammer', atomicRadius: 140, ionizationEnergy: 762, electronegativity: 1.83 },
+            { number: 27, symbol: 'Co', name: 'Cobalt', mass: 58.933, group: 'transition-metal', icon: 'fas fa-magnet', atomicRadius: 135, ionizationEnergy: 760, electronegativity: 1.88 },
+            { number: 28, symbol: 'Ni', name: 'Nickel', mass: 58.693, group: 'transition-metal', icon: 'fas fa-coins', atomicRadius: 135, ionizationEnergy: 737, electronegativity: 1.91 },
+            { number: 29, symbol: 'Cu', name: 'Copper', mass: 63.546, group: 'transition-metal', icon: 'fas fa-bolt', atomicRadius: 135, ionizationEnergy: 745, electronegativity: 1.90 },
+            { number: 30, symbol: 'Zn', name: 'Zinc', mass: 65.38, group: 'transition-metal', icon: 'fas fa-shield-alt', atomicRadius: 135, ionizationEnergy: 906, electronegativity: 1.65 },
+            { number: 31, symbol: 'Ga', name: 'Gallium', mass: 69.723, group: 'post-transition', icon: 'fas fa-microchip', atomicRadius: 130, ionizationEnergy: 579, electronegativity: 1.81 },
+            { number: 32, symbol: 'Ge', name: 'Germanium', mass: 72.630, group: 'metalloid', icon: 'fas fa-microchip', atomicRadius: 125, ionizationEnergy: 762, electronegativity: 2.01 },
+            { number: 33, symbol: 'As', name: 'Arsenic', mass: 74.922, group: 'metalloid', icon: 'fas fa-skull-crossbones', atomicRadius: 115, ionizationEnergy: 947, electronegativity: 2.18 },
+            { number: 34, symbol: 'Se', name: 'Selenium', mass: 78.971, group: 'nonmetal', icon: 'fas fa-sun', atomicRadius: 115, ionizationEnergy: 941, electronegativity: 2.55 },
+            { number: 35, symbol: 'Br', name: 'Bromine', mass: 79.904, group: 'halogen', icon: 'fas fa-flask', atomicRadius: 115, ionizationEnergy: 1140, electronegativity: 2.96 },
+            { number: 36, symbol: 'Kr', name: 'Krypton', mass: 83.798, group: 'noble-gas', icon: 'fas fa-lightbulb', atomicRadius: 88, ionizationEnergy: 1351, electronegativity: 3.00 },
+            { number: 37, symbol: 'Rb', name: 'Rubidium', mass: 85.468, group: 'alkali-metal', icon: 'fas fa-fire', atomicRadius: 235, ionizationEnergy: 403, electronegativity: 0.82 },
+            { number: 38, symbol: 'Sr', name: 'Strontium', mass: 87.62, group: 'alkaline-earth', icon: 'fas fa-fire-flame-curved', atomicRadius: 200, ionizationEnergy: 549, electronegativity: 0.95 },
+            { number: 47, symbol: 'Ag', name: 'Silver', mass: 107.868, group: 'transition-metal', icon: 'fas fa-medal', atomicRadius: 160, ionizationEnergy: 731, electronegativity: 1.93 },
+            { number: 53, symbol: 'I', name: 'Iodine', mass: 126.904, group: 'halogen', icon: 'fas fa-tint', atomicRadius: 140, ionizationEnergy: 1008, electronegativity: 2.66 },
+            { number: 54, symbol: 'Xe', name: 'Xenon', mass: 131.293, group: 'noble-gas', icon: 'fas fa-lightbulb', atomicRadius: 108, ionizationEnergy: 1170, electronegativity: 2.60 },
+            { number: 55, symbol: 'Cs', name: 'Cesium', mass: 132.905, group: 'alkali-metal', icon: 'fas fa-fire', atomicRadius: 260, ionizationEnergy: 376, electronegativity: 0.79 },
+            { number: 56, symbol: 'Ba', name: 'Barium', mass: 137.327, group: 'alkaline-earth', icon: 'fas fa-fire-flame-curved', atomicRadius: 215, ionizationEnergy: 503, electronegativity: 0.89 },
+            { number: 79, symbol: 'Au', name: 'Gold', mass: 196.967, group: 'transition-metal', icon: 'fas fa-crown', atomicRadius: 166, ionizationEnergy: 890, electronegativity: 2.54 },
+            { number: 82, symbol: 'Pb', name: 'Lead', mass: 207.2, group: 'post-transition', icon: 'fas fa-weight-hanging', atomicRadius: 180, ionizationEnergy: 716, electronegativity: 2.33 },
+            { number: 85, symbol: 'At', name: 'Astatine', mass: 210, group: 'halogen', icon: 'fas fa-radiation', atomicRadius: 150, ionizationEnergy: 920, electronegativity: 2.20 },
+            { number: 86, symbol: 'Rn', name: 'Radon', mass: 222, group: 'noble-gas', icon: 'fas fa-radiation', atomicRadius: 120, ionizationEnergy: 1037, electronegativity: null }
         ];
 
         let currentQuizElement = null;
@@ -972,5 +1054,5 @@
         // Initialize the app when page loads
         document.addEventListener('DOMContentLoaded', init);
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97605086565e770b',t:'MTc1NjM0NzQ2OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9760563747e3cd99',t:'MTc1NjM0NzcwMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
