@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Emma!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            height: 100vh;
+            background: linear-gradient(135deg, #87CEEB 0%, #FFB6C1 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            transition: background 0.5s ease;
+        }
+
+        body.dark {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        .card {
+            width: 400px;
+            height: 600px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            transition: transform 0.3s ease, background 0.5s ease, box-shadow 0.5s ease;
+            padding: 40px;
+            text-align: center;
+            animation: auto-bounce 4s ease-in-out infinite;
+        }
+
+        body.dark .card {
+            background: rgba(30, 30, 50, 0.95);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card:hover {
+            transform: scale(1.02);
+        }
+
+        .birthday-icon {
+            margin-bottom: 30px;
+            animation: bounce 2s infinite;
+        }
+
+        .main-text {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #4A90E2;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            transition: color 0.5s ease;
+        }
+
+        body.dark .main-text {
+            color: #87CEEB;
+        }
+
+        .char {
+            display: inline-block;
+            opacity: 0;
+            animation: typewriter 0.5s ease-in-out forwards;
+        }
+
+        .name {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #4A90E2, #FF69B4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            animation: shimmer 3s infinite;
+        }
+
+        .message {
+            font-size: 1.2rem;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            transition: color 0.5s ease;
+        }
+
+        body.dark .message {
+            color: #ccc;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        body.dark .theme-toggle {
+            background: rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .celebrate-btn {
+            background: linear-gradient(45deg, #4A90E2, #FF69B4);
+            border: none;
+            border-radius: 50px;
+            padding: 15px 30px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+        }
+
+        .celebrate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .celebrate-btn:active {
+            transform: translateY(0);
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .confetti.active {
+            animation: confetti-fall 3s ease-out forwards;
+        }
+
+        .balloon {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .balloon.active {
+            animation: balloon-rise 4s ease-out forwards;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        @keyframes auto-bounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-5px) scale(1.01); }
+        }
+
+        @keyframes typewriter {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                opacity: 1;
+                transform: translateY(-100vh) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(100vh) rotate(720deg);
+            }
+        }
+
+        @keyframes balloon-rise {
+            0% {
+                opacity: 1;
+                transform: translateY(100vh) scale(0.5);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(-20vh) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100vh) scale(0.8);
+            }
+        }
+
+        @keyframes card-celebrate {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.05) rotate(1deg); }
+            75% { transform: scale(1.05) rotate(-1deg); }
+        }
+
+        .celebrating {
+            animation: card-celebrate 0.6s ease-in-out;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                width: 90%;
+                height: 80%;
+                padding: 30px 20px;
+            }
+            
+            .main-text {
+                font-size: 2rem;
+            }
+            
+            .name {
+                font-size: 2.5rem;
+            }
+            
+            .message {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+    
+    <div class="card">
+        <div class="birthday-icon">
+            <svg width="80" height="80" viewBox="0 0 100 100">
+                <defs>
+                    <linearGradient id="cakeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#FFB6C1"/>
+                        <stop offset="100%" style="stop-color:#4A90E2"/>
+                    </linearGradient>
+                </defs>
+                <!-- Cake base -->
+                <rect x="20" y="60" width="60" height="30" rx="5" fill="url(#cakeGradient)"/>
+                <!-- Cake layers -->
+                <rect x="25" y="45" width="50" height="20" rx="3" fill="#FF69B4"/>
+                <rect x="30" y="30" width="40" height="20" rx="3" fill="#87CEEB"/>
+                <!-- Candles -->
+                <rect x="35" y="15" width="3" height="20" fill="#FFD700"/>
+                <rect x="48" y="15" width="3" height="20" fill="#FFD700"/>
+                <rect x="61" y="15" width="3" height="20" fill="#FFD700"/>
+                <!-- Flames -->
+                <ellipse cx="36.5" cy="12" rx="2" ry="4" fill="#FF4500"/>
+                <ellipse cx="49.5" cy="12" rx="2" ry="4" fill="#FF4500"/>
+                <ellipse cx="62.5" cy="12" rx="2" ry="4" fill="#FF4500"/>
+            </svg>
+        </div>
+        
+        <div class="main-text" id="main-text"></div>
+        <div class="name">Emma</div>
+        <div class="message">
+            Wishing you a day filled with happiness<br>
+            and a year filled with joy!<br>
+            May all your dreams come true! 🎉
+        </div>
+        <button class="celebrate-btn" onclick="celebrate()">🎉 Celebrate! 🎉</button>
+    </div>
+
+    <script>
+        let celebrationCount = 0;
+        let isDark = false;
+
+        // Typewriter effect for "Happy Birthday"
+        function typeWriter() {
+            const text = "Happy Birthday";
+            const mainTextElement = document.getElementById('main-text');
+            mainTextElement.innerHTML = '';
+            
+            for (let i = 0; i < text.length; i++) {
+                const span = document.createElement('span');
+                span.className = 'char';
+                span.textContent = text[i] === ' ' ? '\u00A0' : text[i]; // Non-breaking space
+                span.style.animationDelay = (i * 0.1) + 's';
+                mainTextElement.appendChild(span);
+            }
+        }
+
+        // Theme toggle function
+        function toggleTheme() {
+            isDark = !isDark;
+            document.body.classList.toggle('dark', isDark);
+            document.querySelector('.theme-toggle').textContent = isDark ? '☀️' : '🌙';
+        }
+
+        function celebrate() {
+            celebrationCount++;
+            
+            // Add celebration animation to card
+            const card = document.querySelector('.card');
+            card.classList.add('celebrating');
+            setTimeout(() => card.classList.remove('celebrating'), 600);
+
+            // Create confetti
+            createConfetti();
+            
+            // Create balloons every 3rd click
+            if (celebrationCount % 3 === 0) {
+                createBalloons();
+            }
+
+            // Update click hint after first celebration
+            if (celebrationCount === 1) {
+                document.querySelector('.click-hint').textContent = 'Keep clicking for more surprises! 🎈';
+            }
+        }
+
+        function createConfetti() {
+            const colors = ['#FF69B4', '#4A90E2', '#FFD700', '#87CEEB', '#FF4500', '#98FB98'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                    
+                    document.body.appendChild(confetti);
+                    confetti.classList.add('active');
+                    
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 20);
+            }
+        }
+
+        function createBalloons() {
+            const balloonColors = ['#FF69B4', '#4A90E2', '#FFD700', '#87CEEB', '#98FB98'];
+            
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const balloon = document.createElement('div');
+                    balloon.className = 'balloon';
+                    balloon.style.left = (20 + i * 15) + '%';
+                    
+                    const color = balloonColors[i];
+                    balloon.innerHTML = `
+                        <svg width="40" height="60" viewBox="0 0 40 60">
+                            <ellipse cx="20" cy="20" rx="15" ry="20" fill="${color}" stroke="#fff" stroke-width="2"/>
+                            <line x1="20" y1="40" x2="20" y2="55" stroke="#333" stroke-width="1"/>
+                            <polygon points="18,55 22,55 20,58" fill="#333"/>
+                        </svg>
+                    `;
+                    
+                    document.body.appendChild(balloon);
+                    balloon.classList.add('active');
+                    
+                    setTimeout(() => balloon.remove(), 4000);
+                }, i * 200);
+            }
+        }
+
+        // Initialize page
+        window.addEventListener('load', () => {
+            // Start typewriter effect
+            setTimeout(typeWriter, 500);
+            
+            // Add some sparkle on page load
+            setTimeout(() => {
+                for (let i = 0; i < 20; i++) {
+                    setTimeout(() => {
+                        const sparkle = document.createElement('div');
+                        sparkle.className = 'confetti';
+                        sparkle.style.left = Math.random() * 100 + 'vw';
+                        sparkle.style.backgroundColor = '#FFD700';
+                        sparkle.style.borderRadius = '50%';
+                        sparkle.style.width = '6px';
+                        sparkle.style.height = '6px';
+                        
+                        document.body.appendChild(sparkle);
+                        sparkle.classList.add('active');
+                        
+                        setTimeout(() => sparkle.remove(), 3000);
+                    }, i * 100);
+                }
+            }, 2000);
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'973659d91359ef03',t:'MTc1NTkwNzQ0OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
