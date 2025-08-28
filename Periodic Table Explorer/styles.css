@@ -1,0 +1,225 @@
+ 
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .section {
+            display: none;
+            min-height: 100vh;
+        }
+        
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .particle-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(59, 130, 246, 0.3);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
+            50% { transform: translateY(-20px) rotate(180deg); opacity: 0.8; }
+        }
+        
+        .orbital-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .orbital-bg::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .element-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .periodic-table-grid {
+            display: grid;
+            grid-template-columns: repeat(18, minmax(45px, 60px));
+            grid-template-rows: repeat(10, minmax(45px, 60px));
+            gap: 2px;
+            justify-content: center;
+            max-width: 100%;
+            margin: 0 auto;
+            overflow-x: auto;
+            padding: 10px;
+        }
+        
+        @media (max-width: 1200px) {
+            .periodic-table-grid {
+                grid-template-columns: repeat(18, 50px);
+                grid-template-rows: repeat(10, 50px);
+                gap: 1px;
+            }
+            .element-card {
+                width: 50px;
+                height: 50px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .periodic-table-grid {
+                grid-template-columns: repeat(18, 40px);
+                grid-template-rows: repeat(10, 40px);
+                gap: 1px;
+                padding: 5px;
+            }
+            .element-card {
+                width: 40px;
+                height: 40px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .periodic-table-grid {
+                grid-template-columns: repeat(18, 35px);
+                grid-template-rows: repeat(10, 35px);
+                gap: 1px;
+            }
+            .element-card {
+                width: 35px;
+                height: 35px;
+            }
+        }
+        
+        .element-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .element-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 8px;
+            padding: 1px;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: xor;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .element-card:hover::before {
+            left: 100%;
+        }
+        
+        .element-card:hover::after {
+            opacity: 1;
+        }
+        
+        .element-card:hover {
+            transform: translateY(-8px) scale(1.15);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3), 0 0 30px currentColor;
+            z-index: 20;
+            filter: brightness(1.2);
+        }
+        
+        .element-card:active {
+            transform: translateY(-6px) scale(1.1);
+            transition: all 0.1s ease;
+        }
+        
+        .modal-backdrop {
+            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        .search-glow:focus {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+        
+        /* Element group colors */
+        .alkali-metal { background: linear-gradient(135deg, #ff6b6b, #ee5a52); }
+        .alkaline-earth { background: linear-gradient(135deg, #feca57, #ff9ff3); }
+        .transition-metal { background: linear-gradient(135deg, #48dbfb, #0abde3); }
+        .post-transition { background: linear-gradient(135deg, #1dd1a1, #10ac84); }
+        .metalloid { background: linear-gradient(135deg, #ffeaa7, #fdcb6e); }
+        .nonmetal { background: linear-gradient(135deg, #a29bfe, #6c5ce7); }
+        .halogen { background: linear-gradient(135deg, #fd79a8, #e84393); }
+        .noble-gas { background: linear-gradient(135deg, #00b894, #00cec9); }
+        .lanthanide { background: linear-gradient(135deg, #e17055, #d63031); }
+        .actinide { background: linear-gradient(135deg, #00b894, #00a085); }
+        
+        /* Trend visualization colors */
+        .trend-low { background: linear-gradient(135deg, #74b9ff, #0984e3); }
+        .trend-medium { background: linear-gradient(135deg, #fdcb6e, #e17055); }
+        .trend-high { background: linear-gradient(135deg, #fd79a8, #e84393); }
+        .trend-very-high { background: linear-gradient(135deg, #a29bfe, #6c5ce7); }
+        
+        .cta-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
+        }
+        
+        .nav-button {
+            transition: all 0.3s ease;
+        }
+        
+        .nav-button:hover {
+            transform: translateY(-2px);
+        }
+    
