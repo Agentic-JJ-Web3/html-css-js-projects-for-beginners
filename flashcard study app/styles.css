@@ -1,0 +1,40 @@
+
+        .flip-card {
+            perspective: 1000px;
+        }
+        .flip-card-inner {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            backface-visibility: hidden;
+        }
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+        .gradient-math { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .gradient-science { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .gradient-history { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .bounce-in { animation: bounceIn 0.5s ease-out; }
+        .achievement-popup { animation: slideInRight 0.5s ease-out; }
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes slideInRight {
+            0% { transform: translateX(100%); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+        .dark .bg-light { background-color: #1f2937; }
+        .dark .text-dark { color: #f9fafb; }
+        .dark .bg-white { background-color: #374151; }
+        .dark .text-gray-800 { color: #f9fafb; }
+        .dark .text-gray-600 { color: #d1d5db; }
+        .dark .text-gray-700 { color: #e5e7eb; }
+        .dark .shadow-xl { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2); }
+    
