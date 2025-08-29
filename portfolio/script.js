@@ -100,7 +100,7 @@
         // Form submission (demo)
         document.querySelector('form').addEventListener('submit', function(e) {
             e.preventDefault();
-            alert('Thanks for the message! In a real portfolio, this would actually send an email. 😊');
+            alert('Thanks for the message! In a real portfolio with a backend, this would actually send an email. 😊');
         });
 
         // Add scroll effect to navigation
