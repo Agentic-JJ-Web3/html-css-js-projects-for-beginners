@@ -7,4 +7,6 @@
             star.style.animationDelay = Math.random() * 3 + 's';
             document.body.appendChild(star);
         }
+
+        
     
