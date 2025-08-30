@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Library</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .search-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .main-content {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            width: 300px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 20px;
+        }
+
+        .sidebar h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .filter-group {
+            margin-bottom: 25px;
+        }
+
+        .filter-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .filter-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .filter-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #667eea;
+        }
+
+        .clear-filters {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s ease;
+            width: 100%;
+        }
+
+        .clear-filters:hover {
+            background: #ff5252;
+        }
+
+        /* Mobile sidebar toggle */
+        .sidebar-toggle {
+            display: none;
+            background: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+
+        /* Books Grid */
+        .books-container {
+            flex: 1;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .book-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+
+        .book-cover {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            color: white;
+            font-size: 3rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .book-info h3 {
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 1.2rem;
+        }
+
+        .book-author {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .book-description {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .book-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #888;
+        }
+
+        .book-genre {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .book-status {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .available {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .borrowed {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .no-results h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: static;
+                display: none;
+            }
+
+            .sidebar.active {
+                display: block;
+            }
+
+            .sidebar-toggle {
+                display: block;
+            }
+
+            .books-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 20px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .books-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Digital Library</h1>
+            <p>Discover your next favorite book</p>
+        </div>
+
+        <div class="search-container">
+            <input type="text" class="search-bar" id="searchInput" placeholder="Search books by title or author...">
+        </div>
+
+        <button class="sidebar-toggle" id="sidebarToggle">
+            📋 Filters & Categories
+        </button>
+
+        <div class="main-content">
+            <div class="sidebar" id="sidebar">
+                <h3>📂 Filters</h3>
+                
+                <div class="filter-group">
+                    <label for="genreFilter">Genre:</label>
+                    <select id="genreFilter">
+                        <option value="">All Genres</option>
+                        <option value="Fiction">Fiction</option>
+                        <option value="Science Fiction">Science Fiction</option>
+                        <option value="Mystery">Mystery</option>
+                        <option value="Romance">Romance</option>
+                        <option value="Fantasy">Fantasy</option>
+                        <option value="Non-Fiction">Non-Fiction</option>
+                        <option value="Biography">Biography</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="yearFilter">Publication Year:</label>
+                    <select id="yearFilter">
+                        <option value="">All Years</option>
+                        <option value="2020s">2020s</option>
+                        <option value="2010s">2010s</option>
+                        <option value="2000s">2000s</option>
+                        <option value="1990s">1990s</option>
+                        <option value="Classic">Before 1990</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Availability:</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="availableFilter" value="available">
+                            <label for="availableFilter">Available</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="borrowedFilter" value="borrowed">
+                            <label for="borrowedFilter">Borrowed</label>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="clear-filters" id="clearFilters">Clear All Filters</button>
+            </div>
+
+            <div class="books-container">
+                <div class="books-grid" id="booksGrid">
+                    <!-- Books will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample book data - realistic library collection
+        const booksData = [
+            {
+                id: 1,
+                title: "The Midnight Library",
+                author: "Matt Haig",
+                genre: "Fiction",
+                year: 2020,
+                status: "available",
+                description: "A magical story about life's infinite possibilities and the choices we make.",
+                cover: "📖"
+            },
+            {
+                id: 2,
+                title: "Dune",
+                author: "Frank Herbert",
+                genre: "Science Fiction",
+                year: 1965,
+                status: "borrowed",
+                description: "Epic tale of politics, religion, and ecology on the desert planet Arrakis.",
+                cover: "🏜️"
+            },
+            {
+                id: 3,
+                title: "The Seven Husbands of Evelyn Hugo",
+                author: "Taylor Jenkins Reid",
+                genre: "Romance",
+                year: 2017,
+                status: "available",
+                description: "A reclusive Hollywood icon reveals her secrets to an unknown journalist.",
+                cover: "💫"
+            },
+            {
+                id: 4,
+                title: "Educated",
+                author: "Tara Westover",
+                genre: "Biography",
+                year: 2018,
+                status: "available",
+                description: "A memoir about education, family, and the struggle for self-invention.",
+                cover: "🎓"
+            },
+            {
+                id: 5,
+                title: "The Silent Patient",
+                author: "Alex Michaelides",
+                genre: "Mystery",
+                year: 2019,
+                status: "borrowed",
+                description: "A woman refuses to speak after allegedly murdering her husband.",
+                cover: "🤐"
+            },
+            {
+                id: 6,
+                title: "Circe",
+                author: "Madeline Miller",
+                genre: "Fantasy",
+                year: 2018,
+                status: "available",
+                description: "The story of the Greek goddess who transforms from nymph to witch.",
+                cover: "🌙"
+            },
+            {
+                id: 7,
+                title: "Atomic Habits",
+                author: "James Clear",
+                genre: "Non-Fiction",
+                year: 2018,
+                status: "available",
+                description: "Practical strategies for forming good habits and breaking bad ones.",
+                cover: "⚛️"
+            },
+            {
+                id: 8,
+                title: "The Thursday Murder Club",
+                author: "Richard Osman",
+                genre: "Mystery",
+                year: 2020,
+                status: "available",
+                description: "Four retirees meet weekly to investigate cold cases.",
+                cover: "🔍"
+            },
+            {
+                id: 9,
+                title: "Project Hail Mary",
+                author: "Andy Weir",
+                genre: "Science Fiction",
+                year: 2021,
+                status: "borrowed",
+                description: "A lone astronaut must save humanity from extinction.",
+                cover: "🚀"
+            },
+            {
+                id: 10,
+                title: "The Invisible Life of Addie LaRue",
+                author: "V.E. Schwab",
+                genre: "Fantasy",
+                year: 2020,
+                status: "available",
+                description: "A young woman makes a Faustian bargain for immortality.",
+                cover: "✨"
+            },
+            {
+                id: 11,
+                title: "Where the Crawdads Sing",
+                author: "Delia Owens",
+                genre: "Fiction",
+                year: 2018,
+                status: "available",
+                description: "A mystery set in the marshlands of North Carolina.",
+                cover: "🦢"
+            },
+            {
+                id: 12,
+                title: "Becoming",
+                author: "Michelle Obama",
+                genre: "Biography",
+                year: 2018,
+                status: "borrowed",
+                description: "The former First Lady's deeply personal memoir.",
+                cover: "👑"
+            }
+        ];
+
+        // DOM elements
+        const searchInput = document.getElementById('searchInput');
+        const genreFilter = document.getElementById('genreFilter');
+        const yearFilter = document.getElementById('yearFilter');
+        const availableFilter = document.getElementById('availableFilter');
+        const borrowedFilter = document.getElementById('borrowedFilter');
+        const clearFiltersBtn = document.getElementById('clearFilters');
+        const booksGrid = document.getElementById('booksGrid');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+
+        let filteredBooks = [...booksData];
+
+        // Initialize the library
+        function init() {
+            displayBooks(booksData);
+            setupEventListeners();
+        }
+
+        // Set up all event listeners
+        function setupEventListeners() {
+            searchInput.addEventListener('input', handleSearch);
+            genreFilter.addEventListener('change', applyFilters);
+            yearFilter.addEventListener('change', applyFilters);
+            availableFilter.addEventListener('change', applyFilters);
+            borrowedFilter.addEventListener('change', applyFilters);
+            clearFiltersBtn.addEventListener('click', clearAllFilters);
+            sidebarToggle.addEventListener('click', toggleSidebar);
+        }
+
+        // Display books in the grid
+        function displayBooks(books) {
+            if (books.length === 0) {
+                booksGrid.innerHTML = `
+                    <div class="no-results">
+                        <h3>📚 No books found</h3>
+                        <p>Try adjusting your search or filters</p>
+                    </div>
+                `;
+                return;
+            }
+
+            booksGrid.innerHTML = books.map(book => `
+                <div class="book-card">
+                    <div class="book-cover">${book.cover}</div>
+                    <div class="book-info">
+                        <h3>${book.title}</h3>
+                        <div class="book-author">by ${book.author}</div>
+                        <div class="book-description">${book.description}</div>
+                        <div class="book-meta">
+                            <span class="book-genre">${book.genre}</span>
+                            <span class="book-status ${book.status}">${book.status}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Handle search functionality
+        function handleSearch() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            
+            if (searchTerm === '') {
+                applyFilters();
+                return;
+            }
+
+            const searchResults = filteredBooks.filter(book => 
+                book.title.toLowerCase().includes(searchTerm) ||
+                book.author.toLowerCase().includes(searchTerm)
+            );
+
+            displayBooks(searchResults);
+        }
+
+        // Apply all active filters
+        function applyFilters() {
+            let filtered = [...booksData];
+
+            // Genre filter
+            const selectedGenre = genreFilter.value;
+            if (selectedGenre) {
+                filtered = filtered.filter(book => book.genre === selectedGenre);
+            }
+
+            // Year filter
+            const selectedYear = yearFilter.value;
+            if (selectedYear) {
+                filtered = filtered.filter(book => {
+                    const bookYear = book.year;
+                    switch (selectedYear) {
+                        case '2020s': return bookYear >= 2020;
+                        case '2010s': return bookYear >= 2010 && bookYear < 2020;
+                        case '2000s': return bookYear >= 2000 && bookYear < 2010;
+                        case '1990s': return bookYear >= 1990 && bookYear < 2000;
+                        case 'Classic': return bookYear < 1990;
+                        default: return true;
+                    }
+                });
+            }
+
+            // Availability filters
+            const showAvailable = availableFilter.checked;
+            const showBorrowed = borrowedFilter.checked;
+            
+            if (showAvailable && !showBorrowed) {
+                filtered = filtered.filter(book => book.status === 'available');
+            } else if (showBorrowed && !showAvailable) {
+                filtered = filtered.filter(book => book.status === 'borrowed');
+            }
+            // If both or neither are checked, show all
+
+            filteredBooks = filtered;
+            
+            // Apply search to filtered results
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            if (searchTerm) {
+                filtered = filtered.filter(book => 
+                    book.title.toLowerCase().includes(searchTerm) ||
+                    book.author.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            displayBooks(filtered);
+        }
+
+        // Clear all filters and search
+        function clearAllFilters() {
+            searchInput.value = '';
+            genreFilter.value = '';
+            yearFilter.value = '';
+            availableFilter.checked = false;
+            borrowedFilter.checked = false;
+            
+            filteredBooks = [...booksData];
+            displayBooks(booksData);
+        }
+
+        // Toggle sidebar on mobile
+        function toggleSidebar() {
+            sidebar.classList.toggle('active');
+        }
+
+        // Handle window resize for responsive behavior
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                sidebar.classList.remove('active');
+            }
+        });
+
+        // Initialize the application
+        init();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9776c94e9442ef3a',t:'MTc1NjU4MzEwMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
