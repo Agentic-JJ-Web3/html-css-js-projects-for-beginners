@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Connect - Advanced Memory Matching Game</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Homepage Styles */
+        .homepage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            min-height: 80vh;
+            justify-content: center;
+        }
+        
+        .hero {
+            margin-bottom: 50px;
+        }
+        
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #fff, #f0f8ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+            width: 100%;
+        }
+        
+        .feature-card {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+        
+        .feature-card p {
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+        
+        .category-selection {
+            margin-bottom: 40px;
+        }
+        
+        .category-selection h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+        
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .category-btn {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .category-btn:hover,
+        .category-btn.selected {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.6);
+            transform: translateY(-2px);
+        }
+        
+        .start-btn {
+            background: linear-gradient(145deg, #4facfe, #00f2fe);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 30px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(79,172,254,0.3);
+            margin-top: 30px;
+        }
+        
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(79,172,254,0.4);
+        }
+        
+        /* Game Styles */
+        .game-container {
+            display: none;
+        }
+        
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .game-title {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .difficulty-indicator {
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            font-weight: 600;
+        }
+        
+        .game-stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .stat {
+            background: rgba(255,255,255,0.2);
+            padding: 12px 24px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            font-weight: 600;
+            min-width: 120px;
+            text-align: center;
+        }
+        
+        .game-board {
+            display: grid;
+            gap: 15px;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            justify-content: center;
+        }
+        
+        .board-2x6 { grid-template-columns: repeat(4, 1fr); }
+        .board-3x6 { grid-template-columns: repeat(6, 1fr); }
+        .board-4x6 { grid-template-columns: repeat(6, 1fr); }
+        
+        .card {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            position: relative;
+            transform-style: preserve-3d;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+        }
+        
+        .card.flipped {
+            background: linear-gradient(145deg, #4facfe, #00f2fe);
+            transform: rotateY(180deg);
+        }
+        
+        .card.matched {
+            background: linear-gradient(145deg, #a8edea, #fed6e3);
+            transform: scale(0.95);
+            cursor: default;
+        }
+        
+        .card-content {
+            font-size: 2.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .card.flipped .card-content,
+        .card.matched .card-content {
+            opacity: 1;
+        }
+        
+        .game-controls {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(145deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(145deg, #ff6b6b, #ee5a24);
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            color: #333;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-content h3 {
+            color: #667eea;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .modal-content p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        /* Footer */
+        .footer {
+            background: rgba(0,0,0,0.2);
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 50px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .footer p {
+            margin-bottom: 10px;
+            opacity: 0.8;
+        }
+        
+        .footer a {
+            color: #4facfe;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+            
+            .categories {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .card {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .card-content {
+                font-size: 2rem;
+            }
+            
+            .game-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .game-stats {
+                justify-content: center;
+            }
+        }
+        
+        .level-complete {
+            background: linear-gradient(145deg, #4facfe, #00f2fe);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+            animation: celebration 0.5s ease;
+        }
+        
+        @keyframes celebration {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Homepage -->
+        <div id="homepage" class="homepage">
+            <div class="hero">
+                <h1>🎯 Team Connect</h1>
+                <p>An advanced memory matching game designed to break the ice and bring teams together through fun challenges and meaningful conversation starters.</p>
+            </div>
+            
+            <div class="features">
+                <div class="feature-card">
+                    <h3>🎮 Progressive Difficulty</h3>
+                    <p>Start with pairs, advance to triplets, and master quadruplets as you improve your memory skills.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🌟 Multiple Categories</h3>
+                    <p>Choose from fruits, symbols, flags, sports, electronics, and more to keep the game fresh and engaging.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>💬 Conversation Starters</h3>
+                    <p>Each match reveals thoughtful questions designed to spark meaningful team discussions and connections.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>📊 Performance Tracking</h3>
+                    <p>Monitor your moves, time, and progress as you advance through increasingly challenging levels.</p>
+                </div>
+            </div>
+            
+            <div class="category-selection">
+                <h3>Choose Your Category</h3>
+                <div class="categories">
+                    <button class="category-btn selected" data-category="fruits">🍎 Fruits</button>
+                    <button class="category-btn" data-category="symbols">⭐ Symbols</button>
+                    <button class="category-btn" data-category="flags">🏁 Flags</button>
+                    <button class="category-btn" data-category="sports">⚽ Sports</button>
+                    <button class="category-btn" data-category="electronics">📱 Electronics</button>
+                    <button class="category-btn" data-category="animals">🐱 Animals</button>
+                    <button class="category-btn" data-category="vehicles">🚗 Vehicles</button>
+                    <button class="category-btn" data-category="nature">🌳 Nature</button>
+                </div>
+            </div>
+            
+            <button class="start-btn" onclick="startGame()">🚀 Start Playing</button>
+        </div>
+        
+        <!-- Game Container -->
+        <div id="gameContainer" class="game-container">
+            <div class="game-header">
+                <div class="game-title">🎯 Team Connect</div>
+                <div class="difficulty-indicator" id="difficultyIndicator">Level 1: Pairs</div>
+            </div>
+            
+            <div class="game-stats">
+                <div class="stat">Level: <span id="currentLevel">1</span></div>
+                <div class="stat">Moves: <span id="moves">0</span></div>
+                <div class="stat">Matches: <span id="matches">0</span>/<span id="totalMatches">6</span></div>
+                <div class="stat">Time: <span id="timer">00:00</span></div>
+            </div>
+            
+            <div class="game-board" id="gameBoard"></div>
+            
+            <div class="game-controls">
+                <button class="btn btn-primary" onclick="resetLevel()">🔄 Reset Level</button>
+                <button class="btn btn-secondary" onclick="goHome()">🏠 Home</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Question Modal -->
+    <div class="modal" id="questionModal">
+        <div class="modal-content">
+            <h3>💬 Conversation Starter</h3>
+            <p id="questionText"></p>
+            <button class="btn btn-primary" onclick="closeQuestion()">Continue Playing</button>
+        </div>
+    </div>
+    
+    <!-- Level Complete Modal -->
+    <div class="modal" id="levelCompleteModal">
+        <div class="modal-content">
+            <h3 id="levelCompleteTitle">🎉 Level Complete!</h3>
+            <p id="levelCompleteText"></p>
+            <div style="display: flex; gap: 15px; justify-content: center;">
+                <button class="btn btn-primary" onclick="nextLevel()">Next Level</button>
+                <button class="btn btn-secondary" onclick="goHome()">Home</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <p><strong>Built and Designed by JJ</strong></p>
+        <p>Open source and available on <a href="#" target="_blank">GitHub</a></p>
+        <p>© 2024 Team Connect - Bringing teams together through play</p>
+    </div>
+
+    <script>
+        const emojiCategories = {
+            fruits: ['🍎', '🍌', '🍊', '🍇', '🍓', '🥝', '🍑', '🍒'],
+            symbols: ['⭐', '💎', '🔥', '⚡', '🌟', '💫', '✨', '🎯'],
+            flags: ['🏁', '🏳️', '🚩', '🏴', '🏳️‍🌈', '🏴‍☠️', '🎌', '🏳️‍⚧️'],
+            sports: ['⚽', '🏀', '🏈', '⚾', '🎾', '🏐', '🏓', '🏸'],
+            electronics: ['📱', '💻', '⌚', '📷', '🎧', '📺', '🖥️', '⌨️'],
+            animals: ['🐱', '🐶', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼'],
+            vehicles: ['🚗', '🚕', '🚙', '🚌', '🚎', '🏎️', '🚓', '🚑'],
+            nature: ['🌳', '🌲', '🌴', '🌵', '🌿', '🍀', '🌺', '🌻']
+        };
+        
+        const questions = [
+            "What emoji best describes your morning routine?",
+            "What's a work skill you're proud of developing?",
+            "If you could have any superpower at work, what would it be?",
+            "What's your favorite way to celebrate team wins?",
+            "What's one thing that always makes you smile during the workday?",
+            "If your job was a movie genre, what would it be and why?",
+            "What's the best piece of advice you've received from a colleague?",
+            "What's your go-to method for staying organized?",
+            "If you could swap jobs with anyone on the team for a day, who and why?",
+            "What's something new you'd like to learn or try this year?",
+            "What's your favorite team-building activity?",
+            "How do you prefer to receive feedback?",
+            "What's your ideal work environment?",
+            "What motivates you most in your daily work?",
+            "What's a recent accomplishment you're proud of?"
+        ];
+        
+        let currentCategory = 'fruits';
+        let currentLevel = 1;
+        let gameBoard = [];
+        let flippedCards = [];
+        let matchedGroups = 0;
+        let moves = 0;
+        let startTime = null;
+        let timerInterval = null;
+        let usedQuestions = [];
+        let requiredMatches = 2; // pairs
+        
+        // Category selection
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                currentCategory = this.dataset.category;
+            });
+        });
+        
+        function startGame() {
+            document.getElementById('homepage').style.display = 'none';
+            document.getElementById('gameContainer').style.display = 'block';
+            initLevel();
+        }
+        
+        function goHome() {
+            document.getElementById('gameContainer').style.display = 'none';
+            document.getElementById('homepage').style.display = 'flex';
+            resetGame();
+        }
+        
+        function initLevel() {
+            // Determine required matches based on level
+            if (currentLevel === 1) {
+                requiredMatches = 2; // pairs
+            } else if (currentLevel === 2) {
+                requiredMatches = 3; // triplets
+            } else {
+                requiredMatches = 4; // quadruplets
+            }
+            
+            updateDifficultyIndicator();
+            createGameBoard();
+            renderBoard();
+            resetStats();
+        }
+        
+        function updateDifficultyIndicator() {
+            const indicator = document.getElementById('difficultyIndicator');
+            const levelNames = ['Pairs', 'Triplets', 'Quadruplets'];
+            indicator.textContent = `Level ${currentLevel}: ${levelNames[currentLevel - 1]}`;
+        }
+        
+        function createGameBoard() {
+            const emojis = emojiCategories[currentCategory];
+            const numGroups = 6;
+            const totalCards = numGroups * requiredMatches;
+            
+            gameBoard = [];
+            
+            // Create groups of matching emojis
+            for (let i = 0; i < numGroups; i++) {
+                for (let j = 0; j < requiredMatches; j++) {
+                    gameBoard.push(emojis[i % emojis.length]);
+                }
+            }
+            
+            // Shuffle the array
+            for (let i = gameBoard.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [gameBoard[i], gameBoard[j]] = [gameBoard[j], gameBoard[i]];
+            }
+        }
+        
+        function renderBoard() {
+            const board = document.getElementById('gameBoard');
+            board.innerHTML = '';
+            
+            // Set grid layout based on level
+            const layoutClass = `board-${requiredMatches}x6`;
+            board.className = `game-board ${layoutClass}`;
+            
+            gameBoard.forEach((emoji, index) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `<div class="card-content">${emoji}</div>`;
+                card.addEventListener('click', () => flipCard(index));
+                board.appendChild(card);
+            });
+            
+            // Update total matches display
+            document.getElementById('totalMatches').textContent = 6;
+        }
+        
+        function flipCard(index) {
+            const cards = document.querySelectorAll('.card');
+            const card = cards[index];
+            
+            // Don't flip if already flipped, matched, or max cards are flipped
+            if (card.classList.contains('flipped') || 
+                card.classList.contains('matched') || 
+                flippedCards.length >= requiredMatches) {
+                return;
+            }
+            
+            // Start timer on first move
+            if (moves === 0) {
+                startTimer();
+            }
+            
+            card.classList.add('flipped');
+            flippedCards.push(index);
+            
+            if (flippedCards.length === requiredMatches) {
+                moves++;
+                document.getElementById('moves').textContent = moves;
+                
+                setTimeout(() => {
+                    checkMatch();
+                }, 1000);
+            }
+        }
+        
+        function checkMatch() {
+            const cards = document.querySelectorAll('.card');
+            
+            // Check if all flipped cards have the same emoji
+            const firstEmoji = gameBoard[flippedCards[0]];
+            const isMatch = flippedCards.every(index => gameBoard[index] === firstEmoji);
+            
+            if (isMatch) {
+                // Match found!
+                flippedCards.forEach(index => {
+                    cards[index].classList.add('matched');
+                    cards[index].classList.remove('flipped');
+                });
+                
+                matchedGroups++;
+                document.getElementById('matches').textContent = matchedGroups;
+                
+                // Show conversation starter
+                showQuestion();
+                
+                // Check if level is complete
+                if (matchedGroups === 6) {
+                    setTimeout(() => {
+                        completeLevel();
+                    }, 1000);
+                }
+            } else {
+                // No match
+                flippedCards.forEach(index => {
+                    cards[index].classList.remove('flipped');
+                });
+            }
+            
+            flippedCards = [];
+        }
+        
+        function showQuestion() {
+            let availableQuestions = questions.filter(q => !usedQuestions.includes(q));
+            
+            if (availableQuestions.length === 0) {
+                usedQuestions = [];
+                availableQuestions = questions;
+            }
+            
+            const randomQuestion = availableQuestions[Math.floor(Math.random() * availableQuestions.length)];
+            usedQuestions.push(randomQuestion);
+            
+            document.getElementById('questionText').textContent = randomQuestion;
+            document.getElementById('questionModal').style.display = 'flex';
+        }
+        
+        function closeQuestion() {
+            document.getElementById('questionModal').style.display = 'none';
+        }
+        
+        function completeLevel() {
+            clearInterval(timerInterval);
+            
+            const title = document.getElementById('levelCompleteTitle');
+            const text = document.getElementById('levelCompleteText');
+            
+            if (currentLevel < 3) {
+                title.textContent = `🎉 Level ${currentLevel} Complete!`;
+                text.textContent = `Excellent work! You've mastered ${requiredMatches === 2 ? 'pairs' : 'triplets'}. Ready for the next challenge?`;
+            } else {
+                title.textContent = '🏆 Congratulations! Game Complete!';
+                text.textContent = 'You\'ve mastered all difficulty levels! You\'re a memory matching champion!';
+            }
+            
+            document.getElementById('levelCompleteModal').style.display = 'flex';
+        }
+        
+        function nextLevel() {
+            document.getElementById('levelCompleteModal').style.display = 'none';
+            
+            if (currentLevel < 3) {
+                currentLevel++;
+                document.getElementById('currentLevel').textContent = currentLevel;
+                initLevel();
+            } else {
+                goHome();
+            }
+        }
+        
+        function resetLevel() {
+            clearInterval(timerInterval);
+            matchedGroups = 0;
+            moves = 0;
+            flippedCards = [];
+            initLevel();
+        }
+        
+        function resetGame() {
+            currentLevel = 1;
+            document.getElementById('currentLevel').textContent = currentLevel;
+            clearInterval(timerInterval);
+            matchedGroups = 0;
+            moves = 0;
+            flippedCards = [];
+            usedQuestions = [];
+            closeQuestion();
+            document.getElementById('levelCompleteModal').style.display = 'none';
+        }
+        
+        function startTimer() {
+            startTime = Date.now();
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+        
+        function updateTimer() {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+            const seconds = (elapsed % 60).toString().padStart(2, '0');
+            document.getElementById('timer').textContent = `${minutes}:${seconds}`;
+        }
+        
+        function resetStats() {
+            document.getElementById('moves').textContent = '0';
+            document.getElementById('matches').textContent = '0';
+            document.getElementById('timer').textContent = '00:00';
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97366eb57474fea9',t:'MTc1NTkwODMwNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
