@@ -187,12 +187,30 @@
         .book-cover {
             width: 100%;
             height: 200px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
             border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .book-card:hover .book-cover img {
+            transform: scale(1.05);
+        }
+
+        .book-cover-fallback {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 15px;
             color: white;
             font-size: 3rem;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
@@ -223,6 +241,7 @@
             align-items: center;
             font-size: 12px;
             color: #888;
+            margin-bottom: 15px;
         }
 
         .book-genre {
@@ -247,6 +266,57 @@
         .borrowed {
             background: #fff3e0;
             color: #f57c00;
+        }
+
+        .book-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a6fd8;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            background: #e9ecef;
+            color: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn:disabled:hover {
+            transform: none;
         }
 
         .no-results {
@@ -372,7 +442,7 @@
     </div>
 
     <script>
-        // Sample book data - realistic library collection
+        // Sample book data - realistic library collection with Unsplash images
         const booksData = [
             {
                 id: 1,
@@ -382,7 +452,8 @@
                 year: 2020,
                 status: "available",
                 description: "A magical story about life's infinite possibilities and the choices we make.",
-                cover: "📖"
+                cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=400&fit=crop&auto=format",
+                fallback: "📖"
             },
             {
                 id: 2,
@@ -392,7 +463,8 @@
                 year: 1965,
                 status: "borrowed",
                 description: "Epic tale of politics, religion, and ecology on the desert planet Arrakis.",
-                cover: "🏜️"
+                cover: "https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=300&h=400&fit=crop&auto=format",
+                fallback: "🏜️"
             },
             {
                 id: 3,
@@ -402,7 +474,8 @@
                 year: 2017,
                 status: "available",
                 description: "A reclusive Hollywood icon reveals her secrets to an unknown journalist.",
-                cover: "💫"
+                cover: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=400&fit=crop&auto=format",
+                fallback: "💫"
             },
             {
                 id: 4,
@@ -412,7 +485,8 @@
                 year: 2018,
                 status: "available",
                 description: "A memoir about education, family, and the struggle for self-invention.",
-                cover: "🎓"
+                cover: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=300&h=400&fit=crop&auto=format",
+                fallback: "🎓"
             },
             {
                 id: 5,
@@ -422,7 +496,8 @@
                 year: 2019,
                 status: "borrowed",
                 description: "A woman refuses to speak after allegedly murdering her husband.",
-                cover: "🤐"
+                cover: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=400&fit=crop&auto=format",
+                fallback: "🤐"
             },
             {
                 id: 6,
@@ -432,7 +507,8 @@
                 year: 2018,
                 status: "available",
                 description: "The story of the Greek goddess who transforms from nymph to witch.",
-                cover: "🌙"
+                cover: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=300&h=400&fit=crop&auto=format",
+                fallback: "🌙"
             },
             {
                 id: 7,
@@ -442,7 +518,8 @@
                 year: 2018,
                 status: "available",
                 description: "Practical strategies for forming good habits and breaking bad ones.",
-                cover: "⚛️"
+                cover: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=300&h=400&fit=crop&auto=format",
+                fallback: "⚛️"
             },
             {
                 id: 8,
@@ -452,7 +529,8 @@
                 year: 2020,
                 status: "available",
                 description: "Four retirees meet weekly to investigate cold cases.",
-                cover: "🔍"
+                cover: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=300&h=400&fit=crop&auto=format",
+                fallback: "🔍"
             },
             {
                 id: 9,
@@ -462,7 +540,8 @@
                 year: 2021,
                 status: "borrowed",
                 description: "A lone astronaut must save humanity from extinction.",
-                cover: "🚀"
+                cover: "https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=300&h=400&fit=crop&auto=format",
+                fallback: "🚀"
             },
             {
                 id: 10,
@@ -472,7 +551,8 @@
                 year: 2020,
                 status: "available",
                 description: "A young woman makes a Faustian bargain for immortality.",
-                cover: "✨"
+                cover: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=300&h=400&fit=crop&auto=format",
+                fallback: "✨"
             },
             {
                 id: 11,
@@ -482,7 +562,8 @@
                 year: 2018,
                 status: "available",
                 description: "A mystery set in the marshlands of North Carolina.",
-                cover: "🦢"
+                cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=400&fit=crop&auto=format",
+                fallback: "🦢"
             },
             {
                 id: 12,
@@ -492,7 +573,8 @@
                 year: 2018,
                 status: "borrowed",
                 description: "The former First Lady's deeply personal memoir.",
-                cover: "👑"
+                cover: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=400&fit=crop&auto=format",
+                fallback: "👑"
             }
         ];
 
@@ -540,7 +622,10 @@
 
             booksGrid.innerHTML = books.map(book => `
                 <div class="book-card">
-                    <div class="book-cover">${book.cover}</div>
+                    <div class="book-cover">
+                        <img src="${book.cover}" alt="${book.title}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="book-cover-fallback" style="display: none;">${book.fallback}</div>
+                    </div>
                     <div class="book-info">
                         <h3>${book.title}</h3>
                         <div class="book-author">by ${book.author}</div>
@@ -548,6 +633,14 @@
                         <div class="book-meta">
                             <span class="book-genre">${book.genre}</span>
                             <span class="book-status ${book.status}">${book.status}</span>
+                        </div>
+                        <div class="book-actions">
+                            ${book.status === 'available' ? 
+                                `<button class="btn btn-primary" onclick="borrowBook(${book.id})">📚 Borrow</button>
+                                 <button class="btn btn-secondary" onclick="readBook(${book.id})">👁️ Read</button>` :
+                                `<button class="btn" disabled>📚 Borrowed</button>
+                                 <button class="btn btn-secondary" onclick="readBook(${book.id})">👁️ Read</button>`
+                            }
                         </div>
                     </div>
                 </div>
@@ -646,8 +739,91 @@
             }
         });
 
+        // Book action functions
+        function borrowBook(bookId) {
+            const book = booksData.find(b => b.id === bookId);
+            if (book && book.status === 'available') {
+                book.status = 'borrowed';
+                
+                // Show success message
+                showNotification(`📚 "${book.title}" has been borrowed successfully!`, 'success');
+                
+                // Refresh the display
+                applyFilters();
+            }
+        }
+
+        function readBook(bookId) {
+            const book = booksData.find(b => b.id === bookId);
+            if (book) {
+                // Show reading interface (demo)
+                showNotification(`👁️ Opening "${book.title}" for reading...`, 'info');
+                
+                // In a real app, this would open a reading interface
+                setTimeout(() => {
+                    alert(`📖 Reading "${book.title}" by ${book.author}\n\n${book.description}\n\nThis is a demo - in a real library app, this would open the full book reader!`);
+                }, 1000);
+            }
+        }
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            // Remove existing notifications
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()" style="background: none; border: none; color: inherit; font-size: 18px; cursor: pointer; margin-left: 10px;">&times;</button>
+            `;
+
+            // Add notification styles
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#4caf50' : type === 'error' ? '#f44336' : '#2196f3'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                max-width: 400px;
+                animation: slideIn 0.3s ease;
+            `;
+
+            // Add animation keyframes
+            if (!document.querySelector('#notification-styles')) {
+                const style = document.createElement('style');
+                style.id = 'notification-styles';
+                style.textContent = `
+                    @keyframes slideIn {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            document.body.appendChild(notification);
+
+            // Auto remove after 4 seconds
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 4000);
+        }
+
         // Initialize the application
         init();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9776c94e9442ef3a',t:'MTc1NjU4MzEwMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9776dd95e163d857',t:'MTc1NjU4MzkzNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
