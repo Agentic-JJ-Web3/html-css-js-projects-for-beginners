@@ -9,10 +9,7 @@ A simple, interactive flashcard application built with vanilla HTML, CSS, and Ja
 *   Navigate through the deck with 'Next' and 'Previous' buttons.
 *   Responsive design that works on different screen sizes.
 
-## Screenshot
 
-![Flashcard App Screenshot](placeholder.png)
-*A brief description of the screenshot.*
 
 ## Technologies Used
 
