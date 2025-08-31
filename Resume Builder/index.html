@@ -24,23 +24,6 @@
             display: flex;
             align-items: center;
             position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-            animation: float 20s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
         }
 
         .hero-content {
@@ -64,28 +47,22 @@
             font-weight: 700;
             margin-bottom: 20px;
             line-height: 1.2;
-            animation: slideInLeft 1s ease-out;
         }
 
         .hero-text .highlight {
-            background: linear-gradient(45deg, #ff6b6b, #feca57);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #feca57;
         }
 
         .hero-text p {
             font-size: 1.3rem;
             margin-bottom: 30px;
             opacity: 0.9;
-            animation: slideInLeft 1s ease-out 0.2s both;
         }
 
         .cta-buttons {
             display: flex;
             gap: 20px;
             margin-bottom: 40px;
-            animation: slideInLeft 1s ease-out 0.4s both;
         }
 
         .btn {
@@ -95,39 +72,35 @@
             font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             text-decoration: none;
             display: inline-block;
             text-align: center;
         }
 
         .btn-primary {
-            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            background: #ff6b6b;
             color: white;
-            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
         }
 
         .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.4);
+            background: #ff5252;
+            transform: translateY(-2px);
         }
 
         .btn-secondary {
             background: rgba(255, 255, 255, 0.1);
             color: white;
             border: 2px solid rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(10px);
         }
 
         .btn-secondary:hover {
             background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-3px);
         }
 
         .tech-stack {
             display: flex;
             gap: 15px;
-            animation: slideInLeft 1s ease-out 0.6s both;
         }
 
         .tech-badge {
@@ -142,20 +115,18 @@
 
         .hero-visual {
             position: relative;
-            animation: slideInRight 1s ease-out;
         }
 
         .resume-mockup {
             background: white;
             border-radius: 20px;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
             padding: 30px;
-            transform: perspective(1000px) rotateY(-15deg) rotateX(5deg);
-            transition: transform 0.3s ease;
+            transition: transform 0.2s ease;
         }
 
         .resume-mockup:hover {
-            transform: perspective(1000px) rotateY(-10deg) rotateX(2deg) scale(1.02);
+            transform: scale(1.02);
         }
 
         .mockup-header {
@@ -478,27 +449,16 @@
             opacity: 0.6;
         }
 
-        /* Animations */
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+        /* Simple fade animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
         }
 
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* Responsive Design */
@@ -551,17 +511,7 @@
             }
         }
 
-        /* Scroll animations */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.6s ease;
-        }
 
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
     </style>
 </head>
 <body>
@@ -992,25 +942,30 @@
     <script>
         // Homepage functionality
         function showBuilder() {
-            document.body.style.display = 'none';
+            document.querySelector('.hero').style.display = 'none';
+            document.querySelector('.features').style.display = 'none';
+            document.querySelector('.tech-section').style.display = 'none';
+            document.querySelector('.opensource').style.display = 'none';
+            document.querySelector('.footer').style.display = 'none';
             document.getElementById('resumeBuilderApp').style.display = 'block';
-            document.body = document.getElementById('resumeBuilderApp');
             initializeResumeBuilder();
         }
 
         function showHomepage() {
             document.getElementById('resumeBuilderApp').style.display = 'none';
-            document.body.style.display = 'block';
+            document.querySelector('.hero').style.display = 'block';
+            document.querySelector('.features').style.display = 'block';
+            document.querySelector('.tech-section').style.display = 'block';
+            document.querySelector('.opensource').style.display = 'block';
+            document.querySelector('.footer').style.display = 'block';
         }
 
-        // Scroll animations
+        // Simple scroll animations
         function handleScrollAnimations() {
             const elements = document.querySelectorAll('.fade-in');
             elements.forEach(element => {
                 const elementTop = element.getBoundingClientRect().top;
-                const elementVisible = 150;
-                
-                if (elementTop < window.innerHeight - elementVisible) {
+                if (elementTop < window.innerHeight - 100) {
                     element.classList.add('visible');
                 }
             });
@@ -1573,5 +1528,5 @@
             }, 500);
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'977921d1e6d96558',t:'MTc1NjYwNzcwMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97792abbb7647f0d',t:'MTc1NjYwODA2Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
