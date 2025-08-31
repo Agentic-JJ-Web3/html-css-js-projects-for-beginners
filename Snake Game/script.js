@@ -19,6 +19,7 @@
                     return defaultSettings;
                 }
             }
+            // Enabling loacl strorage
 
             saveSettings() {
                 localStorage.setItem('snakeGameSettings', JSON.stringify(this.settings));
