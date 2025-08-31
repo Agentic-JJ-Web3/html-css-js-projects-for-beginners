@@ -42,9 +42,16 @@
 
         .tagline {
             font-size: clamp(1rem, 3vw, 1.5rem);
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
             opacity: 0.8;
             letter-spacing: 2px;
+        }
+
+        .high-score {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: #ffaa00;
+            text-shadow: 0 0 10px #ffaa00;
         }
 
         .start-btn {
@@ -118,9 +125,21 @@
             margin-bottom: 1rem;
         }
 
+        .score-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
         .score {
             font-size: 1.5rem;
             text-shadow: 0 0 10px #00ff88;
+        }
+
+        .best-score {
+            font-size: 1rem;
+            color: #ffaa00;
+            text-shadow: 0 0 5px #ffaa00;
         }
 
         .controls {
@@ -137,11 +156,17 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-family: inherit;
+            min-width: 80px;
         }
 
         .control-btn:hover {
             background: rgba(0, 255, 136, 0.2);
             transform: scale(1.05);
+        }
+
+        .control-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         #gameCanvas {
@@ -156,12 +181,13 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.95);
             padding: 2rem;
             border-radius: 15px;
             text-align: center;
             border: 2px solid #ff4444;
             display: none;
+            min-width: 300px;
         }
 
         .game-over h2 {
@@ -169,6 +195,14 @@
             margin-bottom: 1rem;
             font-size: 2rem;
             text-shadow: 0 0 20px #ff4444;
+        }
+
+        .game-over .new-record {
+            color: #ffaa00;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 15px #ffaa00;
+            animation: pulse 1s infinite;
         }
 
         .restart-btn {
@@ -189,6 +223,26 @@
             box-shadow: 0 0 20px rgba(255, 68, 68, 0.5);
         }
 
+        .pause-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid #00ff88;
+            display: none;
+        }
+
+        .pause-overlay h2 {
+            color: #00ff88;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+            text-shadow: 0 0 20px #00ff88;
+        }
+
         /* Mobile Instructions */
         .mobile-controls {
             display: none;
@@ -206,11 +260,21 @@
                 max-width: 90vw;
                 max-height: 60vh;
             }
+
+            .game-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
         }
 
         @keyframes glow {
             from { text-shadow: 0 0 20px #00ff88, 0 0 40px #00ff88; }
             to { text-shadow: 0 0 30px #00ff88, 0 0 60px #00ff88, 0 0 80px #00ff88; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         /* Hidden class for transitions */
@@ -224,6 +288,7 @@
     <div class="homepage" id="homepage">
         <h1>🐍 SNAKE</h1>
         <p class="tagline">Play. Learn. Share. Open Source for Everyone.</p>
+        <div class="high-score" id="homeHighScore">Best Score: 0</div>
         <button class="start-btn" id="startBtn">Start Game</button>
     </div>
 
@@ -236,7 +301,10 @@
     <!-- Game Container -->
     <div class="game-container" id="gameContainer">
         <div class="game-header">
-            <div class="score">Score: <span id="score">0</span></div>
+            <div class="score-info">
+                <div class="score">Score: <span id="score">0</span></div>
+                <div class="best-score">Best: <span id="bestScore">0</span></div>
+            </div>
             <div class="controls">
                 <button class="control-btn" id="pauseBtn">Pause</button>
                 <button class="control-btn" id="homeBtn">Home</button>
@@ -249,15 +317,71 @@
             <p>Tap canvas edges or use arrow keys to move</p>
         </div>
 
+        <!-- Pause Overlay -->
+        <div class="pause-overlay" id="pauseOverlay">
+            <h2>PAUSED</h2>
+            <p>Press Resume to continue</p>
+        </div>
+
         <!-- Game Over Modal -->
         <div class="game-over" id="gameOver">
             <h2>Game Over!</h2>
+            <div class="new-record" id="newRecord" style="display: none;">🎉 NEW RECORD! 🎉</div>
             <p>Final Score: <span id="finalScore">0</span></p>
+            <p>Best Score: <span id="gameOverBest">0</span></p>
             <button class="restart-btn" id="restartBtn">Play Again</button>
         </div>
     </div>
 
     <script>
+        // Score Management
+        class ScoreManager {
+            constructor() {
+                this.currentScore = 0;
+                this.bestScore = this.loadBestScore();
+                this.updateDisplay();
+            }
+
+            loadBestScore() {
+                return parseInt(localStorage.getItem('snakeGameBestScore') || '0');
+            }
+
+            saveBestScore() {
+                localStorage.setItem('snakeGameBestScore', this.bestScore.toString());
+            }
+
+            updateScore(points) {
+                this.currentScore += points;
+                document.getElementById('score').textContent = this.currentScore;
+                
+                if (this.currentScore > this.bestScore) {
+                    this.bestScore = this.currentScore;
+                    this.saveBestScore();
+                    this.updateDisplay();
+                    return true; // New record
+                }
+                return false;
+            }
+
+            resetCurrentScore() {
+                this.currentScore = 0;
+                document.getElementById('score').textContent = '0';
+            }
+
+            updateDisplay() {
+                document.getElementById('bestScore').textContent = this.bestScore;
+                document.getElementById('homeHighScore').textContent = `Best Score: ${this.bestScore}`;
+            }
+
+            getCurrentScore() {
+                return this.currentScore;
+            }
+
+            getBestScore() {
+                return this.bestScore;
+            }
+        }
+
         // Game State Management
         class SnakeGame {
             constructor() {
@@ -271,29 +395,46 @@
                 this.food = this.generateFood();
                 this.dx = 0;
                 this.dy = 0;
-                this.score = 0;
                 this.gameRunning = false;
                 this.gamePaused = false;
+                this.gameLoopId = null;
+                
+                // Score manager
+                this.scoreManager = new ScoreManager();
                 
                 this.setupEventListeners();
                 this.setupMobileControls();
             }
 
             generateFood() {
-                return {
-                    x: Math.floor(Math.random() * this.tileCount),
-                    y: Math.floor(Math.random() * (this.canvas.height / this.gridSize))
-                };
+                let food;
+                do {
+                    food = {
+                        x: Math.floor(Math.random() * this.tileCount),
+                        y: Math.floor(Math.random() * (this.canvas.height / this.gridSize))
+                    };
+                } while (this.snake.some(segment => segment.x === food.x && segment.y === food.y));
+                
+                return food;
             }
 
             setupEventListeners() {
                 // Keyboard controls
                 document.addEventListener('keydown', (e) => {
-                    if (!this.gameRunning || this.gamePaused) return;
+                    if (!this.gameRunning) return;
                     
                     const key = e.key.toLowerCase();
                     
-                    // Prevent reverse direction
+                    // Pause with spacebar
+                    if (key === ' ') {
+                        e.preventDefault();
+                        this.togglePause();
+                        return;
+                    }
+                    
+                    if (this.gamePaused) return;
+                    
+                    // Movement controls - prevent reverse direction
                     if ((key === 'arrowleft' || key === 'a') && this.dx !== 1) {
                         this.dx = -1; this.dy = 0;
                     } else if ((key === 'arrowup' || key === 'w') && this.dy !== 1) {
@@ -310,6 +451,8 @@
                 // Touch controls for mobile
                 this.canvas.addEventListener('touchstart', (e) => {
                     e.preventDefault();
+                    if (!this.gameRunning || this.gamePaused) return;
+                    
                     const rect = this.canvas.getBoundingClientRect();
                     const touch = e.touches[0];
                     const x = touch.clientX - rect.left;
@@ -342,26 +485,48 @@
             start() {
                 this.gameRunning = true;
                 this.gamePaused = false;
+                this.scoreManager.resetCurrentScore();
+                document.getElementById('pauseBtn').disabled = false;
                 this.gameLoop();
             }
 
-            pause() {
+            togglePause() {
+                if (!this.gameRunning) return;
+                
                 this.gamePaused = !this.gamePaused;
-                if (!this.gamePaused) {
+                const pauseBtn = document.getElementById('pauseBtn');
+                const pauseOverlay = document.getElementById('pauseOverlay');
+                
+                if (this.gamePaused) {
+                    pauseBtn.textContent = 'Resume';
+                    pauseOverlay.style.display = 'block';
+                    if (this.gameLoopId) {
+                        clearTimeout(this.gameLoopId);
+                    }
+                } else {
+                    pauseBtn.textContent = 'Pause';
+                    pauseOverlay.style.display = 'none';
                     this.gameLoop();
                 }
             }
 
             restart() {
+                // Reset game state
                 this.snake = [{ x: 10, y: 10 }];
                 this.food = this.generateFood();
                 this.dx = 0;
                 this.dy = 0;
-                this.score = 0;
                 this.gameRunning = true;
                 this.gamePaused = false;
-                document.getElementById('score').textContent = '0';
+                
+                // Reset UI
+                this.scoreManager.resetCurrentScore();
                 document.getElementById('gameOver').style.display = 'none';
+                document.getElementById('pauseOverlay').style.display = 'none';
+                document.getElementById('pauseBtn').textContent = 'Pause';
+                document.getElementById('pauseBtn').disabled = false;
+                
+                // Start game loop
                 this.gameLoop();
             }
 
@@ -371,11 +536,15 @@
                 this.update();
                 this.draw();
 
-                // Continue game loop
-                setTimeout(() => this.gameLoop(), 150);
+                // Continue game loop with variable speed based on score
+                const speed = Math.max(100, 200 - Math.floor(this.scoreManager.getCurrentScore() / 50) * 10);
+                this.gameLoopId = setTimeout(() => this.gameLoop(), speed);
             }
 
             update() {
+                // Don't move if no direction set
+                if (this.dx === 0 && this.dy === 0) return;
+
                 // Move snake head
                 const head = { x: this.snake[0].x + this.dx, y: this.snake[0].y + this.dy };
 
@@ -398,13 +567,15 @@
 
                 // Check food collision
                 if (head.x === this.food.x && head.y === this.food.y) {
-                    this.score += 10;
-                    document.getElementById('score').textContent = this.score;
+                    const isNewRecord = this.scoreManager.updateScore(10);
                     this.food = this.generateFood();
                     
-                    // Ensure food doesn't spawn on snake
-                    while (this.snake.some(segment => segment.x === this.food.x && segment.y === this.food.y)) {
-                        this.food = this.generateFood();
+                    // Visual feedback for new record
+                    if (isNewRecord) {
+                        document.getElementById('bestScore').style.animation = 'pulse 0.5s';
+                        setTimeout(() => {
+                            document.getElementById('bestScore').style.animation = '';
+                        }, 500);
                     }
                 } else {
                     this.snake.pop();
@@ -450,8 +621,28 @@
 
             gameOver() {
                 this.gameRunning = false;
-                document.getElementById('finalScore').textContent = this.score;
+                if (this.gameLoopId) {
+                    clearTimeout(this.gameLoopId);
+                }
+                
+                const finalScore = this.scoreManager.getCurrentScore();
+                const bestScore = this.scoreManager.getBestScore();
+                const isNewRecord = finalScore === bestScore && finalScore > 0;
+                
+                // Update game over display
+                document.getElementById('finalScore').textContent = finalScore;
+                document.getElementById('gameOverBest').textContent = bestScore;
+                document.getElementById('newRecord').style.display = isNewRecord ? 'block' : 'none';
                 document.getElementById('gameOver').style.display = 'block';
+                document.getElementById('pauseBtn').disabled = true;
+            }
+
+            stop() {
+                this.gameRunning = false;
+                this.gamePaused = false;
+                if (this.gameLoopId) {
+                    clearTimeout(this.gameLoopId);
+                }
             }
         }
 
@@ -460,6 +651,12 @@
             constructor() {
                 this.game = null;
                 this.setupEventListeners();
+                this.updateHomeScore();
+            }
+
+            updateHomeScore() {
+                const bestScore = parseInt(localStorage.getItem('snakeGameBestScore') || '0');
+                document.getElementById('homeHighScore').textContent = `Best Score: ${bestScore}`;
             }
 
             setupEventListeners() {
@@ -471,9 +668,7 @@
                 // Control buttons
                 document.getElementById('pauseBtn').addEventListener('click', () => {
                     if (this.game) {
-                        this.game.pause();
-                        document.getElementById('pauseBtn').textContent = 
-                            this.game.gamePaused ? 'Resume' : 'Pause';
+                        this.game.togglePause();
                     }
                 });
 
@@ -510,9 +705,9 @@
             }
 
             goHome() {
-                // Reset game state
+                // Stop game
                 if (this.game) {
-                    this.game.gameRunning = false;
+                    this.game.stop();
                 }
 
                 // Show curtain and transition back
@@ -524,7 +719,11 @@
                     document.getElementById('gameContainer').style.display = 'none';
                     document.getElementById('homepage').classList.remove('hidden');
                     document.getElementById('gameOver').style.display = 'none';
+                    document.getElementById('pauseOverlay').style.display = 'none';
                     document.getElementById('pauseBtn').textContent = 'Pause';
+                    
+                    // Update home screen score
+                    this.updateHomeScore();
                     
                     // Reset curtain for next time
                     setTimeout(() => {
@@ -547,5 +746,5 @@
             e.preventDefault();
         }, { passive: false });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9778be31325b63ae',t:'MTc1NjYwMzYyMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9778ccaf9734b86a',t:'MTc1NjYwNDIxMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
