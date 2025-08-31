@@ -15,8 +15,10 @@
             font-family: 'Courier New', monospace;
             background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
             color: #00ff88;
-            overflow: hidden;
-            height: 100vh;
+            overflow-x: hidden;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
         }
 
         /* Homepage Styles */
@@ -75,14 +77,18 @@
             height: 100%;
             background: linear-gradient(90deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%);
             z-index: 1000;
-            display: flex;
+            display: none;
         }
 
         .curtain-left, .curtain-right {
             width: 50%;
             height: 100%;
-            background: inherit;
+            background: linear-gradient(90deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%);
             transition: transform 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .curtain.active {
+            display: flex;
         }
 
         .curtain.opening .curtain-left {
@@ -483,20 +489,24 @@
             }
 
             startGame() {
-                // Trigger curtain animation
+                // Show and trigger curtain animation
                 const curtain = document.getElementById('curtain');
-                curtain.classList.add('opening');
+                curtain.classList.add('active');
+                
+                setTimeout(() => {
+                    curtain.classList.add('opening');
+                }, 50);
 
                 // Hide homepage and show game after animation
                 setTimeout(() => {
                     document.getElementById('homepage').classList.add('hidden');
                     document.getElementById('gameContainer').style.display = 'flex';
-                    curtain.style.display = 'none';
+                    curtain.classList.remove('active');
                     
                     // Initialize and start game
                     this.game = new SnakeGame();
                     this.game.start();
-                }, 1500);
+                }, 1600);
             }
 
             goHome() {
@@ -507,7 +517,7 @@
 
                 // Show curtain and transition back
                 const curtain = document.getElementById('curtain');
-                curtain.style.display = 'flex';
+                curtain.classList.add('active');
                 curtain.classList.remove('opening');
 
                 setTimeout(() => {
@@ -520,8 +530,7 @@
                     setTimeout(() => {
                         curtain.classList.add('opening');
                         setTimeout(() => {
-                            curtain.style.display = 'none';
-                            curtain.classList.remove('opening');
+                            curtain.classList.remove('active', 'opening');
                         }, 1500);
                     }, 100);
                 }, 100);
@@ -538,5 +547,5 @@
             e.preventDefault();
         }, { passive: false });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9778afdc82ed001f',t:'MTc1NjYwMzAzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9778be31325b63ae',t:'MTc1NjYwMzYyMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
