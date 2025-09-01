@@ -1,0 +1,203 @@
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e2e 0%, #2d1b69 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .music-player {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .track-info {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .track-title {
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .track-artist {
+            color: #b8b8d1;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .waveform-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 80px;
+            margin: 30px 0;
+            gap: 4px;
+        }
+
+        .waveform-bar {
+            width: 6px;
+            background: linear-gradient(to top, #6366f1, #8b5cf6);
+            border-radius: 3px;
+            animation-duration: 1.2s;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .waveform-bar:nth-child(1) { height: 20px; animation-name: wave1; animation-delay: 0s; }
+        .waveform-bar:nth-child(2) { height: 35px; animation-name: wave2; animation-delay: 0.1s; }
+        .waveform-bar:nth-child(3) { height: 50px; animation-name: wave3; animation-delay: 0.2s; }
+        .waveform-bar:nth-child(4) { height: 30px; animation-name: wave4; animation-delay: 0.3s; }
+        .waveform-bar:nth-child(5) { height: 60px; animation-name: wave5; animation-delay: 0.4s; }
+        .waveform-bar:nth-child(6) { height: 25px; animation-name: wave6; animation-delay: 0.5s; }
+        .waveform-bar:nth-child(7) { height: 45px; animation-name: wave7; animation-delay: 0.6s; }
+        .waveform-bar:nth-child(8) { height: 35px; animation-name: wave8; animation-delay: 0.7s; }
+        .waveform-bar:nth-child(9) { height: 55px; animation-name: wave9; animation-delay: 0.8s; }
+        .waveform-bar:nth-child(10) { height: 40px; animation-name: wave10; animation-delay: 0.9s; }
+
+        @keyframes wave1 { 0% { height: 20px; } 100% { height: 40px; } }
+        @keyframes wave2 { 0% { height: 35px; } 100% { height: 60px; } }
+        @keyframes wave3 { 0% { height: 50px; } 100% { height: 25px; } }
+        @keyframes wave4 { 0% { height: 30px; } 100% { height: 55px; } }
+        @keyframes wave5 { 0% { height: 60px; } 100% { height: 35px; } }
+        @keyframes wave6 { 0% { height: 25px; } 100% { height: 50px; } }
+        @keyframes wave7 { 0% { height: 45px; } 100% { height: 30px; } }
+        @keyframes wave8 { 0% { height: 35px; } 100% { height: 65px; } }
+        @keyframes wave9 { 0% { height: 55px; } 100% { height: 20px; } }
+        @keyframes wave10 { 0% { height: 40px; } 100% { height: 45px; } }
+
+        .waveform-container.paused .waveform-bar {
+            animation-play-state: paused;
+            opacity: 0.3;
+        }
+
+        .progress-container {
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            border-radius: 3px;
+            width: 35%;
+            transition: width 0.3s ease;
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            color: #b8b8d1;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            color: #ffffff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .control-btn.secondary {
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
+        }
+
+        .control-btn.primary {
+            width: 70px;
+            height: 70px;
+            font-size: 28px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .control-btn.primary:hover {
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.4);
+        }
+
+        .control-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Responsive design */
+        @media (max-width: 480px) {
+            .music-player {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+
+            .track-title {
+                font-size: 20px;
+            }
+
+            .waveform-container {
+                height: 60px;
+            }
+
+            .controls {
+                gap: 15px;
+            }
+
+            .control-btn.secondary {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+
+            .control-btn.primary {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+            }
+        }
+    
