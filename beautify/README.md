@@ -1,14 +1,13 @@
+# Beautify
 
-# Beautify Project
+A simple code beautifier tool built with HTML, CSS, and JavaScript.
 
-This is a simple web project consisting of a single HTML page, a stylesheet, and a script.
+## Contributing
 
-## Files
+Contributions are welcome! Please follow these steps:
 
-* `index.html`: The main HTML file.
-* `styles.css`: The stylesheet for the project.
-* `script.js`: The JavaScript file for the project.
-
-## Usage
-
-Open `index.html` in your web browser to view the project.
+1.  Fork the repository.
+2.  Create a new branch: `git checkout -b feature/your-feature-name`
+3.  Make your changes and commit them: `git commit -m 'Add some feature'`
+4.  Push to the branch: `git push origin feature/your-feature-name`
+5.  Submit a pull request.

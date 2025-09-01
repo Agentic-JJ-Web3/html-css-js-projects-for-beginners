@@ -1,14 +1,13 @@
 # Music Player UI
 
-A simple music player user interface built with HTML, CSS, and JavaScript.
+A simple music player UI built with HTML, CSS, and JavaScript.
 
-## Files
+## Contributing
 
-*   `index.html`: The main structure of the music player.
-*   `styles.css`: The styles for the music player.
-*   `script.js`: The functionality for the music player.
+Contributions are welcome! Please follow these steps:
 
-## How to Use
-
-1.  Clone the repository.
-2.  Open `index.html` in your browser.
+1.  Fork the repository.
+2.  Create a new branch: `git checkout -b feature/your-feature-name`
+3.  Make your changes and commit them: `git commit -m 'Add some feature'`
+4.  Push to the branch: `git push origin feature/your-feature-name`
+5.  Submit a pull request.

@@ -1,22 +1,13 @@
-
 # Digital Library
 
 A simple digital library application built with HTML, CSS, and JavaScript.
 
-## Features
+## Contributing
 
-- View a list of books.
-- Add new books to the library.
-- Mark books as read.
-- Remove books from the library.
+Contributions are welcome! Please follow these steps:
 
-## Technologies Used
-
-- HTML
-- CSS
-- JavaScript
-
-## How to Run
-
-1. Clone this repository.
-2. Open the `index.html` file in your web browser.
+1.  Fork the repository.
+2.  Create a new branch: `git checkout -b feature/your-feature-name`
+3.  Make your changes and commit them: `git commit -m 'Add some feature'`
+4.  Push to the branch: `git push origin feature/your-feature-name`
+5.  Submit a pull request.

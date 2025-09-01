@@ -1,22 +1,13 @@
 # Resume Builder
 
-A simple web-based resume builder created using HTML, CSS, and JavaScript.
+A simple resume builder application built with HTML, CSS, and JavaScript.
 
-## Features
+## Contributing
 
-*   Easy-to-use interface for creating and editing resumes.
-*   Dynamically add and remove sections like work experience, education, and skills.
-*   Preview the resume in real-time.
-*   Print or save the resume as a PDF.
+Contributions are welcome! Please follow these steps:
 
-## Getting Started
-
-1.  Clone the repository or download the source code.
-2.  Open `index.html` in your web browser.
-
-## Usage
-
-*   Fill in your personal information.
-*   Add your work experience, education, and skills.
-*   Customize the template as needed.
-*   Use the browser's print functionality to save the resume as a PDF.
+1.  Fork the repository.
+2.  Create a new branch: `git checkout -b feature/your-feature-name`
+3.  Make your changes and commit them: `git commit -m 'Add some feature'`
+4.  Push to the branch: `git push origin feature/your-feature-name`
+5.  Submit a pull request.

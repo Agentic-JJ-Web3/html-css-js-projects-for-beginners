@@ -1,16 +1,13 @@
 # Snake Game
 
-A simple implementation of the classic Snake game using HTML, CSS, and JavaScript.
+A simple snake game built with HTML, CSS, and JavaScript.
 
-## How to Play
+## Contributing
 
-1.  Open the `index.html` file in your web browser.
-2.  Use the arrow keys (Up, Down, Left, Right) to control the snake.
-3.  The objective is to eat the food that appears on the screen.
-4.  The game ends if the snake runs into the wall or into itself.
+Contributions are welcome! Please follow these steps:
 
-## Files
-
-*   `index.html`: The main HTML file.
-*   `styles.css`: The CSS file for styling the game.
-*   `script.js`: The JavaScript file containing the game logic.
+1.  Fork the repository.
+2.  Create a new branch: `git checkout -b feature/your-feature-name`
+3.  Make your changes and commit them: `git commit -m 'Add some feature'`
+4.  Push to the branch: `git push origin feature/your-feature-name`
+5.  Submit a pull request.
