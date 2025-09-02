@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -108,7 +107,6 @@
         }
 
         .cell.found {
-            background: #00b894;
             color: white;
             animation: found-pulse 0.6s ease;
         }
@@ -298,6 +296,13 @@
                 this.startTime = null;
                 this.timerInterval = null;
                 this.difficulty = 'medium';
+                this.wordColors = new Map();
+                this.availableColors = [
+                    '#e74c3c', '#3498db', '#9b59b6', '#e67e22', 
+                    '#1abc9c', '#f39c12', '#2ecc71', '#34495e',
+                    '#e91e63', '#ff5722', '#795548', '#607d8b',
+                    '#8bc34a', '#ffc107', '#673ab7', '#009688'
+                ];
                 
                 this.initializeGame();
                 this.setupEventListeners();
@@ -547,10 +552,32 @@
 
             markWordAsFound(word) {
                 this.foundWords.add(word);
+                
+                // Assign a random color to this word if not already assigned
+                if (!this.wordColors.has(word)) {
+                    const availableColorsCopy = [...this.availableColors];
+                    // Remove colors already used by other words
+                    const usedColors = Array.from(this.wordColors.values());
+                    const unusedColors = availableColorsCopy.filter(color => !usedColors.includes(color));
+                    
+                    // If all colors are used, pick any random color
+                    const colorPool = unusedColors.length > 0 ? unusedColors : this.availableColors;
+                    const randomColor = colorPool[Math.floor(Math.random() * colorPool.length)];
+                    this.wordColors.set(word, randomColor);
+                }
+                
+                const wordColor = this.wordColors.get(word);
                 const wordElement = document.querySelector(`[data-word="${word}"]`);
                 if (wordElement) {
                     wordElement.classList.add('found');
+                    wordElement.style.borderLeftColor = wordColor;
+                    wordElement.style.background = wordColor + '20'; // Add transparency
                 }
+                
+                // Apply the color to all cells of this word
+                this.currentSelection.forEach(cell => {
+                    cell.style.background = wordColor;
+                });
                 
                 this.updateProgress();
                 
@@ -635,6 +662,7 @@
                 clearInterval(this.timerInterval);
                 this.foundWords.clear();
                 this.placedWords = [];
+                this.wordColors.clear();
                 document.getElementById('completion-message').style.display = 'none';
                 
                 // Update grid CSS for different sizes
@@ -665,5 +693,5 @@
             game = new WordSearchGame();
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'978e8daff50c718c',t:'MTc1NjgzMjMyMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'978e9d3d6143774f',t:'MTc1NjgzMjk1Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
