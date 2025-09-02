@@ -13,9 +13,158 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #0a0a0a;
             min-height: 100vh;
             padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Aurora Background Effect */
+        .aurora-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .aurora {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(ellipse at 40% 80%, rgba(120, 219, 226, 0.3) 0%, transparent 50%),
+                radial-gradient(ellipse at 0% 0%, rgba(135, 206, 235, 0.2) 0%, transparent 50%),
+                radial-gradient(ellipse at 100% 100%, rgba(238, 130, 238, 0.2) 0%, transparent 50%),
+                linear-gradient(135deg, 
+                    rgba(72, 61, 139, 0.1) 0%, 
+                    rgba(106, 90, 205, 0.1) 25%, 
+                    rgba(147, 112, 219, 0.1) 50%, 
+                    rgba(138, 43, 226, 0.1) 75%, 
+                    rgba(75, 0, 130, 0.1) 100%);
+            animation: aurora-move 20s ease-in-out infinite;
+            filter: blur(2px);
+        }
+
+        .aurora::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 60% 30%, rgba(0, 255, 127, 0.2) 0%, transparent 50%),
+                radial-gradient(ellipse at 30% 70%, rgba(255, 20, 147, 0.2) 0%, transparent 50%),
+                radial-gradient(ellipse at 90% 60%, rgba(30, 144, 255, 0.2) 0%, transparent 50%);
+            animation: aurora-move-reverse 25s ease-in-out infinite;
+        }
+
+        .aurora::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 70% 10%, rgba(255, 215, 0, 0.15) 0%, transparent 40%),
+                radial-gradient(ellipse at 10% 90%, rgba(50, 205, 50, 0.15) 0%, transparent 40%),
+                radial-gradient(ellipse at 50% 50%, rgba(255, 69, 0, 0.1) 0%, transparent 60%);
+            animation: aurora-pulse 15s ease-in-out infinite;
+        }
+
+        @keyframes aurora-move {
+            0%, 100% {
+                transform: translateX(-10%) translateY(-10%) rotate(0deg);
+            }
+            25% {
+                transform: translateX(0%) translateY(-5%) rotate(1deg);
+            }
+            50% {
+                transform: translateX(-5%) translateY(0%) rotate(-1deg);
+            }
+            75% {
+                transform: translateX(-15%) translateY(-8%) rotate(0.5deg);
+            }
+        }
+
+        @keyframes aurora-move-reverse {
+            0%, 100% {
+                transform: translateX(5%) translateY(5%) rotate(0deg);
+            }
+            33% {
+                transform: translateX(-2%) translateY(8%) rotate(-0.5deg);
+            }
+            66% {
+                transform: translateX(8%) translateY(-3%) rotate(1deg);
+            }
+        }
+
+        @keyframes aurora-pulse {
+            0%, 100% {
+                opacity: 0.3;
+                transform: scale(1) rotate(0deg);
+            }
+            50% {
+                opacity: 0.6;
+                transform: scale(1.1) rotate(180deg);
+            }
+        }
+
+        /* Floating particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .particle:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { left: 20%; animation-delay: 1s; }
+        .particle:nth-child(3) { left: 30%; animation-delay: 2s; }
+        .particle:nth-child(4) { left: 40%; animation-delay: 3s; }
+        .particle:nth-child(5) { left: 50%; animation-delay: 4s; }
+        .particle:nth-child(6) { left: 60%; animation-delay: 5s; }
+        .particle:nth-child(7) { left: 70%; animation-delay: 0.5s; }
+        .particle:nth-child(8) { left: 80%; animation-delay: 1.5s; }
+        .particle:nth-child(9) { left: 90%; animation-delay: 2.5s; }
+        .particle:nth-child(10) { left: 15%; animation-delay: 3.5s; }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(90vh) scale(1);
+            }
+            90% {
+                opacity: 1;
+                transform: translateY(10vh) scale(1);
+            }
+            100% {
+                transform: translateY(0vh) scale(0);
+                opacity: 0;
+            }
         }
 
         .container {
@@ -269,10 +418,52 @@
             .game-info {
                 gap: 15px;
             }
+
+            /* Mobile aurora optimizations */
+            .aurora {
+                width: 150%;
+                height: 150%;
+                filter: blur(1px);
+            }
+
+            .particle {
+                width: 1px;
+                height: 1px;
+            }
+
+            /* Reduce animation complexity on mobile */
+            @media (prefers-reduced-motion: reduce) {
+                .aurora, .aurora::before, .aurora::after {
+                    animation: none;
+                }
+                .particle {
+                    animation: none;
+                    opacity: 0.3;
+                }
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Aurora Background -->
+    <div class="aurora-container">
+        <div class="aurora"></div>
+    </div>
+    
+    <!-- Floating Particles -->
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
     <div class="container">
         <div class="header">
             <h1>🔍 Word Search Puzzle</h1>
@@ -942,5 +1133,5 @@
             game = new WordSearchGame();
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'978edcf045be48c4',t:'MTc1NjgzNTU2Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'978ee328317f48c4',t:'MTc1NjgzNTgyMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
