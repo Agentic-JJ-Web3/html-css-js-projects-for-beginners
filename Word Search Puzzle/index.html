@@ -150,6 +150,37 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
+        .dropdown-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .dropdown {
+            padding: 12px 16px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            background: white;
+            color: #333;
+            min-width: 140px;
+        }
+
+        .dropdown:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .dropdown:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
         .word-list {
             background: #f8f9fa;
             padding: 30px;
@@ -270,8 +301,23 @@
                 <div class="controls">
                     <button class="btn btn-primary" onclick="newGame()">New Game</button>
                     <button class="btn btn-secondary" onclick="showHint()">Hint</button>
-                    <button class="btn btn-secondary" onclick="toggleDifficulty()">Change Difficulty</button>
-                    <button class="btn btn-secondary" onclick="changeCategory()">Change Category</button>
+                    <div class="dropdown-group">
+                        <select class="dropdown" id="difficulty-select" onchange="changeDifficulty()">
+                            <option value="easy">Easy (8x8)</option>
+                            <option value="medium" selected>Medium (10x10)</option>
+                            <option value="hard">Hard (12x12)</option>
+                        </select>
+                        <select class="dropdown" id="category-select" onchange="changeCategoryFromDropdown()">
+                            <option value="technology" selected>🖥️ Technology</option>
+                            <option value="animals">🐾 Animals</option>
+                            <option value="food">🍕 Food</option>
+                            <option value="nature">🌿 Nature</option>
+                            <option value="sports">⚽ Sports</option>
+                            <option value="countries">🌍 Countries</option>
+                            <option value="colors">🎨 Colors</option>
+                            <option value="space">🚀 Space</option>
+                        </select>
+                    </div>
                     <button class="btn btn-primary" onclick="randomizeEverything()">🎲 Surprise Me!</button>
                 </div>
                 <div class="completion-message" id="completion-message">
@@ -757,10 +803,47 @@
                 this.newGame();
             }
 
+            changeDifficultyFromDropdown(newDifficulty) {
+                this.difficulty = newDifficulty;
+                
+                // Adjust grid size based on difficulty
+                switch(this.difficulty) {
+                    case 'easy':
+                        this.gridSize = 8;
+                        break;
+                    case 'medium':
+                        this.gridSize = 10;
+                        break;
+                    case 'hard':
+                        this.gridSize = 12;
+                        break;
+                }
+                
+                // Get new words for current difficulty and category
+                this.words = this.getWordsForDifficulty();
+                
+                document.getElementById('difficulty').textContent = 
+                    this.difficulty.charAt(0).toUpperCase() + this.difficulty.slice(1);
+                
+                this.newGame();
+            }
+
             changeCategory() {
                 const categories = Object.keys(this.wordBank);
                 const currentIndex = categories.indexOf(this.currentCategory);
                 this.currentCategory = categories[(currentIndex + 1) % categories.length];
+                
+                // Get new words for current category and difficulty
+                this.words = this.getWordsForDifficulty();
+                
+                document.getElementById('category').textContent = 
+                    this.currentCategory.charAt(0).toUpperCase() + this.currentCategory.slice(1);
+                
+                this.newGame();
+            }
+
+            changeCategoryFromDropdown(newCategory) {
+                this.currentCategory = newCategory;
                 
                 // Get new words for current category and difficulty
                 this.words = this.getWordsForDifficulty();
@@ -788,6 +871,10 @@
                     this.difficulty.charAt(0).toUpperCase() + this.difficulty.slice(1);
                 document.getElementById('category').textContent = 
                     this.currentCategory.charAt(0).toUpperCase() + this.currentCategory.slice(1);
+                
+                // Update dropdown selections
+                document.getElementById('difficulty-select').value = this.difficulty;
+                document.getElementById('category-select').value = this.currentCategory;
                 
                 this.newGame();
             }
@@ -824,8 +911,18 @@
             game.toggleDifficulty();
         }
 
+        function changeDifficulty() {
+            const select = document.getElementById('difficulty-select');
+            game.changeDifficultyFromDropdown(select.value);
+        }
+
         function changeCategory() {
             game.changeCategory();
+        }
+
+        function changeCategoryFromDropdown() {
+            const select = document.getElementById('category-select');
+            game.changeCategoryFromDropdown(select.value);
         }
 
         function randomizeEverything() {
@@ -845,5 +942,5 @@
             game = new WordSearchGame();
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'978ecf56e6c89491',t:'MTc1NjgzNTAwOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'978edcf045be48c4',t:'MTc1NjgzNTU2Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
