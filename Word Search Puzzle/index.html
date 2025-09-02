@@ -466,6 +466,9 @@
 
     <div class="container">
         <div class="header">
+            <div id="welcome-message" style="margin-bottom: 15px; font-size: 1.2rem; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+                Welcome, Player! 👋
+            </div>
             <h1>🔍 Word Search Puzzle</h1>
             <div class="game-info">
                 <div class="info-item">
@@ -510,6 +513,7 @@
                         </select>
                     </div>
                     <button class="btn btn-primary" onclick="randomizeEverything()">🎲 Surprise Me!</button>
+                    <button class="btn btn-secondary" onclick="changeUsername()">👤 Change Name</button>
                 </div>
                 <div class="completion-message" id="completion-message">
                     <h2>🎉 Congratulations!</h2>
@@ -1128,10 +1132,45 @@
             document.getElementById('hint-purchase-message').style.display = 'none';
         }
 
+        // Username functionality
+        function promptForUsername() {
+            let username = localStorage.getItem('wordSearchUsername');
+            
+            if (!username) {
+                username = prompt('🎮 Welcome to Word Search Puzzle!\n\nWhat\'s your name?');
+                
+                if (username && username.trim()) {
+                    username = username.trim();
+                    localStorage.setItem('wordSearchUsername', username);
+                } else {
+                    username = 'Player';
+                }
+            }
+            
+            updateWelcomeMessage(username);
+            return username;
+        }
+
+        function updateWelcomeMessage(username) {
+            const welcomeElement = document.getElementById('welcome-message');
+            welcomeElement.textContent = `Welcome, ${username}! 👋`;
+        }
+
+        function changeUsername() {
+            const newUsername = prompt('🎮 Change your name:', localStorage.getItem('wordSearchUsername') || 'Player');
+            
+            if (newUsername && newUsername.trim()) {
+                const username = newUsername.trim();
+                localStorage.setItem('wordSearchUsername', username);
+                updateWelcomeMessage(username);
+            }
+        }
+
         // Initialize game when page loads
         document.addEventListener('DOMContentLoaded', () => {
+            promptForUsername();
             game = new WordSearchGame();
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'978ee328317f48c4',t:'MTc1NjgzNTgyMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'978efafb559063c1',t:'MTc1NjgzNjc5Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
