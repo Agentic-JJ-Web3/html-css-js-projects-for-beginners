@@ -255,6 +255,9 @@
                 <div class="info-item">
                     <strong>Difficulty:</strong> <span id="difficulty">Medium</span>
                 </div>
+                <div class="info-item">
+                    <strong>Hints:</strong> <span id="hints-remaining">3</span>
+                </div>
             </div>
         </div>
 
@@ -269,6 +272,11 @@
                 <div class="completion-message" id="completion-message">
                     <h2>🎉 Congratulations!</h2>
                     <p>You found all words in <span id="final-time"></span>!</p>
+                </div>
+                <div class="completion-message" id="hint-purchase-message" style="background: linear-gradient(45deg, #ff6b6b, #feca57);">
+                    <h3>💡 No More Hints!</h3>
+                    <p>You've used all your free hints. Purchase more hints to continue getting help!</p>
+                    <button class="btn btn-primary" onclick="buyHints()" style="margin-top: 15px;">Buy More Hints - $0.99</button>
                 </div>
             </div>
 
@@ -297,6 +305,7 @@
                 this.timerInterval = null;
                 this.difficulty = 'medium';
                 this.wordColors = new Map();
+                this.hintsRemaining = 3;
                 this.availableColors = [
                     '#e74c3c', '#3498db', '#9b59b6', '#e67e22', 
                     '#1abc9c', '#f39c12', '#2ecc71', '#34495e',
@@ -316,6 +325,7 @@
                 this.renderWordList();
                 this.startTimer();
                 this.updateProgress();
+                this.updateHintDisplay();
             }
 
             createGrid() {
@@ -611,8 +621,16 @@
             }
 
             showHint() {
+                if (this.hintsRemaining <= 0) {
+                    document.getElementById('hint-purchase-message').style.display = 'block';
+                    return;
+                }
+                
                 const unFoundWords = this.words.filter(word => !this.foundWords.has(word));
                 if (unFoundWords.length === 0) return;
+                
+                this.hintsRemaining--;
+                this.updateHintDisplay();
                 
                 const randomWord = unFoundWords[Math.floor(Math.random() * unFoundWords.length)];
                 const wordData = this.placedWords.find(w => w.word === randomWord);
@@ -629,6 +647,10 @@
                         cell.style.transform = '';
                     }, 1500);
                 }
+            }
+
+            updateHintDisplay() {
+                document.getElementById('hints-remaining').textContent = this.hintsRemaining;
             }
 
             toggleDifficulty() {
@@ -663,7 +685,9 @@
                 this.foundWords.clear();
                 this.placedWords = [];
                 this.wordColors.clear();
+                this.hintsRemaining = 3;
                 document.getElementById('completion-message').style.display = 'none';
+                document.getElementById('hint-purchase-message').style.display = 'none';
                 
                 // Update grid CSS for different sizes
                 const grid = document.getElementById('puzzle-grid');
@@ -688,10 +712,18 @@
             game.toggleDifficulty();
         }
 
+        function buyHints() {
+            // Simulate purchase notification
+            alert('🛒 Purchase Successful!\n\nYou have received 5 additional hints!\nThank you for your purchase.');
+            game.hintsRemaining += 5;
+            game.updateHintDisplay();
+            document.getElementById('hint-purchase-message').style.display = 'none';
+        }
+
         // Initialize game when page loads
         document.addEventListener('DOMContentLoaded', () => {
             game = new WordSearchGame();
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'978e9d3d6143774f',t:'MTc1NjgzMjk1Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'978ea93dd6f3774f',t:'MTc1NjgzMzQ0OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
