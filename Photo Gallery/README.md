@@ -14,6 +14,5 @@ A simple photo gallery web application.
 *   Add a backend to store and manage the image data.
 *   Implement user authentication.
 *   Add the ability to create albums.
-*   Add a search functionality.
 *   Improve the UI/UX.
 *   Add animations and transitions.
