@@ -1,6 +1,6 @@
- 
+
         // Sample image data with Unsplash URLs
-        const images = [
+        const defaultImages = [
             {
                 src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=600&fit=crop',
                 caption: 'Mountain Lake Reflection',
@@ -63,6 +63,20 @@
             }
         ];
 
+        // Load uploaded images from localStorage
+        function loadUploadedImages() {
+            const stored = localStorage.getItem('uploadedImages');
+            return stored ? JSON.parse(stored) : [];
+        }
+
+        // Save uploaded images to localStorage
+        function saveUploadedImages(uploadedImages) {
+            localStorage.setItem('uploadedImages', JSON.stringify(uploadedImages));
+        }
+
+        // Combine default and uploaded images
+        let uploadedImages = loadUploadedImages();
+        let images = [...defaultImages, ...uploadedImages];
         let currentImageIndex = 0;
         let filteredImages = [...images];
 
@@ -75,6 +89,8 @@
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
         const filterBtns = document.querySelectorAll('.filter-btn');
+        const uploadBox = document.getElementById('uploadBox');
+        const fileInput = document.getElementById('fileInput');
 
         // Initialize gallery
         function initGallery() {
@@ -104,6 +120,66 @@
                 item.addEventListener('click', () => openModal(index));
                 
                 gallery.appendChild(item);
+            });
+        }
+
+        // Handle file upload
+        function handleFileUpload(files) {
+            Array.from(files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const newImage = {
+                            src: e.target.result,
+                            caption: file.name.replace(/\.[^/.]+$/, ""), // Remove file extension
+                            category: 'uploaded'
+                        };
+                        
+                        // Add to uploaded images array
+                        uploadedImages.push(newImage);
+                        
+                        // Update main images array
+                        images = [...defaultImages, ...uploadedImages];
+                        filteredImages = [...images];
+                        
+                        // Save to localStorage
+                        saveUploadedImages(uploadedImages);
+                        
+                        // Re-render gallery
+                        renderGallery(filteredImages);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // Setup upload functionality
+        function setupUploadFeatures() {
+            // File input change event
+            fileInput.addEventListener('change', (e) => {
+                handleFileUpload(e.target.files);
+            });
+
+            // Drag and drop functionality
+            uploadBox.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadBox.classList.add('dragover');
+            });
+
+            uploadBox.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                uploadBox.classList.remove('dragover');
+            });
+
+            uploadBox.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadBox.classList.remove('dragover');
+                handleFileUpload(e.dataTransfer.files);
+            });
+
+            // Click to upload
+            uploadBox.addEventListener('click', () => {
+                fileInput.click();
             });
         }
 
@@ -192,8 +268,11 @@
             
             // Filter buttons
             setupFilterButtons();
+            
+            // Upload functionality
+            setupUploadFeatures();
         }
 
         // Initialize the gallery when page loads
         document.addEventListener('DOMContentLoaded', initGallery);
-    
+    (function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'978e2401c608718c',t:'MTc1NjgyNzk5MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();
