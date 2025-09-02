@@ -256,6 +256,9 @@
                     <strong>Difficulty:</strong> <span id="difficulty">Medium</span>
                 </div>
                 <div class="info-item">
+                    <strong>Category:</strong> <span id="category">Technology</span>
+                </div>
+                <div class="info-item">
                     <strong>Hints:</strong> <span id="hints-remaining">3</span>
                 </div>
             </div>
@@ -268,6 +271,8 @@
                     <button class="btn btn-primary" onclick="newGame()">New Game</button>
                     <button class="btn btn-secondary" onclick="showHint()">Hint</button>
                     <button class="btn btn-secondary" onclick="toggleDifficulty()">Change Difficulty</button>
+                    <button class="btn btn-secondary" onclick="changeCategory()">Change Category</button>
+                    <button class="btn btn-primary" onclick="randomizeEverything()">🎲 Surprise Me!</button>
                 </div>
                 <div class="completion-message" id="completion-message">
                     <h2>🎉 Congratulations!</h2>
@@ -309,7 +314,6 @@
             constructor() {
                 this.gridSize = 10;
                 this.grid = [];
-                this.words = ['JAVASCRIPT', 'PYTHON', 'CODING', 'PUZZLE', 'SEARCH', 'GAME', 'LOGIC', 'BRAIN'];
                 this.foundWords = new Set();
                 this.placedWords = [];
                 this.isSelecting = false;
@@ -318,6 +322,7 @@
                 this.startTime = null;
                 this.timerInterval = null;
                 this.difficulty = 'medium';
+                this.currentCategory = 'technology';
                 this.wordColors = new Map();
                 this.hintsRemaining = 3;
                 this.availableColors = [
@@ -326,9 +331,67 @@
                     '#e91e63', '#ff5722', '#795548', '#607d8b',
                     '#8bc34a', '#ffc107', '#673ab7', '#009688'
                 ];
-                
+
+                // Comprehensive word bank organized by categories
+                this.wordBank = {
+                    technology: {
+                        easy: ['CODE', 'DATA', 'WIFI', 'APPS', 'TECH', 'BYTE', 'CHIP', 'DISK'],
+                        medium: ['PYTHON', 'CODING', 'LAPTOP', 'SERVER', 'ROUTER', 'MOBILE', 'TABLET', 'GAMING'],
+                        hard: ['JAVASCRIPT', 'ALGORITHM', 'DATABASE', 'FRAMEWORK', 'DEBUGGING', 'INTERFACE', 'PROGRAMMING', 'DEVELOPMENT']
+                    },
+                    animals: {
+                        easy: ['CAT', 'DOG', 'FISH', 'BIRD', 'BEAR', 'LION', 'FROG', 'DUCK'],
+                        medium: ['TIGER', 'EAGLE', 'SHARK', 'HORSE', 'RABBIT', 'MONKEY', 'TURTLE', 'PENGUIN'],
+                        hard: ['ELEPHANT', 'GIRAFFE', 'KANGAROO', 'BUTTERFLY', 'CROCODILE', 'RHINOCEROS', 'CHIMPANZEE', 'FLAMINGO']
+                    },
+                    food: {
+                        easy: ['CAKE', 'RICE', 'SOUP', 'MEAT', 'FISH', 'MILK', 'EGGS', 'BREAD'],
+                        medium: ['PIZZA', 'PASTA', 'SALAD', 'BURGER', 'CHEESE', 'CHICKEN', 'COOKIES', 'SANDWICH'],
+                        hard: ['SPAGHETTI', 'CHOCOLATE', 'HAMBURGER', 'BREAKFAST', 'RESTAURANT', 'DELICIOUS', 'INGREDIENTS', 'NUTRITION']
+                    },
+                    nature: {
+                        easy: ['TREE', 'LEAF', 'ROCK', 'SAND', 'WIND', 'RAIN', 'SNOW', 'FIRE'],
+                        medium: ['FOREST', 'OCEAN', 'MOUNTAIN', 'FLOWER', 'GARDEN', 'SUNSET', 'RAINBOW', 'THUNDER'],
+                        hard: ['WATERFALL', 'LIGHTNING', 'BUTTERFLY', 'ECOSYSTEM', 'WILDERNESS', 'LANDSCAPE', 'ADVENTURE', 'BEAUTIFUL']
+                    },
+                    sports: {
+                        easy: ['BALL', 'GAME', 'TEAM', 'WIN', 'PLAY', 'RUN', 'JUMP', 'KICK'],
+                        medium: ['SOCCER', 'TENNIS', 'HOCKEY', 'BOXING', 'RACING', 'SWIMMING', 'CYCLING', 'RUNNING'],
+                        hard: ['BASKETBALL', 'FOOTBALL', 'VOLLEYBALL', 'BADMINTON', 'WRESTLING', 'GYMNASTICS', 'ATHLETICS', 'CHAMPIONSHIP']
+                    },
+                    countries: {
+                        easy: ['USA', 'UK', 'JAPAN', 'CHINA', 'INDIA', 'ITALY', 'SPAIN', 'FRANCE'],
+                        medium: ['CANADA', 'BRAZIL', 'RUSSIA', 'GERMANY', 'MEXICO', 'TURKEY', 'POLAND', 'GREECE'],
+                        hard: ['AUSTRALIA', 'ARGENTINA', 'SWITZERLAND', 'NETHERLANDS', 'SINGAPORE', 'PORTUGAL', 'INDONESIA', 'PHILIPPINES']
+                    },
+                    colors: {
+                        easy: ['RED', 'BLUE', 'GREEN', 'BLACK', 'WHITE', 'PINK', 'GRAY', 'BROWN'],
+                        medium: ['YELLOW', 'ORANGE', 'PURPLE', 'SILVER', 'GOLDEN', 'VIOLET', 'MAROON', 'INDIGO'],
+                        hard: ['TURQUOISE', 'MAGENTA', 'CRIMSON', 'EMERALD', 'SAPPHIRE', 'LAVENDER', 'BURGUNDY', 'CHARTREUSE']
+                    },
+                    space: {
+                        easy: ['SUN', 'MOON', 'STAR', 'MARS', 'EARTH', 'SPACE', 'ORBIT', 'COMET'],
+                        medium: ['PLANET', 'GALAXY', 'ROCKET', 'SATURN', 'JUPITER', 'NEPTUNE', 'URANUS', 'MERCURY'],
+                        hard: ['ASTRONAUT', 'TELESCOPE', 'SATELLITE', 'ASTEROID', 'UNIVERSE', 'SPACESHIP', 'BLACKHOLE', 'CONSTELLATION']
+                    }
+                };
+
+                this.words = this.getWordsForDifficulty();
                 this.initializeGame();
                 this.setupEventListeners();
+            }
+
+            getWordsForDifficulty() {
+                const categoryWords = this.wordBank[this.currentCategory][this.difficulty];
+                // Shuffle and select 6-10 words based on difficulty
+                const wordCount = this.difficulty === 'easy' ? 6 : this.difficulty === 'medium' ? 8 : 10;
+                const shuffled = [...categoryWords].sort(() => Math.random() - 0.5);
+                return shuffled.slice(0, wordCount);
+            }
+
+            getRandomCategory() {
+                const categories = Object.keys(this.wordBank);
+                return categories[Math.floor(Math.random() * categories.length)];
             }
 
             initializeGame() {
@@ -672,24 +735,59 @@
                 const currentIndex = difficulties.indexOf(this.difficulty);
                 this.difficulty = difficulties[(currentIndex + 1) % difficulties.length];
                 
-                // Adjust grid size and word count based on difficulty
+                // Adjust grid size based on difficulty
                 switch(this.difficulty) {
                     case 'easy':
                         this.gridSize = 8;
-                        this.words = ['CODE', 'GAME', 'FIND', 'WORD', 'EASY'];
                         break;
                     case 'medium':
                         this.gridSize = 10;
-                        this.words = ['JAVASCRIPT', 'PYTHON', 'CODING', 'PUZZLE', 'SEARCH', 'GAME', 'LOGIC', 'BRAIN'];
                         break;
                     case 'hard':
                         this.gridSize = 12;
-                        this.words = ['ALGORITHM', 'PROGRAMMING', 'DEVELOPMENT', 'COMPUTER', 'SOFTWARE', 'TECHNOLOGY', 'DEBUGGING', 'FRAMEWORK', 'DATABASE', 'INTERFACE'];
                         break;
                 }
                 
+                // Get new words for current difficulty and category
+                this.words = this.getWordsForDifficulty();
+                
                 document.getElementById('difficulty').textContent = 
                     this.difficulty.charAt(0).toUpperCase() + this.difficulty.slice(1);
+                
+                this.newGame();
+            }
+
+            changeCategory() {
+                const categories = Object.keys(this.wordBank);
+                const currentIndex = categories.indexOf(this.currentCategory);
+                this.currentCategory = categories[(currentIndex + 1) % categories.length];
+                
+                // Get new words for current category and difficulty
+                this.words = this.getWordsForDifficulty();
+                
+                document.getElementById('category').textContent = 
+                    this.currentCategory.charAt(0).toUpperCase() + this.currentCategory.slice(1);
+                
+                this.newGame();
+            }
+
+            randomizeEverything() {
+                // Pick random category and difficulty
+                this.currentCategory = this.getRandomCategory();
+                const difficulties = ['easy', 'medium', 'hard'];
+                this.difficulty = difficulties[Math.floor(Math.random() * difficulties.length)];
+                
+                // Update grid size
+                this.gridSize = this.difficulty === 'easy' ? 8 : this.difficulty === 'medium' ? 10 : 12;
+                
+                // Get new words
+                this.words = this.getWordsForDifficulty();
+                
+                // Update display
+                document.getElementById('difficulty').textContent = 
+                    this.difficulty.charAt(0).toUpperCase() + this.difficulty.slice(1);
+                document.getElementById('category').textContent = 
+                    this.currentCategory.charAt(0).toUpperCase() + this.currentCategory.slice(1);
                 
                 this.newGame();
             }
@@ -726,6 +824,14 @@
             game.toggleDifficulty();
         }
 
+        function changeCategory() {
+            game.changeCategory();
+        }
+
+        function randomizeEverything() {
+            game.randomizeEverything();
+        }
+
         function buyHints() {
             // Simulate purchase notification
             alert('🛒 Purchase Successful!\n\nYou have received 5 additional hints!\nThank you for your purchase.');
@@ -739,5 +845,5 @@
             game = new WordSearchGame();
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'978ead512642774f',t:'MTc1NjgzMzYxNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'978ecf56e6c89491',t:'MTc1NjgzNTAwOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
