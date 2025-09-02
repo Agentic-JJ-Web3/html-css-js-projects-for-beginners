@@ -1,0 +1,439 @@
+ 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Aurora Background Effect */
+        .aurora-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .aurora {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(ellipse at 40% 80%, rgba(120, 219, 226, 0.3) 0%, transparent 50%),
+                radial-gradient(ellipse at 0% 0%, rgba(135, 206, 235, 0.2) 0%, transparent 50%),
+                radial-gradient(ellipse at 100% 100%, rgba(238, 130, 238, 0.2) 0%, transparent 50%),
+                linear-gradient(135deg, 
+                    rgba(72, 61, 139, 0.1) 0%, 
+                    rgba(106, 90, 205, 0.1) 25%, 
+                    rgba(147, 112, 219, 0.1) 50%, 
+                    rgba(138, 43, 226, 0.1) 75%, 
+                    rgba(75, 0, 130, 0.1) 100%);
+            animation: aurora-move 20s ease-in-out infinite;
+            filter: blur(2px);
+        }
+
+        .aurora::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 60% 30%, rgba(0, 255, 127, 0.2) 0%, transparent 50%),
+                radial-gradient(ellipse at 30% 70%, rgba(255, 20, 147, 0.2) 0%, transparent 50%),
+                radial-gradient(ellipse at 90% 60%, rgba(30, 144, 255, 0.2) 0%, transparent 50%);
+            animation: aurora-move-reverse 25s ease-in-out infinite;
+        }
+
+        .aurora::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 70% 10%, rgba(255, 215, 0, 0.15) 0%, transparent 40%),
+                radial-gradient(ellipse at 10% 90%, rgba(50, 205, 50, 0.15) 0%, transparent 40%),
+                radial-gradient(ellipse at 50% 50%, rgba(255, 69, 0, 0.1) 0%, transparent 60%);
+            animation: aurora-pulse 15s ease-in-out infinite;
+        }
+
+        @keyframes aurora-move {
+            0%, 100% {
+                transform: translateX(-10%) translateY(-10%) rotate(0deg);
+            }
+            25% {
+                transform: translateX(0%) translateY(-5%) rotate(1deg);
+            }
+            50% {
+                transform: translateX(-5%) translateY(0%) rotate(-1deg);
+            }
+            75% {
+                transform: translateX(-15%) translateY(-8%) rotate(0.5deg);
+            }
+        }
+
+        @keyframes aurora-move-reverse {
+            0%, 100% {
+                transform: translateX(5%) translateY(5%) rotate(0deg);
+            }
+            33% {
+                transform: translateX(-2%) translateY(8%) rotate(-0.5deg);
+            }
+            66% {
+                transform: translateX(8%) translateY(-3%) rotate(1deg);
+            }
+        }
+
+        @keyframes aurora-pulse {
+            0%, 100% {
+                opacity: 0.3;
+                transform: scale(1) rotate(0deg);
+            }
+            50% {
+                opacity: 0.6;
+                transform: scale(1.1) rotate(180deg);
+            }
+        }
+
+        /* Floating particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .particle:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { left: 20%; animation-delay: 1s; }
+        .particle:nth-child(3) { left: 30%; animation-delay: 2s; }
+        .particle:nth-child(4) { left: 40%; animation-delay: 3s; }
+        .particle:nth-child(5) { left: 50%; animation-delay: 4s; }
+        .particle:nth-child(6) { left: 60%; animation-delay: 5s; }
+        .particle:nth-child(7) { left: 70%; animation-delay: 0.5s; }
+        .particle:nth-child(8) { left: 80%; animation-delay: 1.5s; }
+        .particle:nth-child(9) { left: 90%; animation-delay: 2.5s; }
+        .particle:nth-child(10) { left: 15%; animation-delay: 3.5s; }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(90vh) scale(1);
+            }
+            90% {
+                opacity: 1;
+                transform: translateY(10vh) scale(1);
+            }
+            100% {
+                transform: translateY(0vh) scale(0);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .info-item {
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+        }
+
+        .game-container {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 40px;
+            padding: 40px;
+            align-items: start;
+        }
+
+        .puzzle-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 2px;
+            background: #34495e;
+            padding: 10px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            user-select: none;
+        }
+
+        .cell {
+            width: 40px;
+            height: 40px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .cell:hover {
+            background: #e8f4fd;
+            transform: scale(1.05);
+        }
+
+        .cell.selecting {
+            background: #74b9ff;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .cell.found {
+            color: white;
+            animation: found-pulse 0.6s ease;
+        }
+
+        @keyframes found-pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #ddd;
+            color: #333;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .dropdown-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .dropdown {
+            padding: 12px 16px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            background: white;
+            color: #333;
+            min-width: 140px;
+        }
+
+        .dropdown:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .dropdown:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .word-list {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            min-width: 250px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .word-list h3 {
+            color: #2d3436;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            text-align: center;
+        }
+
+        .word-item {
+            padding: 12px 16px;
+            margin: 8px 0;
+            background: white;
+            border-radius: 10px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border-left: 4px solid #ddd;
+            text-transform: uppercase;
+        }
+
+        .word-item.found {
+            background: #d1f2eb;
+            color: #00b894;
+            border-left-color: #00b894;
+            text-decoration: line-through;
+            transform: scale(0.95);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #ddd;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #00b894, #55efc4);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 4px;
+        }
+
+        .completion-message {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(45deg, #00b894, #55efc4);
+            color: white;
+            border-radius: 15px;
+            margin-top: 20px;
+            display: none;
+            animation: celebration 1s ease;
+        }
+
+        @keyframes celebration {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .game-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 20px;
+            }
+            
+            .cell {
+                width: 35px;
+                height: 35px;
+                font-size: 16px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .game-info {
+                gap: 15px;
+            }
+
+            /* Mobile aurora optimizations */
+            .aurora {
+                width: 150%;
+                height: 150%;
+                filter: blur(1px);
+            }
+
+            .particle {
+                width: 1px;
+                height: 1px;
+            }
+
+            /* Reduce animation complexity on mobile */
+            @media (prefers-reduced-motion: reduce) {
+                .aurora, .aurora::before, .aurora::after {
+                    animation: none;
+                }
+                .particle {
+                    animation: none;
+                    opacity: 0.3;
+                }
+            }
+        }
+    
