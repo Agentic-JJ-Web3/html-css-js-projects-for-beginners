@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Digital Diary</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .bounce-in {
+            animation: bounceIn 0.6s ease-out;
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .hover-lift {
+            transition: all 0.3s ease;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .typing-indicator {
+            border-right: 2px solid #667eea;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { border-color: #667eea; }
+            51%, 100% { border-color: transparent; }
+        }
+        
+        .mood-emoji {
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            filter: grayscale(100%);
+        }
+        
+        .mood-emoji:hover, .mood-emoji.selected {
+            filter: grayscale(0%);
+            transform: scale(1.2);
+        }
+        
+        .search-highlight {
+            background: linear-gradient(120deg, #fbbf24 0%, #f59e0b 100%);
+            padding: 2px 4px;
+            border-radius: 4px;
+            color: white;
+        }
+        
+        .theme-dark {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+            color: white;
+        }
+        
+        .theme-dark .glass-effect {
+            background: rgba(30, 27, 75, 0.9);
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50 min-h-screen transition-all duration-500" id="mainBody">
+    <!-- Floating Theme Toggle -->
+    <div class="fixed top-4 right-4 z-50">
+        <button onclick="toggleTheme()" class="glass-effect rounded-full p-3 hover:scale-110 transition-all duration-300 shadow-lg">
+            <span id="themeIcon">🌙</span>
+        </button>
+    </div>
+
+    <!-- Floating Stats -->
+    <div class="fixed top-4 left-4 z-50 glass-effect rounded-xl p-4 shadow-lg fade-in">
+        <div class="text-sm font-medium text-gray-700" id="statsDisplay">
+            <div>📊 <span id="totalPosts">0</span> entries</div>
+            <div>📝 <span id="totalWords">0</span> words</div>
+            <div>🔥 <span id="streak">0</span> day streak</div>
+        </div>
+    </div>
+
+    <div id="app" class="container mx-auto px-4 py-8 max-w-4xl">
+        <!-- Enhanced Header -->
+        <header class="text-center mb-8 bounce-in">
+            <h1 class="text-5xl font-bold gradient-text mb-4">📖 My Digital Diary</h1>
+            <p class="text-gray-600 text-lg typing-indicator" id="headerSubtext">Your personal space for thoughts and memories</p>
+        </header>
+
+        <!-- Profile Setup -->
+        <div id="profileSetup" class="glass-effect rounded-2xl shadow-2xl p-8 mb-8 hidden fade-in">
+            <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center gradient-text">Welcome! Let's set up your profile</h2>
+            <div class="max-w-md mx-auto">
+                <div class="mb-6">
+                    <label class="block text-gray-700 font-semibold mb-3">Your Name</label>
+                    <input type="text" id="profileName" class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300" placeholder="Enter your name">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 font-semibold mb-3">Choose Your Avatar Color</label>
+                    <div class="flex space-x-3 justify-center">
+                        <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full cursor-pointer hover:scale-110 transition-transform avatar-color selected" data-gradient="from-purple-500 to-pink-500"></div>
+                        <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full cursor-pointer hover:scale-110 transition-transform avatar-color" data-gradient="from-blue-500 to-cyan-500"></div>
+                        <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full cursor-pointer hover:scale-110 transition-transform avatar-color" data-gradient="from-green-500 to-emerald-500"></div>
+                        <div class="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-full cursor-pointer hover:scale-110 transition-transform avatar-color" data-gradient="from-orange-500 to-red-500"></div>
+                    </div>
+                </div>
+                <div class="mb-8">
+                    <label class="block text-gray-700 font-semibold mb-3">About You (Optional)</label>
+                    <textarea id="profileBio" rows="4" class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300" placeholder="Tell us a bit about yourself..."></textarea>
+                </div>
+                <button onclick="saveProfile()" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
+                    ✨ Create Profile
+                </button>
+            </div>
+        </div>
+
+        <!-- Main App -->
+        <div id="mainApp" class="hidden">
+            <!-- Enhanced Profile Card -->
+            <div class="glass-effect rounded-2xl shadow-2xl p-8 mb-8 hover-lift">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <div class="w-20 h-20 bg-gradient-to-r rounded-full flex items-center justify-center text-white text-3xl font-bold mr-6 shadow-lg" id="profileAvatar">
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800 mb-1" id="profileDisplayName"></h2>
+                            <p class="text-gray-600 text-lg" id="profileDisplayBio"></p>
+                            <div class="flex items-center mt-2 space-x-4 text-sm text-gray-500">
+                                <span>📅 Joined <span id="joinDate"></span></span>
+                                <span>🎯 Level <span id="userLevel">1</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="editProfile()" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-xl hover:scale-105 transition-all duration-300 font-medium shadow-lg">
+                        ✏️ Edit Profile
+                    </button>
+                </div>
+            </div>
+
+            <!-- Search and Filter Bar -->
+            <div class="glass-effect rounded-2xl shadow-lg p-6 mb-8 fade-in">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="flex-1">
+                        <input type="text" id="searchInput" class="w-full px-6 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300" placeholder="🔍 Search your entries...">
+                    </div>
+                    <select id="sortFilter" class="px-6 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300">
+                        <option value="newest">📅 Newest First</option>
+                        <option value="oldest">📅 Oldest First</option>
+                        <option value="longest">📏 Longest First</option>
+                        <option value="shortest">📏 Shortest First</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Enhanced New Post Form -->
+            <div class="glass-effect rounded-2xl shadow-2xl p-8 mb-8 hover-lift">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 gradient-text">✍️ Write a new entry</h3>
+                <div class="mb-6">
+                    <input type="text" id="postTitle" class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300 text-lg" placeholder="What's your entry about?">
+                </div>
+                
+                <!-- Mood Selector -->
+                <div class="mb-6">
+                    <label class="block text-gray-700 font-semibold mb-3">How are you feeling?</label>
+                    <div class="flex space-x-3">
+                        <span class="mood-emoji" data-mood="😊" title="Happy">😊</span>
+                        <span class="mood-emoji" data-mood="😢" title="Sad">😢</span>
+                        <span class="mood-emoji" data-mood="😴" title="Tired">😴</span>
+                        <span class="mood-emoji" data-mood="😍" title="Excited">😍</span>
+                        <span class="mood-emoji" data-mood="😤" title="Frustrated">😤</span>
+                        <span class="mood-emoji" data-mood="🤔" title="Thoughtful">🤔</span>
+                        <span class="mood-emoji" data-mood="😌" title="Peaceful">😌</span>
+                        <span class="mood-emoji" data-mood="🥳" title="Celebrating">🥳</span>
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <textarea id="postContent" rows="6" class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300 text-lg" placeholder="Pour your heart out..."></textarea>
+                </div>
+                
+                <!-- Writing Tools -->
+                <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
+                    <div class="flex items-center space-x-4 text-sm text-gray-600">
+                        <span id="wordCount" class="font-medium">0 words</span>
+                        <span id="charCount">0 characters</span>
+                        <span id="readTime">~0 min read</span>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="insertTemplate('gratitude')" class="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg hover:bg-yellow-200 transition-colors text-sm font-medium">
+                            🙏 Gratitude
+                        </button>
+                        <button onclick="insertTemplate('goals')" class="px-4 py-2 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition-colors text-sm font-medium">
+                            🎯 Goals
+                        </button>
+                        <button onclick="insertTemplate('reflection')" class="px-4 py-2 bg-green-100 text-green-800 rounded-lg hover:bg-green-200 transition-colors text-sm font-medium">
+                            💭 Reflection
+                        </button>
+                    </div>
+                </div>
+                
+                <button onclick="savePost()" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg text-lg">
+                    💾 Save Entry
+                </button>
+            </div>
+
+            <!-- Posts List -->
+            <div class="space-y-6" id="postsList">
+                <!-- Posts will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Toast -->
+    <div id="successToast" class="fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-xl shadow-lg transform translate-y-full transition-transform duration-300 z-50">
+        <div class="flex items-center">
+            <span class="mr-2">✅</span>
+            <span id="toastMessage">Entry saved successfully!</span>
+        </div>
+    </div>
+
+    <script>
+        let selectedMood = '';
+        let selectedAvatarGradient = 'from-purple-500 to-pink-500';
+        let isDarkTheme = false;
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProfile();
+            loadPosts();
+            updateStats();
+            
+            // Event listeners
+            document.getElementById('postContent').addEventListener('input', updateWritingStats);
+            document.getElementById('searchInput').addEventListener('input', filterPosts);
+            document.getElementById('sortFilter').addEventListener('change', filterPosts);
+            
+            // Mood selector
+            document.querySelectorAll('.mood-emoji').forEach(emoji => {
+                emoji.addEventListener('click', function() {
+                    document.querySelectorAll('.mood-emoji').forEach(e => e.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedMood = this.dataset.mood;
+                });
+            });
+            
+            // Avatar color selector
+            document.querySelectorAll('.avatar-color').forEach(color => {
+                color.addEventListener('click', function() {
+                    document.querySelectorAll('.avatar-color').forEach(c => c.classList.remove('selected', 'ring-4', 'ring-purple-300'));
+                    this.classList.add('selected', 'ring-4', 'ring-purple-300');
+                    selectedAvatarGradient = this.dataset.gradient;
+                });
+            });
+            
+            // Typing effect for header
+            typeWriter();
+        });
+
+        // Enhanced Profile Management
+        function loadProfile() {
+            const profile = localStorage.getItem('diaryProfile');
+            if (profile) {
+                const profileData = JSON.parse(profile);
+                document.getElementById('profileDisplayName').textContent = profileData.name;
+                document.getElementById('profileDisplayBio').textContent = profileData.bio || 'Living life one day at a time ✨';
+                document.getElementById('profileAvatar').textContent = profileData.name.charAt(0).toUpperCase();
+                document.getElementById('profileAvatar').className = `w-20 h-20 bg-gradient-to-r ${profileData.avatarGradient || 'from-purple-500 to-pink-500'} rounded-full flex items-center justify-center text-white text-3xl font-bold mr-6 shadow-lg`;
+                document.getElementById('joinDate').textContent = formatDate(profileData.createdAt, true);
+                
+                // Calculate user level based on posts
+                const posts = JSON.parse(localStorage.getItem('diaryPosts') || '[]');
+                const level = Math.floor(posts.length / 5) + 1;
+                document.getElementById('userLevel').textContent = level;
+                
+                document.getElementById('profileSetup').classList.add('hidden');
+                document.getElementById('mainApp').classList.remove('hidden');
+            } else {
+                document.getElementById('profileSetup').classList.remove('hidden');
+                document.getElementById('mainApp').classList.add('hidden');
+            }
+        }
+
+        function saveProfile() {
+            const name = document.getElementById('profileName').value.trim();
+            if (!name) {
+                showToast('Please enter your name', 'error');
+                return;
+            }
+
+            const bio = document.getElementById('profileBio').value.trim();
+            const profile = {
+                name: name,
+                bio: bio,
+                avatarGradient: selectedAvatarGradient,
+                createdAt: new Date().toISOString()
+            };
+
+            localStorage.setItem('diaryProfile', JSON.stringify(profile));
+            showToast('Profile created successfully! 🎉');
+            setTimeout(() => loadProfile(), 1000);
+        }
+
+        function editProfile() {
+            const profile = JSON.parse(localStorage.getItem('diaryProfile'));
+            document.getElementById('profileName').value = profile.name;
+            document.getElementById('profileBio').value = profile.bio || '';
+            selectedAvatarGradient = profile.avatarGradient || 'from-purple-500 to-pink-500';
+            
+            // Update selected avatar color
+            document.querySelectorAll('.avatar-color').forEach(color => {
+                color.classList.remove('selected', 'ring-4', 'ring-purple-300');
+                if (color.dataset.gradient === selectedAvatarGradient) {
+                    color.classList.add('selected', 'ring-4', 'ring-purple-300');
+                }
+            });
+            
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('profileSetup').classList.remove('hidden');
+        }
+
+        // Enhanced Post Management
+        function savePost() {
+            const title = document.getElementById('postTitle').value.trim();
+            const content = document.getElementById('postContent').value.trim();
+
+            if (!title || !content) {
+                showToast('Please fill in both title and content', 'error');
+                return;
+            }
+
+            const posts = JSON.parse(localStorage.getItem('diaryPosts') || '[]');
+            const wordCount = content.split(/\s+/).filter(word => word.length > 0).length;
+            const newPost = {
+                id: Date.now(),
+                title: title,
+                content: content,
+                mood: selectedMood,
+                createdAt: new Date().toISOString(),
+                wordCount: wordCount,
+                readTime: Math.ceil(wordCount / 200)
+            };
+
+            posts.unshift(newPost);
+            localStorage.setItem('diaryPosts', JSON.stringify(posts));
+
+            // Clear form
+            document.getElementById('postTitle').value = '';
+            document.getElementById('postContent').value = '';
+            selectedMood = '';
+            document.querySelectorAll('.mood-emoji').forEach(e => e.classList.remove('selected'));
+            updateWritingStats();
+
+            showToast('Entry saved successfully! 📝');
+            loadPosts();
+            updateStats();
+        }
+
+        function loadPosts() {
+            const posts = JSON.parse(localStorage.getItem('diaryPosts') || '[]');
+            const postsList = document.getElementById('postsList');
+
+            if (posts.length === 0) {
+                postsList.innerHTML = `
+                    <div class="glass-effect rounded-2xl shadow-lg p-12 text-center fade-in">
+                        <div class="text-8xl mb-6">📝</div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4 gradient-text">No entries yet</h3>
+                        <p class="text-gray-600 text-lg">Start writing your first diary entry above!</p>
+                        <p class="text-gray-500 mt-2">✨ Tip: Try using one of the writing templates to get started</p>
+                    </div>
+                `;
+                return;
+            }
+
+            postsList.innerHTML = posts.map((post, index) => `
+                <div class="glass-effect rounded-2xl shadow-lg p-8 hover-lift fade-in" style="animation-delay: ${index * 0.1}s">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-center space-x-3">
+                            <h3 class="text-2xl font-bold text-gray-800">${escapeHtml(post.title)}</h3>
+                            ${post.mood ? `<span class="text-2xl">${post.mood}</span>` : ''}
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="toggleFavorite(${post.id})" class="text-yellow-500 hover:text-yellow-600 text-xl transition-colors">
+                                ${post.favorite ? '⭐' : '☆'}
+                            </button>
+                            <button onclick="deletePost(${post.id})" class="text-red-500 hover:text-red-700 transition-colors">
+                                🗑️
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 mb-6 leading-relaxed text-lg" id="post-content-${post.id}">${escapeHtml(post.content).replace(/\n/g, '<br>')}</p>
+                    <div class="flex justify-between items-center text-sm text-gray-500 border-t pt-4">
+                        <div class="flex space-x-4">
+                            <span>📅 ${formatDate(post.createdAt)}</span>
+                            <span>📝 ${post.wordCount} words</span>
+                            <span>⏱️ ${post.readTime} min read</span>
+                        </div>
+                        <button onclick="sharePost(${post.id})" class="text-purple-600 hover:text-purple-800 font-medium">
+                            📤 Share
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function deletePost(postId) {
+            if (confirm('Are you sure you want to delete this entry? This action cannot be undone.')) {
+                const posts = JSON.parse(localStorage.getItem('diaryPosts') || '[]');
+                const filteredPosts = posts.filter(post => post.id !== postId);
+                localStorage.setItem('diaryPosts', JSON.stringify(filteredPosts));
+                showToast('Entry deleted successfully');
+                loadPosts();
+                updateStats();
+            }
+        }
+
+        function toggleFavorite(postId) {
+            const posts = JSON.parse(localStorage.getItem('diaryPosts') || '[]');
+            const post = posts.find(p => p.id === postId);
+            if (post) {
+                post.favorite = !post.favorite;
+                localStorage.setItem('diaryPosts', JSON.stringify(posts));
+                loadPosts();
+                showToast(post.favorite ? 'Added to favorites ⭐' : 'Removed from favorites');
+            }
+        }
+
+        function sharePost(postId) {
+            const posts = JSON.parse(localStorage.getItem('diaryPosts') || '[]');
+            const post = posts.find(p => p.id === postId);
+            if (post) {
+                const shareText = `${post.title}\n\n${post.content}\n\n- From my digital diary`;
+                if (navigator.share) {
+                    navigator.share({
+                        title: post.title,
+                        text: shareText
+                    });
+                } else {
+                    navigator.clipboard.writeText(shareText);
+                    showToast('Entry copied to clipboard! 📋');
+                }
+            }
+        }
+
+        // Enhanced UI Features
+        function updateWritingStats() {
+            const content = document.getElementById('postContent').value;
+            const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0;
+            const charCount = content.length;
+            const readTime = Math.ceil(wordCount / 200);
+            
+            document.getElementById('wordCount').textContent = `${wordCount} words`;
+            document.getElementById('charCount').textContent = `${charCount} characters`;
+            document.getElementById('readTime').textContent = `~${readTime} min read`;
+        }
+
+        function updateStats() {
+            const posts = JSON.parse(localStorage.getItem('diaryPosts') || '[]');
+            const totalWords = posts.reduce((sum, post) => sum + post.wordCount, 0);
+            const streak = calculateStreak(posts);
+            
+            document.getElementById('totalPosts').textContent = posts.length;
+            document.getElementById('totalWords').textContent = totalWords.toLocaleString();
+            document.getElementById('streak').textContent = streak;
+        }
+
+        function calculateStreak(posts) {
+            if (posts.length === 0) return 0;
+            
+            const today = new Date();
+            const dates = posts.map(post => new Date(post.createdAt).toDateString());
+            const uniqueDates = [...new Set(dates)].sort((a, b) => new Date(b) - new Date(a));
+            
+            let streak = 0;
+            let currentDate = new Date(today);
+            
+            for (let dateStr of uniqueDates) {
+                const postDate = new Date(dateStr);
+                const diffDays = Math.floor((currentDate - postDate) / (1000 * 60 * 60 * 24));
+                
+                if (diffDays === streak) {
+                    streak++;
+                    currentDate.setDate(currentDate.getDate() - 1);
+                } else {
+                    break;
+                }
+            }
+            
+            return streak;
+        }
+
+        function filterPosts() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const sortBy = document.getElementById('sortFilter').value;
+            let posts = JSON.parse(localStorage.getItem('diaryPosts') || '[]');
+            
+            // Filter by search term
+            if (searchTerm) {
+                posts = posts.filter(post => 
+                    post.title.toLowerCase().includes(searchTerm) || 
+                    post.content.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Sort posts
+            switch (sortBy) {
+                case 'oldest':
+                    posts.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+                    break;
+                case 'longest':
+                    posts.sort((a, b) => b.wordCount - a.wordCount);
+                    break;
+                case 'shortest':
+                    posts.sort((a, b) => a.wordCount - b.wordCount);
+                    break;
+                default: // newest
+                    posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            }
+            
+            // Highlight search terms
+            const postsList = document.getElementById('postsList');
+            if (posts.length === 0 && searchTerm) {
+                postsList.innerHTML = `
+                    <div class="glass-effect rounded-2xl shadow-lg p-12 text-center">
+                        <div class="text-6xl mb-4">🔍</div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">No entries found</h3>
+                        <p class="text-gray-600">Try searching for something else</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Re-render filtered posts
+            postsList.innerHTML = posts.map((post, index) => {
+                let highlightedTitle = post.title;
+                let highlightedContent = post.content;
+                
+                if (searchTerm) {
+                    const regex = new RegExp(`(${searchTerm})`, 'gi');
+                    highlightedTitle = highlightedTitle.replace(regex, '<span class="search-highlight">$1</span>');
+                    highlightedContent = highlightedContent.replace(regex, '<span class="search-highlight">$1</span>');
+                }
+                
+                return `
+                    <div class="glass-effect rounded-2xl shadow-lg p-8 hover-lift fade-in" style="animation-delay: ${index * 0.1}s">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex items-center space-x-3">
+                                <h3 class="text-2xl font-bold text-gray-800">${highlightedTitle}</h3>
+                                ${post.mood ? `<span class="text-2xl">${post.mood}</span>` : ''}
+                            </div>
+                            <div class="flex space-x-2">
+                                <button onclick="toggleFavorite(${post.id})" class="text-yellow-500 hover:text-yellow-600 text-xl transition-colors">
+                                    ${post.favorite ? '⭐' : '☆'}
+                                </button>
+                                <button onclick="deletePost(${post.id})" class="text-red-500 hover:text-red-700 transition-colors">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                        <p class="text-gray-700 mb-6 leading-relaxed text-lg">${highlightedContent.replace(/\n/g, '<br>')}</p>
+                        <div class="flex justify-between items-center text-sm text-gray-500 border-t pt-4">
+                            <div class="flex space-x-4">
+                                <span>📅 ${formatDate(post.createdAt)}</span>
+                                <span>📝 ${post.wordCount} words</span>
+                                <span>⏱️ ${post.readTime} min read</span>
+                            </div>
+                            <button onclick="sharePost(${post.id})" class="text-purple-600 hover:text-purple-800 font-medium">
+                                📤 Share
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function insertTemplate(type) {
+            const templates = {
+                gratitude: "Today I'm grateful for:\n• \n• \n• \n\nThese things made me smile because...",
+                goals: "My goals for today/this week:\n□ \n□ \n□ \n\nI will achieve these by...",
+                reflection: "Today I learned:\n\nSomething that challenged me:\n\nHow I grew:\n\nTomorrow I want to focus on:"
+            };
+            
+            const textarea = document.getElementById('postContent');
+            const template = templates[type];
+            if (template) {
+                textarea.value = template;
+                updateWritingStats();
+                textarea.focus();
+            }
+        }
+
+        function toggleTheme() {
+            isDarkTheme = !isDarkTheme;
+            const body = document.getElementById('mainBody');
+            const themeIcon = document.getElementById('themeIcon');
+            
+            if (isDarkTheme) {
+                body.classList.add('theme-dark');
+                themeIcon.textContent = '☀️';
+            } else {
+                body.classList.remove('theme-dark');
+                themeIcon.textContent = '🌙';
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('successToast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            toastMessage.textContent = message;
+            
+            if (type === 'error') {
+                toast.className = toast.className.replace('bg-green-500', 'bg-red-500');
+            } else {
+                toast.className = toast.className.replace('bg-red-500', 'bg-green-500');
+            }
+            
+            toast.classList.remove('translate-y-full');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-full');
+            }, 3000);
+        }
+
+        function typeWriter() {
+            const texts = [
+                "Your personal space for thoughts and memories",
+                "Where every word matters ✨",
+                "Capture life's beautiful moments 🌟",
+                "Your digital sanctuary 🏡"
+            ];
+            
+            let textIndex = 0;
+            let charIndex = 0;
+            const element = document.getElementById('headerSubtext');
+            
+            function type() {
+                if (charIndex < texts[textIndex].length) {
+                    element.textContent = texts[textIndex].substring(0, charIndex + 1);
+                    charIndex++;
+                    setTimeout(type, 100);
+                } else {
+                    setTimeout(() => {
+                        charIndex = 0;
+                        textIndex = (textIndex + 1) % texts.length;
+                        element.textContent = '';
+                        type();
+                    }, 3000);
+                }
+            }
+            
+            type();
+        }
+
+        // Utility functions
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(dateString, short = false) {
+            const date = new Date(dateString);
+            if (short) {
+                return date.toLocaleDateString('en-US', {
+                    month: 'short',
+                    year: 'numeric'
+                });
+            }
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'978f3f29908b718c',t:'MTc1NjgzOTU4OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
