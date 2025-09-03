@@ -5,37 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Digital Diary</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         body { font-family: 'Inter', sans-serif; }
         
         .fade-in {
-            animation: fadeIn 0.5s ease-in-out;
+            animation: fadeIn 0.6s ease-in-out;
         }
         
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
-        .slide-in {
-            animation: slideIn 0.3s ease-out;
+        .slide-in-left {
+            animation: slideInLeft 0.5s ease-out;
         }
         
-        @keyframes slideIn {
+        @keyframes slideInLeft {
             from { transform: translateX(-100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
         
+        .slide-in-right {
+            animation: slideInRight 0.5s ease-out;
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
         .bounce-in {
-            animation: bounceIn 0.6s ease-out;
+            animation: bounceIn 0.8s ease-out;
         }
         
         @keyframes bounceIn {
             0% { transform: scale(0.3); opacity: 0; }
-            50% { transform: scale(1.05); }
+            50% { transform: scale(1.1); }
             70% { transform: scale(0.9); }
             100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes pulseGlow {
+            from { box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); }
+            to { box-shadow: 0 0 30px rgba(139, 92, 246, 0.6); }
         }
         
         .gradient-text {
@@ -46,105 +65,306 @@
         }
         
         .glass-effect {
-            backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         .hover-lift {
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
         .hover-lift:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
         }
         
-        .typing-indicator {
-            border-right: 2px solid #667eea;
-            animation: blink 1s infinite;
+        .stat-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
         }
         
-        @keyframes blink {
-            0%, 50% { border-color: #667eea; }
-            51%, 100% { border-color: transparent; }
+        .streak-fire {
+            animation: flickerFire 1.5s ease-in-out infinite alternate;
+        }
+        
+        @keyframes flickerFire {
+            0% { transform: scale(1) rotate(-1deg); }
+            50% { transform: scale(1.1) rotate(1deg); }
+            100% { transform: scale(1) rotate(-1deg); }
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            animation: progressGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes progressGlow {
+            from { box-shadow: 0 0 10px rgba(102, 126, 234, 0.5); }
+            to { box-shadow: 0 0 20px rgba(102, 126, 234, 0.8); }
         }
         
         .mood-emoji {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             filter: grayscale(100%);
         }
         
         .mood-emoji:hover, .mood-emoji.selected {
             filter: grayscale(0%);
-            transform: scale(1.2);
-        }
-        
-        .search-highlight {
-            background: linear-gradient(120deg, #fbbf24 0%, #f59e0b 100%);
-            padding: 2px 4px;
-            border-radius: 4px;
-            color: white;
+            transform: scale(1.3) rotate(5deg);
         }
         
         .theme-dark {
-            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
             color: white;
         }
         
         .theme-dark .glass-effect {
-            background: rgba(30, 27, 75, 0.9);
+            background: rgba(15, 15, 35, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             color: white;
+        }
+        
+        .theme-dark .stat-card {
+            background: linear-gradient(135deg, rgba(15,15,35,0.9) 0%, rgba(26,26,46,0.7) 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        .achievement-badge {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            animation: badgeShine 2s ease-in-out infinite;
+        }
+        
+        @keyframes badgeShine {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
     </style>
 </head>
 <body class="bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50 min-h-screen transition-all duration-500" id="mainBody">
-    <!-- Floating Theme Toggle -->
-    <div class="fixed top-4 right-4 z-50">
-        <button onclick="toggleTheme()" class="glass-effect rounded-full p-3 hover:scale-110 transition-all duration-300 shadow-lg">
-            <span id="themeIcon">🌙</span>
-        </button>
+    <!-- Floating Particles Background -->
+    <div class="floating-particles">
+        <div class="particle" style="width: 4px; height: 4px; top: 20%; left: 10%; animation-delay: 0s;"></div>
+        <div class="particle" style="width: 6px; height: 6px; top: 60%; left: 80%; animation-delay: 2s;"></div>
+        <div class="particle" style="width: 3px; height: 3px; top: 80%; left: 20%; animation-delay: 4s;"></div>
+        <div class="particle" style="width: 5px; height: 5px; top: 30%; left: 70%; animation-delay: 1s;"></div>
     </div>
 
-    <!-- Floating Stats -->
-    <div class="fixed top-4 left-4 z-50 glass-effect rounded-xl p-4 shadow-lg fade-in">
-        <div class="text-sm font-medium text-gray-700" id="statsDisplay">
-            <div>📊 <span id="totalPosts">0</span> entries</div>
-            <div>📝 <span id="totalWords">0</span> words</div>
-            <div>🔥 <span id="streak">0</span> day streak</div>
+    <!-- Enhanced Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glass-effect shadow-lg">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <h1 class="text-xl font-bold gradient-text">📖 Digital Diary</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="showAnalytics()" class="glass-effect px-4 py-2 rounded-lg hover:scale-105 transition-all duration-300 font-medium">
+                        📊 Analytics
+                    </button>
+                    <button onclick="toggleTheme()" class="glass-effect rounded-full p-3 hover:scale-110 transition-all duration-300">
+                        <span id="themeIcon">🌙</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Enhanced Stats Dashboard -->
+    <div class="fixed top-20 left-4 z-40 space-y-3 slide-in-left">
+        <!-- Total Entries -->
+        <div class="stat-card rounded-xl p-4 shadow-lg hover-lift">
+            <div class="flex items-center space-x-3">
+                <div class="text-2xl">📚</div>
+                <div>
+                    <div class="text-2xl font-bold text-purple-600" id="totalPosts">0</div>
+                    <div class="text-xs text-gray-600">Total Entries</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Total Words -->
+        <div class="stat-card rounded-xl p-4 shadow-lg hover-lift">
+            <div class="flex items-center space-x-3">
+                <div class="text-2xl">✍️</div>
+                <div>
+                    <div class="text-2xl font-bold text-blue-600" id="totalWords">0</div>
+                    <div class="text-xs text-gray-600">Words Written</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Current Streak -->
+        <div class="stat-card rounded-xl p-4 shadow-lg hover-lift">
+            <div class="flex items-center space-x-3">
+                <div class="text-2xl streak-fire">🔥</div>
+                <div>
+                    <div class="text-2xl font-bold text-orange-600" id="currentStreak">0</div>
+                    <div class="text-xs text-gray-600">Day Streak</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Best Streak -->
+        <div class="stat-card rounded-xl p-4 shadow-lg hover-lift">
+            <div class="flex items-center space-x-3">
+                <div class="text-2xl">🏆</div>
+                <div>
+                    <div class="text-2xl font-bold text-yellow-600" id="bestStreak">0</div>
+                    <div class="text-xs text-gray-600">Best Streak</div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div id="app" class="container mx-auto px-4 py-8 max-w-4xl">
+    <!-- Level Progress -->
+    <div class="fixed top-20 right-4 z-40 slide-in-right">
+        <div class="stat-card rounded-xl p-4 shadow-lg hover-lift">
+            <div class="text-center mb-2">
+                <div class="text-lg font-bold gradient-text">Level <span id="userLevel">1</span></div>
+                <div class="text-xs text-gray-600" id="levelTitle">Beginner Writer</div>
+            </div>
+            <div class="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div class="progress-bar h-full rounded-full transition-all duration-1000" id="levelProgress" style="width: 0%"></div>
+            </div>
+            <div class="text-xs text-gray-600 mt-1 text-center">
+                <span id="levelProgressText">0/5 entries to next level</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="app" class="container mx-auto px-4 py-24 max-w-5xl">
         <!-- Enhanced Header -->
-        <header class="text-center mb-8 bounce-in">
-            <h1 class="text-5xl font-bold gradient-text mb-4">📖 My Digital Diary</h1>
-            <p class="text-gray-600 text-lg typing-indicator" id="headerSubtext">Your personal space for thoughts and memories</p>
+        <header class="text-center mb-12 bounce-in">
+            <h1 class="text-6xl font-bold gradient-text mb-6">📖 My Digital Diary</h1>
+            <p class="text-gray-600 text-xl typing-indicator" id="headerSubtext">Your personal space for thoughts and memories</p>
+            
+            <!-- Achievement Badges -->
+            <div class="flex justify-center space-x-2 mt-6" id="achievementBadges">
+                <!-- Badges will be dynamically added here -->
+            </div>
         </header>
 
-        <!-- Profile Setup -->
-        <div id="profileSetup" class="glass-effect rounded-2xl shadow-2xl p-8 mb-8 hidden fade-in">
-            <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center gradient-text">Welcome! Let's set up your profile</h2>
-            <div class="max-w-md mx-auto">
-                <div class="mb-6">
-                    <label class="block text-gray-700 font-semibold mb-3">Your Name</label>
-                    <input type="text" id="profileName" class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300" placeholder="Enter your name">
-                </div>
-                <div class="mb-6">
-                    <label class="block text-gray-700 font-semibold mb-3">Choose Your Avatar Color</label>
-                    <div class="flex space-x-3 justify-center">
-                        <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full cursor-pointer hover:scale-110 transition-transform avatar-color selected" data-gradient="from-purple-500 to-pink-500"></div>
-                        <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full cursor-pointer hover:scale-110 transition-transform avatar-color" data-gradient="from-blue-500 to-cyan-500"></div>
-                        <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full cursor-pointer hover:scale-110 transition-transform avatar-color" data-gradient="from-green-500 to-emerald-500"></div>
-                        <div class="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-full cursor-pointer hover:scale-110 transition-transform avatar-color" data-gradient="from-orange-500 to-red-500"></div>
+        <!-- Analytics Modal -->
+        <div id="analyticsModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+            <div class="glass-effect rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                <div class="p-8">
+                    <div class="flex justify-between items-center mb-8">
+                        <h2 class="text-3xl font-bold gradient-text">📊 Writing Analytics</h2>
+                        <button onclick="hideAnalytics()" class="text-gray-500 hover:text-gray-700 text-2xl">✕</button>
+                    </div>
+                    
+                    <!-- Analytics Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <div class="stat-card rounded-xl p-6 text-center">
+                            <div class="text-3xl mb-2">📈</div>
+                            <div class="text-2xl font-bold text-green-600" id="avgWordsPerEntry">0</div>
+                            <div class="text-sm text-gray-600">Avg Words/Entry</div>
+                        </div>
+                        <div class="stat-card rounded-xl p-6 text-center">
+                            <div class="text-3xl mb-2">📅</div>
+                            <div class="text-2xl font-bold text-blue-600" id="writingDays">0</div>
+                            <div class="text-sm text-gray-600">Days Writing</div>
+                        </div>
+                        <div class="stat-card rounded-xl p-6 text-center">
+                            <div class="text-3xl mb-2">⏰</div>
+                            <div class="text-2xl font-bold text-purple-600" id="totalReadTime">0</div>
+                            <div class="text-sm text-gray-600">Total Read Time</div>
+                        </div>
+                        <div class="stat-card rounded-xl p-6 text-center">
+                            <div class="text-3xl mb-2">😊</div>
+                            <div class="text-xl font-bold text-pink-600" id="favoriteEmoji">😊</div>
+                            <div class="text-sm text-gray-600">Favorite Mood</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Charts -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                        <div class="stat-card rounded-xl p-6">
+                            <h3 class="text-lg font-semibold mb-4">📊 Writing Activity (Last 30 Days)</h3>
+                            <canvas id="activityChart" width="400" height="200"></canvas>
+                        </div>
+                        <div class="stat-card rounded-xl p-6">
+                            <h3 class="text-lg font-semibold mb-4">😊 Mood Distribution</h3>
+                            <canvas id="moodChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Writing Streaks Calendar -->
+                    <div class="stat-card rounded-xl p-6">
+                        <h3 class="text-lg font-semibold mb-4">🔥 Writing Calendar (Last 90 Days)</h3>
+                        <div id="streakCalendar" class="grid grid-cols-10 gap-1">
+                            <!-- Calendar will be generated here -->
+                        </div>
+                        <div class="flex items-center justify-center space-x-4 mt-4 text-sm text-gray-600">
+                            <div class="flex items-center space-x-1">
+                                <div class="w-3 h-3 bg-gray-200 rounded"></div>
+                                <span>No entry</span>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <div class="w-3 h-3 bg-green-200 rounded"></div>
+                                <span>1-2 entries</span>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <div class="w-3 h-3 bg-green-400 rounded"></div>
+                                <span>3-4 entries</span>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <div class="w-3 h-3 bg-green-600 rounded"></div>
+                                <span>5+ entries</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Profile Setup -->
+        <div id="profileSetup" class="glass-effect rounded-3xl shadow-2xl p-10 mb-8 hidden fade-in pulse-glow">
+            <h2 class="text-4xl font-bold text-gray-800 mb-10 text-center gradient-text">Welcome! Let's set up your profile</h2>
+            <div class="max-w-lg mx-auto">
                 <div class="mb-8">
-                    <label class="block text-gray-700 font-semibold mb-3">About You (Optional)</label>
-                    <textarea id="profileBio" rows="4" class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300" placeholder="Tell us a bit about yourself..."></textarea>
+                    <label class="block text-gray-700 font-bold mb-4 text-lg">Your Name</label>
+                    <input type="text" id="profileName" class="w-full px-8 py-5 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300 text-lg" placeholder="Enter your name">
                 </div>
-                <button onclick="saveProfile()" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
+                <div class="mb-8">
+                    <label class="block text-gray-700 font-bold mb-4 text-lg">Choose Your Avatar Color</label>
+                    <div class="flex space-x-4 justify-center">
+                        <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full cursor-pointer hover:scale-110 transition-transform avatar-color selected" data-gradient="from-purple-500 to-pink-500"></div>
+                        <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full cursor-pointer hover:scale-110 transition-transform avatar-color" data-gradient="from-blue-500 to-cyan-500"></div>
+                        <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full cursor-pointer hover:scale-110 transition-transform avatar-color" data-gradient="from-green-500 to-emerald-500"></div>
+                        <div class="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-full cursor-pointer hover:scale-110 transition-transform avatar-color" data-gradient="from-orange-500 to-red-500"></div>
+                    </div>
+                </div>
+                <div class="mb-10">
+                    <label class="block text-gray-700 font-bold mb-4 text-lg">About You (Optional)</label>
+                    <textarea id="profileBio" rows="4" class="w-full px-8 py-5 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300 text-lg" placeholder="Tell us a bit about yourself..."></textarea>
+                </div>
+                <button onclick="saveProfile()" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-5 px-10 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-xl text-lg">
                     ✨ Create Profile
                 </button>
             </div>
@@ -153,52 +373,67 @@
         <!-- Main App -->
         <div id="mainApp" class="hidden">
             <!-- Enhanced Profile Card -->
-            <div class="glass-effect rounded-2xl shadow-2xl p-8 mb-8 hover-lift">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <div class="w-20 h-20 bg-gradient-to-r rounded-full flex items-center justify-center text-white text-3xl font-bold mr-6 shadow-lg" id="profileAvatar">
+            <div class="glass-effect rounded-3xl shadow-2xl p-10 mb-10 hover-lift">
+                <div class="flex flex-col md:flex-row items-center justify-between">
+                    <div class="flex flex-col md:flex-row items-center mb-6 md:mb-0">
+                        <div class="w-24 h-24 bg-gradient-to-r rounded-full flex items-center justify-center text-white text-4xl font-bold mr-8 shadow-xl mb-4 md:mb-0" id="profileAvatar">
                         </div>
-                        <div>
-                            <h2 class="text-2xl font-bold text-gray-800 mb-1" id="profileDisplayName"></h2>
-                            <p class="text-gray-600 text-lg" id="profileDisplayBio"></p>
-                            <div class="flex items-center mt-2 space-x-4 text-sm text-gray-500">
-                                <span>📅 Joined <span id="joinDate"></span></span>
-                                <span>🎯 Level <span id="userLevel">1</span></span>
+                        <div class="text-center md:text-left">
+                            <h2 class="text-3xl font-bold text-gray-800 mb-2" id="profileDisplayName"></h2>
+                            <p class="text-gray-600 text-lg mb-3" id="profileDisplayBio"></p>
+                            <div class="flex flex-wrap items-center justify-center md:justify-start space-x-6 text-sm text-gray-500">
+                                <span class="flex items-center">📅 Joined <span id="joinDate" class="ml-1"></span></span>
+                                <span class="flex items-center">🎯 Level <span id="profileLevel" class="ml-1">1</span></span>
+                                <span class="flex items-center">⭐ <span id="totalFavorites" class="ml-1">0</span> favorites</span>
                             </div>
                         </div>
                     </div>
-                    <button onclick="editProfile()" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-xl hover:scale-105 transition-all duration-300 font-medium shadow-lg">
+                    <button onclick="editProfile()" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-4 rounded-2xl hover:scale-105 transition-all duration-300 font-bold shadow-xl">
                         ✏️ Edit Profile
                     </button>
                 </div>
             </div>
 
-            <!-- Search and Filter Bar -->
-            <div class="glass-effect rounded-2xl shadow-lg p-6 mb-8 fade-in">
-                <div class="flex flex-col md:flex-row gap-4">
+            <!-- Enhanced Search and Filter -->
+            <div class="glass-effect rounded-3xl shadow-xl p-8 mb-10 fade-in">
+                <div class="flex flex-col lg:flex-row gap-6">
                     <div class="flex-1">
-                        <input type="text" id="searchInput" class="w-full px-6 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300" placeholder="🔍 Search your entries...">
+                        <input type="text" id="searchInput" class="w-full px-8 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300 text-lg" placeholder="🔍 Search your entries...">
                     </div>
-                    <select id="sortFilter" class="px-6 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300">
-                        <option value="newest">📅 Newest First</option>
-                        <option value="oldest">📅 Oldest First</option>
-                        <option value="longest">📏 Longest First</option>
-                        <option value="shortest">📏 Shortest First</option>
-                    </select>
+                    <div class="flex gap-4">
+                        <select id="sortFilter" class="px-8 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300">
+                            <option value="newest">📅 Newest First</option>
+                            <option value="oldest">📅 Oldest First</option>
+                            <option value="longest">📏 Longest First</option>
+                            <option value="shortest">📏 Shortest First</option>
+                            <option value="favorites">⭐ Favorites Only</option>
+                        </select>
+                        <select id="moodFilter" class="px-8 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300">
+                            <option value="">All Moods</option>
+                            <option value="😊">😊 Happy</option>
+                            <option value="😢">😢 Sad</option>
+                            <option value="😴">😴 Tired</option>
+                            <option value="😍">😍 Excited</option>
+                            <option value="😤">😤 Frustrated</option>
+                            <option value="🤔">🤔 Thoughtful</option>
+                            <option value="😌">😌 Peaceful</option>
+                            <option value="🥳">🥳 Celebrating</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
             <!-- Enhanced New Post Form -->
-            <div class="glass-effect rounded-2xl shadow-2xl p-8 mb-8 hover-lift">
-                <h3 class="text-2xl font-bold text-gray-800 mb-6 gradient-text">✍️ Write a new entry</h3>
-                <div class="mb-6">
-                    <input type="text" id="postTitle" class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300 text-lg" placeholder="What's your entry about?">
+            <div class="glass-effect rounded-3xl shadow-2xl p-10 mb-10 hover-lift pulse-glow">
+                <h3 class="text-3xl font-bold text-gray-800 mb-8 gradient-text">✍️ Write a new entry</h3>
+                <div class="mb-8">
+                    <input type="text" id="postTitle" class="w-full px-8 py-5 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300 text-xl" placeholder="What's your entry about?">
                 </div>
                 
-                <!-- Mood Selector -->
-                <div class="mb-6">
-                    <label class="block text-gray-700 font-semibold mb-3">How are you feeling?</label>
-                    <div class="flex space-x-3">
+                <!-- Enhanced Mood Selector -->
+                <div class="mb-8">
+                    <label class="block text-gray-700 font-bold mb-4 text-lg">How are you feeling?</label>
+                    <div class="flex flex-wrap gap-4 justify-center">
                         <span class="mood-emoji" data-mood="😊" title="Happy">😊</span>
                         <span class="mood-emoji" data-mood="😢" title="Sad">😢</span>
                         <span class="mood-emoji" data-mood="😴" title="Tired">😴</span>
@@ -210,47 +445,47 @@
                     </div>
                 </div>
                 
-                <div class="mb-6">
-                    <textarea id="postContent" rows="6" class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300 text-lg" placeholder="Pour your heart out..."></textarea>
+                <div class="mb-8">
+                    <textarea id="postContent" rows="8" class="w-full px-8 py-5 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300 text-lg" placeholder="Pour your heart out..."></textarea>
                 </div>
                 
-                <!-- Writing Tools -->
-                <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
-                    <div class="flex items-center space-x-4 text-sm text-gray-600">
-                        <span id="wordCount" class="font-medium">0 words</span>
+                <!-- Enhanced Writing Tools -->
+                <div class="flex flex-wrap justify-between items-center mb-8 gap-4">
+                    <div class="flex items-center space-x-6 text-sm text-gray-600">
+                        <span id="wordCount" class="font-bold text-lg">0 words</span>
                         <span id="charCount">0 characters</span>
                         <span id="readTime">~0 min read</span>
                     </div>
-                    <div class="flex space-x-2">
-                        <button onclick="insertTemplate('gratitude')" class="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg hover:bg-yellow-200 transition-colors text-sm font-medium">
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="insertTemplate('gratitude')" class="px-6 py-3 bg-yellow-100 text-yellow-800 rounded-xl hover:bg-yellow-200 transition-all duration-300 font-bold hover:scale-105">
                             🙏 Gratitude
                         </button>
-                        <button onclick="insertTemplate('goals')" class="px-4 py-2 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition-colors text-sm font-medium">
+                        <button onclick="insertTemplate('goals')" class="px-6 py-3 bg-blue-100 text-blue-800 rounded-xl hover:bg-blue-200 transition-all duration-300 font-bold hover:scale-105">
                             🎯 Goals
                         </button>
-                        <button onclick="insertTemplate('reflection')" class="px-4 py-2 bg-green-100 text-green-800 rounded-lg hover:bg-green-200 transition-colors text-sm font-medium">
+                        <button onclick="insertTemplate('reflection')" class="px-6 py-3 bg-green-100 text-green-800 rounded-xl hover:bg-green-200 transition-all duration-300 font-bold hover:scale-105">
                             💭 Reflection
                         </button>
                     </div>
                 </div>
                 
-                <button onclick="savePost()" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg text-lg">
+                <button onclick="savePost()" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-5 px-10 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-xl text-xl">
                     💾 Save Entry
                 </button>
             </div>
 
             <!-- Posts List -->
-            <div class="space-y-6" id="postsList">
+            <div class="space-y-8" id="postsList">
                 <!-- Posts will be dynamically inserted here -->
             </div>
         </div>
     </div>
 
-    <!-- Success Toast -->
-    <div id="successToast" class="fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-xl shadow-lg transform translate-y-full transition-transform duration-300 z-50">
+    <!-- Enhanced Success Toast -->
+    <div id="successToast" class="fixed bottom-6 right-6 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-8 py-4 rounded-2xl shadow-2xl transform translate-y-full transition-all duration-500 z-50">
         <div class="flex items-center">
-            <span class="mr-2">✅</span>
-            <span id="toastMessage">Entry saved successfully!</span>
+            <span class="mr-3 text-xl">✅</span>
+            <span id="toastMessage" class="font-bold">Entry saved successfully!</span>
         </div>
     </div>
 
@@ -258,17 +493,21 @@
         let selectedMood = '';
         let selectedAvatarGradient = 'from-purple-500 to-pink-500';
         let isDarkTheme = false;
+        let activityChart = null;
+        let moodChart = null;
 
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
             loadProfile();
             loadPosts();
-            updateStats();
+            updateAllStats();
+            updateAchievements();
             
             // Event listeners
             document.getElementById('postContent').addEventListener('input', updateWritingStats);
             document.getElementById('searchInput').addEventListener('input', filterPosts);
             document.getElementById('sortFilter').addEventListener('change', filterPosts);
+            document.getElementById('moodFilter').addEventListener('change', filterPosts);
             
             // Mood selector
             document.querySelectorAll('.mood-emoji').forEach(emoji => {
@@ -300,13 +539,16 @@
                 document.getElementById('profileDisplayName').textContent = profileData.name;
                 document.getElementById('profileDisplayBio').textContent = profileData.bio || 'Living life one day at a time ✨';
                 document.getElementById('profileAvatar').textContent = profileData.name.charAt(0).toUpperCase();
-                document.getElementById('profileAvatar').className = `w-20 h-20 bg-gradient-to-r ${profileData.avatarGradient || 'from-purple-500 to-pink-500'} rounded-full flex items-center justify-center text-white text-3xl font-bold mr-6 shadow-lg`;
+                document.getElementById('profileAvatar').className = `w-24 h-24 bg-gradient-to-r ${profileData.avatarGradient || 'from-purple-500 to-pink-500'} rounded-full flex items-center justify-center text-white text-4xl font-bold mr-8 shadow-xl mb-4 md:mb-0`;
                 document.getElementById('joinDate').textContent = formatDate(profileData.createdAt, true);
                 
-                // Calculate user level based on posts
+                // Calculate user level and favorites
                 const posts = JSON.parse(localStorage.getItem('diaryPosts') || '[]');
                 const level = Math.floor(posts.length / 5) + 1;
-                document.getElementById('userLevel').textContent = level;
+                const favorites = posts.filter(post => post.favorite).length;
+                
+                document.getElementById('profileLevel').textContent = level;
+                document.getElementById('totalFavorites').textContent = favorites;
                 
                 document.getElementById('profileSetup').classList.add('hidden');
                 document.getElementById('mainApp').classList.remove('hidden');
@@ -373,7 +615,8 @@
                 mood: selectedMood,
                 createdAt: new Date().toISOString(),
                 wordCount: wordCount,
-                readTime: Math.ceil(wordCount / 200)
+                readTime: Math.ceil(wordCount / 200),
+                favorite: false
             };
 
             posts.unshift(newPost);
@@ -388,7 +631,9 @@
 
             showToast('Entry saved successfully! 📝');
             loadPosts();
-            updateStats();
+            updateAllStats();
+            updateAchievements();
+            checkForNewAchievements(posts.length, wordCount);
         }
 
         function loadPosts() {
@@ -397,40 +642,40 @@
 
             if (posts.length === 0) {
                 postsList.innerHTML = `
-                    <div class="glass-effect rounded-2xl shadow-lg p-12 text-center fade-in">
-                        <div class="text-8xl mb-6">📝</div>
-                        <h3 class="text-2xl font-bold text-gray-800 mb-4 gradient-text">No entries yet</h3>
-                        <p class="text-gray-600 text-lg">Start writing your first diary entry above!</p>
-                        <p class="text-gray-500 mt-2">✨ Tip: Try using one of the writing templates to get started</p>
+                    <div class="glass-effect rounded-3xl shadow-xl p-16 text-center fade-in">
+                        <div class="text-9xl mb-8">📝</div>
+                        <h3 class="text-3xl font-bold text-gray-800 mb-6 gradient-text">No entries yet</h3>
+                        <p class="text-gray-600 text-xl mb-4">Start writing your first diary entry above!</p>
+                        <p class="text-gray-500 text-lg">✨ Tip: Try using one of the writing templates to get started</p>
                     </div>
                 `;
                 return;
             }
 
             postsList.innerHTML = posts.map((post, index) => `
-                <div class="glass-effect rounded-2xl shadow-lg p-8 hover-lift fade-in" style="animation-delay: ${index * 0.1}s">
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="flex items-center space-x-3">
+                <div class="glass-effect rounded-3xl shadow-xl p-10 hover-lift fade-in" style="animation-delay: ${index * 0.1}s">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="flex items-center space-x-4">
                             <h3 class="text-2xl font-bold text-gray-800">${escapeHtml(post.title)}</h3>
-                            ${post.mood ? `<span class="text-2xl">${post.mood}</span>` : ''}
+                            ${post.mood ? `<span class="text-3xl">${post.mood}</span>` : ''}
                         </div>
-                        <div class="flex space-x-2">
-                            <button onclick="toggleFavorite(${post.id})" class="text-yellow-500 hover:text-yellow-600 text-xl transition-colors">
+                        <div class="flex space-x-3">
+                            <button onclick="toggleFavorite(${post.id})" class="text-yellow-500 hover:text-yellow-600 text-2xl transition-all duration-300 hover:scale-125">
                                 ${post.favorite ? '⭐' : '☆'}
                             </button>
-                            <button onclick="deletePost(${post.id})" class="text-red-500 hover:text-red-700 transition-colors">
+                            <button onclick="deletePost(${post.id})" class="text-red-500 hover:text-red-700 transition-all duration-300 hover:scale-125">
                                 🗑️
                             </button>
                         </div>
                     </div>
-                    <p class="text-gray-700 mb-6 leading-relaxed text-lg" id="post-content-${post.id}">${escapeHtml(post.content).replace(/\n/g, '<br>')}</p>
-                    <div class="flex justify-between items-center text-sm text-gray-500 border-t pt-4">
-                        <div class="flex space-x-4">
-                            <span>📅 ${formatDate(post.createdAt)}</span>
-                            <span>📝 ${post.wordCount} words</span>
-                            <span>⏱️ ${post.readTime} min read</span>
+                    <p class="text-gray-700 mb-8 leading-relaxed text-lg" id="post-content-${post.id}">${escapeHtml(post.content).replace(/\n/g, '<br>')}</p>
+                    <div class="flex justify-between items-center text-sm text-gray-500 border-t pt-6">
+                        <div class="flex space-x-6">
+                            <span class="flex items-center">📅 ${formatDate(post.createdAt)}</span>
+                            <span class="flex items-center">📝 ${post.wordCount} words</span>
+                            <span class="flex items-center">⏱️ ${post.readTime} min read</span>
                         </div>
-                        <button onclick="sharePost(${post.id})" class="text-purple-600 hover:text-purple-800 font-medium">
+                        <button onclick="sharePost(${post.id})" class="text-purple-600 hover:text-purple-800 font-bold transition-all duration-300 hover:scale-105">
                             📤 Share
                         </button>
                     </div>
@@ -445,7 +690,8 @@
                 localStorage.setItem('diaryPosts', JSON.stringify(filteredPosts));
                 showToast('Entry deleted successfully');
                 loadPosts();
-                updateStats();
+                updateAllStats();
+                updateAchievements();
             }
         }
 
@@ -456,6 +702,7 @@
                 post.favorite = !post.favorite;
                 localStorage.setItem('diaryPosts', JSON.stringify(posts));
                 loadPosts();
+                updateAllStats();
                 showToast(post.favorite ? 'Added to favorites ⭐' : 'Removed from favorites');
             }
         }
@@ -477,6 +724,329 @@
             }
         }
 
+        // Enhanced Stats and Analytics
+        function updateAllStats() {
+            const posts = JSON.parse(localStorage.getItem('diaryPosts') || '[]');
+            const totalWords = posts.reduce((sum, post) => sum + post.wordCount, 0);
+            const currentStreak = calculateCurrentStreak(posts);
+            const bestStreak = calculateBestStreak(posts);
+            const level = Math.floor(posts.length / 5) + 1;
+            const progressInLevel = posts.length % 5;
+            const progressPercentage = (progressInLevel / 5) * 100;
+            
+            // Update main stats
+            document.getElementById('totalPosts').textContent = posts.length;
+            document.getElementById('totalWords').textContent = totalWords.toLocaleString();
+            document.getElementById('currentStreak').textContent = currentStreak;
+            document.getElementById('bestStreak').textContent = bestStreak;
+            
+            // Update level info
+            document.getElementById('userLevel').textContent = level;
+            document.getElementById('levelProgress').style.width = `${progressPercentage}%`;
+            document.getElementById('levelProgressText').textContent = `${progressInLevel}/5 entries to next level`;
+            
+            // Update level title
+            const levelTitles = {
+                1: 'Beginner Writer',
+                2: 'Casual Journaler',
+                3: 'Regular Writer',
+                4: 'Dedicated Diarist',
+                5: 'Prolific Author',
+                6: 'Master Storyteller',
+                7: 'Writing Virtuoso',
+                8: 'Literary Genius'
+            };
+            document.getElementById('levelTitle').textContent = levelTitles[Math.min(level, 8)] || 'Legendary Writer';
+        }
+
+        function calculateCurrentStreak(posts) {
+            if (posts.length === 0) return 0;
+            
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            const dates = posts.map(post => {
+                const date = new Date(post.createdAt);
+                date.setHours(0, 0, 0, 0);
+                return date.getTime();
+            });
+            
+            const uniqueDates = [...new Set(dates)].sort((a, b) => b - a);
+            
+            let streak = 0;
+            let currentDate = today.getTime();
+            
+            for (let dateTime of uniqueDates) {
+                const diffDays = Math.floor((currentDate - dateTime) / (1000 * 60 * 60 * 24));
+                
+                if (diffDays === streak) {
+                    streak++;
+                    currentDate -= (1000 * 60 * 60 * 24);
+                } else if (diffDays > streak) {
+                    break;
+                }
+            }
+            
+            return streak;
+        }
+
+        function calculateBestStreak(posts) {
+            if (posts.length === 0) return 0;
+            
+            const dates = posts.map(post => {
+                const date = new Date(post.createdAt);
+                date.setHours(0, 0, 0, 0);
+                return date.getTime();
+            });
+            
+            const uniqueDates = [...new Set(dates)].sort((a, b) => a - b);
+            
+            let bestStreak = 0;
+            let currentStreak = 1;
+            
+            for (let i = 1; i < uniqueDates.length; i++) {
+                const diffDays = Math.floor((uniqueDates[i] - uniqueDates[i-1]) / (1000 * 60 * 60 * 24));
+                
+                if (diffDays === 1) {
+                    currentStreak++;
+                } else {
+                    bestStreak = Math.max(bestStreak, currentStreak);
+                    currentStreak = 1;
+                }
+            }
+            
+            return Math.max(bestStreak, currentStreak);
+        }
+
+        // Analytics Functions
+        function showAnalytics() {
+            document.getElementById('analyticsModal').classList.remove('hidden');
+            updateAnalyticsData();
+            setTimeout(() => {
+                createActivityChart();
+                createMoodChart();
+                createStreakCalendar();
+            }, 100);
+        }
+
+        function hideAnalytics() {
+            document.getElementById('analyticsModal').classList.add('hidden');
+        }
+
+        function updateAnalyticsData() {
+            const posts = JSON.parse(localStorage.getItem('diaryPosts') || '[]');
+            
+            // Calculate analytics
+            const avgWords = posts.length > 0 ? Math.round(posts.reduce((sum, post) => sum + post.wordCount, 0) / posts.length) : 0;
+            const writingDays = new Set(posts.map(post => new Date(post.createdAt).toDateString())).size;
+            const totalReadTime = posts.reduce((sum, post) => sum + post.readTime, 0);
+            
+            // Find favorite mood
+            const moodCounts = {};
+            posts.forEach(post => {
+                if (post.mood) {
+                    moodCounts[post.mood] = (moodCounts[post.mood] || 0) + 1;
+                }
+            });
+            const favoriteEmoji = Object.keys(moodCounts).reduce((a, b) => moodCounts[a] > moodCounts[b] ? a : b, '😊');
+            
+            // Update analytics display
+            document.getElementById('avgWordsPerEntry').textContent = avgWords;
+            document.getElementById('writingDays').textContent = writingDays;
+            document.getElementById('totalReadTime').textContent = `${totalReadTime} min`;
+            document.getElementById('favoriteEmoji').textContent = favoriteEmoji;
+        }
+
+        function createActivityChart() {
+            const posts = JSON.parse(localStorage.getItem('diaryPosts') || '[]');
+            const ctx = document.getElementById('activityChart').getContext('2d');
+            
+            // Get last 30 days
+            const last30Days = [];
+            const today = new Date();
+            for (let i = 29; i >= 0; i--) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                last30Days.push(date.toDateString());
+            }
+            
+            // Count posts per day
+            const dailyCounts = last30Days.map(dateStr => {
+                return posts.filter(post => new Date(post.createdAt).toDateString() === dateStr).length;
+            });
+            
+            if (activityChart) {
+                activityChart.destroy();
+            }
+            
+            activityChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: last30Days.map(date => new Date(date).getDate()),
+                    datasets: [{
+                        label: 'Entries',
+                        data: dailyCounts,
+                        borderColor: 'rgb(102, 126, 234)',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createMoodChart() {
+            const posts = JSON.parse(localStorage.getItem('diaryPosts') || '[]');
+            const ctx = document.getElementById('moodChart').getContext('2d');
+            
+            // Count moods
+            const moodCounts = {};
+            posts.forEach(post => {
+                if (post.mood) {
+                    moodCounts[post.mood] = (moodCounts[post.mood] || 0) + 1;
+                }
+            });
+            
+            if (moodChart) {
+                moodChart.destroy();
+            }
+            
+            moodChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(moodCounts),
+                    datasets: [{
+                        data: Object.values(moodCounts),
+                        backgroundColor: [
+                            '#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1',
+                            '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        function createStreakCalendar() {
+            const posts = JSON.parse(localStorage.getItem('diaryPosts') || '[]');
+            const calendar = document.getElementById('streakCalendar');
+            
+            // Get last 90 days
+            const last90Days = [];
+            const today = new Date();
+            for (let i = 89; i >= 0; i--) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                last90Days.push(date);
+            }
+            
+            // Count posts per day
+            const dailyCounts = {};
+            posts.forEach(post => {
+                const dateStr = new Date(post.createdAt).toDateString();
+                dailyCounts[dateStr] = (dailyCounts[dateStr] || 0) + 1;
+            });
+            
+            calendar.innerHTML = last90Days.map(date => {
+                const dateStr = date.toDateString();
+                const count = dailyCounts[dateStr] || 0;
+                let colorClass = 'bg-gray-200';
+                
+                if (count >= 5) colorClass = 'bg-green-600';
+                else if (count >= 3) colorClass = 'bg-green-400';
+                else if (count >= 1) colorClass = 'bg-green-200';
+                
+                return `<div class="w-3 h-3 ${colorClass} rounded" title="${dateStr}: ${count} entries"></div>`;
+            }).join('');
+        }
+
+        // Achievement System
+        function updateAchievements() {
+            const posts = JSON.parse(localStorage.getItem('diaryPosts') || '[]');
+            const achievements = [];
+            
+            // First Entry
+            if (posts.length >= 1) {
+                achievements.push({ emoji: '🎉', title: 'First Entry', description: 'Welcome to your diary!' });
+            }
+            
+            // Milestone entries
+            if (posts.length >= 10) {
+                achievements.push({ emoji: '📚', title: 'Storyteller', description: '10 entries written' });
+            }
+            if (posts.length >= 50) {
+                achievements.push({ emoji: '✍️', title: 'Prolific Writer', description: '50 entries written' });
+            }
+            if (posts.length >= 100) {
+                achievements.push({ emoji: '🏆', title: 'Century Club', description: '100 entries written' });
+            }
+            
+            // Word count achievements
+            const totalWords = posts.reduce((sum, post) => sum + post.wordCount, 0);
+            if (totalWords >= 1000) {
+                achievements.push({ emoji: '📖', title: 'Wordsmith', description: '1,000 words written' });
+            }
+            if (totalWords >= 10000) {
+                achievements.push({ emoji: '📝', title: 'Author', description: '10,000 words written' });
+            }
+            
+            // Streak achievements
+            const currentStreak = calculateCurrentStreak(posts);
+            if (currentStreak >= 7) {
+                achievements.push({ emoji: '🔥', title: 'Week Warrior', description: '7-day writing streak' });
+            }
+            if (currentStreak >= 30) {
+                achievements.push({ emoji: '💪', title: 'Monthly Master', description: '30-day writing streak' });
+            }
+            
+            // Display achievements
+            const badgeContainer = document.getElementById('achievementBadges');
+            badgeContainer.innerHTML = achievements.map(achievement => 
+                `<div class="achievement-badge rounded-full p-2 text-2xl" title="${achievement.title}: ${achievement.description}">
+                    ${achievement.emoji}
+                </div>`
+            ).join('');
+        }
+
+        function checkForNewAchievements(entryCount, wordCount) {
+            const milestones = [1, 5, 10, 25, 50, 100];
+            const wordMilestones = [100, 500, 1000, 5000, 10000];
+            
+            if (milestones.includes(entryCount)) {
+                showToast(`🎉 Achievement unlocked! ${entryCount} entries written!`, 'achievement');
+            }
+            
+            const totalWords = JSON.parse(localStorage.getItem('diaryPosts') || '[]')
+                .reduce((sum, post) => sum + post.wordCount, 0);
+            
+            if (wordMilestones.includes(totalWords)) {
+                showToast(`📚 Achievement unlocked! ${totalWords.toLocaleString()} words written!`, 'achievement');
+            }
+        }
+
         // Enhanced UI Features
         function updateWritingStats() {
             const content = document.getElementById('postContent').value;
@@ -489,44 +1059,10 @@
             document.getElementById('readTime').textContent = `~${readTime} min read`;
         }
 
-        function updateStats() {
-            const posts = JSON.parse(localStorage.getItem('diaryPosts') || '[]');
-            const totalWords = posts.reduce((sum, post) => sum + post.wordCount, 0);
-            const streak = calculateStreak(posts);
-            
-            document.getElementById('totalPosts').textContent = posts.length;
-            document.getElementById('totalWords').textContent = totalWords.toLocaleString();
-            document.getElementById('streak').textContent = streak;
-        }
-
-        function calculateStreak(posts) {
-            if (posts.length === 0) return 0;
-            
-            const today = new Date();
-            const dates = posts.map(post => new Date(post.createdAt).toDateString());
-            const uniqueDates = [...new Set(dates)].sort((a, b) => new Date(b) - new Date(a));
-            
-            let streak = 0;
-            let currentDate = new Date(today);
-            
-            for (let dateStr of uniqueDates) {
-                const postDate = new Date(dateStr);
-                const diffDays = Math.floor((currentDate - postDate) / (1000 * 60 * 60 * 24));
-                
-                if (diffDays === streak) {
-                    streak++;
-                    currentDate.setDate(currentDate.getDate() - 1);
-                } else {
-                    break;
-                }
-            }
-            
-            return streak;
-        }
-
         function filterPosts() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const sortBy = document.getElementById('sortFilter').value;
+            const moodFilter = document.getElementById('moodFilter').value;
             let posts = JSON.parse(localStorage.getItem('diaryPosts') || '[]');
             
             // Filter by search term
@@ -535,6 +1071,16 @@
                     post.title.toLowerCase().includes(searchTerm) || 
                     post.content.toLowerCase().includes(searchTerm)
                 );
+            }
+            
+            // Filter by mood
+            if (moodFilter) {
+                posts = posts.filter(post => post.mood === moodFilter);
+            }
+            
+            // Filter favorites only
+            if (sortBy === 'favorites') {
+                posts = posts.filter(post => post.favorite);
             }
             
             // Sort posts
@@ -548,58 +1094,57 @@
                 case 'shortest':
                     posts.sort((a, b) => a.wordCount - b.wordCount);
                     break;
-                default: // newest
+                default: // newest or favorites
                     posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
             }
             
-            // Highlight search terms
+            // Re-render filtered posts
             const postsList = document.getElementById('postsList');
-            if (posts.length === 0 && searchTerm) {
+            if (posts.length === 0) {
                 postsList.innerHTML = `
-                    <div class="glass-effect rounded-2xl shadow-lg p-12 text-center">
-                        <div class="text-6xl mb-4">🔍</div>
-                        <h3 class="text-xl font-semibold text-gray-800 mb-2">No entries found</h3>
-                        <p class="text-gray-600">Try searching for something else</p>
+                    <div class="glass-effect rounded-3xl shadow-xl p-16 text-center">
+                        <div class="text-8xl mb-6">🔍</div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">No entries found</h3>
+                        <p class="text-gray-600 text-lg">Try adjusting your search or filters</p>
                     </div>
                 `;
                 return;
             }
             
-            // Re-render filtered posts
             postsList.innerHTML = posts.map((post, index) => {
                 let highlightedTitle = post.title;
                 let highlightedContent = post.content;
                 
                 if (searchTerm) {
                     const regex = new RegExp(`(${searchTerm})`, 'gi');
-                    highlightedTitle = highlightedTitle.replace(regex, '<span class="search-highlight">$1</span>');
-                    highlightedContent = highlightedContent.replace(regex, '<span class="search-highlight">$1</span>');
+                    highlightedTitle = highlightedTitle.replace(regex, '<span class="bg-yellow-200 px-1 rounded">$1</span>');
+                    highlightedContent = highlightedContent.replace(regex, '<span class="bg-yellow-200 px-1 rounded">$1</span>');
                 }
                 
                 return `
-                    <div class="glass-effect rounded-2xl shadow-lg p-8 hover-lift fade-in" style="animation-delay: ${index * 0.1}s">
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="flex items-center space-x-3">
+                    <div class="glass-effect rounded-3xl shadow-xl p-10 hover-lift fade-in" style="animation-delay: ${index * 0.1}s">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="flex items-center space-x-4">
                                 <h3 class="text-2xl font-bold text-gray-800">${highlightedTitle}</h3>
-                                ${post.mood ? `<span class="text-2xl">${post.mood}</span>` : ''}
+                                ${post.mood ? `<span class="text-3xl">${post.mood}</span>` : ''}
                             </div>
-                            <div class="flex space-x-2">
-                                <button onclick="toggleFavorite(${post.id})" class="text-yellow-500 hover:text-yellow-600 text-xl transition-colors">
+                            <div class="flex space-x-3">
+                                <button onclick="toggleFavorite(${post.id})" class="text-yellow-500 hover:text-yellow-600 text-2xl transition-all duration-300 hover:scale-125">
                                     ${post.favorite ? '⭐' : '☆'}
                                 </button>
-                                <button onclick="deletePost(${post.id})" class="text-red-500 hover:text-red-700 transition-colors">
+                                <button onclick="deletePost(${post.id})" class="text-red-500 hover:text-red-700 transition-all duration-300 hover:scale-125">
                                     🗑️
                                 </button>
                             </div>
                         </div>
-                        <p class="text-gray-700 mb-6 leading-relaxed text-lg">${highlightedContent.replace(/\n/g, '<br>')}</p>
-                        <div class="flex justify-between items-center text-sm text-gray-500 border-t pt-4">
-                            <div class="flex space-x-4">
-                                <span>📅 ${formatDate(post.createdAt)}</span>
-                                <span>📝 ${post.wordCount} words</span>
-                                <span>⏱️ ${post.readTime} min read</span>
+                        <p class="text-gray-700 mb-8 leading-relaxed text-lg">${highlightedContent.replace(/\n/g, '<br>')}</p>
+                        <div class="flex justify-between items-center text-sm text-gray-500 border-t pt-6">
+                            <div class="flex space-x-6">
+                                <span class="flex items-center">📅 ${formatDate(post.createdAt)}</span>
+                                <span class="flex items-center">📝 ${post.wordCount} words</span>
+                                <span class="flex items-center">⏱️ ${post.readTime} min read</span>
                             </div>
-                            <button onclick="sharePost(${post.id})" class="text-purple-600 hover:text-purple-800 font-medium">
+                            <button onclick="sharePost(${post.id})" class="text-purple-600 hover:text-purple-800 font-bold transition-all duration-300 hover:scale-105">
                                 📤 Share
                             </button>
                         </div>
@@ -644,17 +1189,21 @@
             
             toastMessage.textContent = message;
             
+            // Set toast color based on type
+            toast.className = toast.className.replace(/bg-gradient-to-r from-\w+-\d+ to-\w+-\d+/, '');
             if (type === 'error') {
-                toast.className = toast.className.replace('bg-green-500', 'bg-red-500');
+                toast.classList.add('bg-gradient-to-r', 'from-red-500', 'to-red-600');
+            } else if (type === 'achievement') {
+                toast.classList.add('bg-gradient-to-r', 'from-yellow-500', 'to-orange-500');
             } else {
-                toast.className = toast.className.replace('bg-red-500', 'bg-green-500');
+                toast.classList.add('bg-gradient-to-r', 'from-green-500', 'to-emerald-500');
             }
             
             toast.classList.remove('translate-y-full');
             
             setTimeout(() => {
                 toast.classList.add('translate-y-full');
-            }, 3000);
+            }, 4000);
         }
 
         function typeWriter() {
@@ -662,7 +1211,8 @@
                 "Your personal space for thoughts and memories",
                 "Where every word matters ✨",
                 "Capture life's beautiful moments 🌟",
-                "Your digital sanctuary 🏡"
+                "Your digital sanctuary 🏡",
+                "Track your journey, one entry at a time 📈"
             ];
             
             let textIndex = 0;
@@ -711,5 +1261,5 @@
             });
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'978f3f29908b718c',t:'MTc1NjgzOTU4OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9798eec5947bcd92',t:'MTc1Njk0MTE1NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
