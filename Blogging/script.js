@@ -388,6 +388,10 @@
                 activityChart.destroy();
             }
             
+            const isDark = document.getElementById('mainBody').classList.contains('theme-dark');
+            const textColor = isDark ? '#e2e8f0' : '#374151';
+            const gridColor = isDark ? 'rgba(139, 92, 246, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+            
             activityChart = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -395,10 +399,14 @@
                     datasets: [{
                         label: 'Entries',
                         data: dailyCounts,
-                        borderColor: 'rgb(102, 126, 234)',
-                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderColor: isDark ? 'rgb(167, 139, 250)' : 'rgb(102, 126, 234)',
+                        backgroundColor: isDark ? 'rgba(167, 139, 250, 0.1)' : 'rgba(102, 126, 234, 0.1)',
                         tension: 0.4,
-                        fill: true
+                        fill: true,
+                        pointBackgroundColor: isDark ? 'rgb(192, 132, 252)' : 'rgb(102, 126, 234)',
+                        pointBorderColor: isDark ? 'rgb(232, 121, 249)' : 'rgb(79, 70, 229)',
+                        pointHoverBackgroundColor: isDark ? 'rgb(232, 121, 249)' : 'rgb(79, 70, 229)',
+                        pointHoverBorderColor: isDark ? '#ffffff' : '#000000'
                     }]
                 },
                 options: {
@@ -409,10 +417,22 @@
                         }
                     },
                     scales: {
+                        x: {
+                            ticks: {
+                                color: textColor
+                            },
+                            grid: {
+                                color: gridColor
+                            }
+                        },
                         y: {
                             beginAtZero: true,
                             ticks: {
-                                stepSize: 1
+                                stepSize: 1,
+                                color: textColor
+                            },
+                            grid: {
+                                color: gridColor
                             }
                         }
                     }
@@ -436,23 +456,47 @@
                 moodChart.destroy();
             }
             
+            const isDark = document.getElementById('mainBody').classList.contains('theme-dark');
+            const textColor = isDark ? '#e2e8f0' : '#374151';
+            
             moodChart = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     labels: Object.keys(moodCounts),
                     datasets: [{
                         data: Object.values(moodCounts),
-                        backgroundColor: [
+                        backgroundColor: isDark ? [
+                            '#fbbf24', '#f87171', '#34d399', '#60a5fa',
+                            '#a78bfa', '#fb923c', '#f472b6', '#10b981'
+                        ] : [
                             '#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1',
                             '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8'
-                        ]
+                        ],
+                        borderColor: isDark ? 'rgba(139, 92, 246, 0.3)' : '#ffffff',
+                        borderWidth: isDark ? 2 : 3,
+                        hoverBorderColor: isDark ? 'rgba(139, 92, 246, 0.8)' : '#000000',
+                        hoverBorderWidth: 3
                     }]
                 },
                 options: {
                     responsive: true,
                     plugins: {
                         legend: {
-                            position: 'bottom'
+                            position: 'bottom',
+                            labels: {
+                                color: textColor,
+                                font: {
+                                    size: 14
+                                },
+                                padding: 20
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: isDark ? 'rgba(15, 15, 35, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+                            titleColor: textColor,
+                            bodyColor: textColor,
+                            borderColor: isDark ? 'rgba(139, 92, 246, 0.5)' : 'rgba(0, 0, 0, 0.1)',
+                            borderWidth: 1
                         }
                     }
                 }
@@ -769,4 +813,4 @@
                 minute: '2-digit'
             });
         }
-    (function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9798eec5947bcd92',t:'MTc1Njk0MTE1NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();
+    (function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97993284964497ab',t:'MTc1Njk0MzkyOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();
