@@ -361,6 +361,37 @@
             background-color: rgba(251, 146, 60, 0.1) !important;
         }
         
+        .theme-dark #mobileSidebar {
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 30%, #16213e 70%, #0f3460 100%);
+        }
+        
+        .theme-dark #mobileSidebar .glass-effect {
+            background: rgba(15, 15, 35, 0.95);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            color: #e2e8f0;
+        }
+        
+        .theme-dark #mobileSidebar .border-gray-200 {
+            border-color: rgba(139, 92, 246, 0.3) !important;
+        }
+        
+        .theme-dark #mobileSidebar input,
+        .theme-dark #mobileSidebar select {
+            background: rgba(15, 15, 35, 0.8);
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            color: #e2e8f0;
+        }
+        
+        .theme-dark #mobileSidebar input:focus,
+        .theme-dark #mobileSidebar select:focus {
+            border-color: rgba(139, 92, 246, 0.6);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+        }
+        
+        .theme-dark #mobileSidebar input::placeholder {
+            color: #64748b;
+        }
+        
         .profile-dropdown-show {
             transform: scale(1) !important;
             opacity: 1 !important;
@@ -374,6 +405,14 @@
             
             .level-progress {
                 display: none !important;
+            }
+            
+            .desktop-sidebar {
+                display: none !important;
+            }
+            
+            .mobile-sidebar-toggle {
+                display: block !important;
             }
             
             #profileDropdown {
@@ -397,6 +436,30 @@
             .profile-dropdown-show {
                 transform: scale(1) translateX(-20px) !important;
             }
+        }
+        
+        .mobile-sidebar-toggle {
+            display: none;
+        }
+        
+        .mobile-sidebar {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .mobile-sidebar.open {
+            transform: translateX(0);
+        }
+        
+        .mobile-sidebar-overlay {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .mobile-sidebar-overlay.open {
+            opacity: 1;
+            visibility: visible;
         }
         
         .dark-glow {
@@ -477,6 +540,11 @@
                     <h1 class="text-xl font-bold gradient-text">📖 Digital Diary</h1>
                 </div>
                 <div class="flex items-center space-x-4">
+                    <!-- Mobile Sidebar Toggle -->
+                    <button onclick="toggleMobileSidebar()" class="mobile-sidebar-toggle glass-effect p-3 rounded-lg hover:scale-105 transition-all duration-300 hover:shadow-lg">
+                        <i class="fas fa-bars text-lg"></i>
+                    </button>
+                    
                     <button onclick="showAnalytics()" class="glass-effect px-4 py-2 rounded-lg hover:scale-105 transition-all duration-300 font-medium hover:shadow-lg">
                         📊 Analytics
                     </button>
@@ -601,6 +669,56 @@
         </div>
     </div>
 
+    <!-- Mobile Sidebar Overlay -->
+    <div id="mobileSidebarOverlay" class="mobile-sidebar-overlay fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden" onclick="closeMobileSidebar()"></div>
+    
+    <!-- Mobile Sidebar -->
+    <div id="mobileSidebar" class="mobile-sidebar fixed top-0 left-0 h-full w-full bg-white z-50 md:hidden">
+        <div class="glass-effect h-full overflow-y-auto">
+            <!-- Mobile Sidebar Header -->
+            <div class="flex justify-between items-center p-6 border-b border-gray-200">
+                <h2 class="text-xl font-bold gradient-text">📚 Your Entries</h2>
+                <button onclick="closeMobileSidebar()" class="text-gray-500 hover:text-gray-700 text-2xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- Mobile Search and Filter -->
+            <div class="p-6 border-b border-gray-200">
+                <div class="space-y-4">
+                    <input type="text" id="mobileSearchInput" class="w-full px-6 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300" placeholder="🔍 Search entries...">
+                    <div class="flex gap-2">
+                        <select id="mobileSortFilter" class="flex-1 px-4 py-2 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300 text-sm">
+                            <option value="newest">📅 Newest</option>
+                            <option value="oldest">📅 Oldest</option>
+                            <option value="longest">📏 Longest</option>
+                            <option value="shortest">📏 Shortest</option>
+                            <option value="favorites">⭐ Favorites</option>
+                        </select>
+                        <select id="mobileMoodFilter" class="flex-1 px-4 py-2 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300 text-sm">
+                            <option value="">All Moods</option>
+                            <option value="😊">😊 Happy</option>
+                            <option value="😢">😢 Sad</option>
+                            <option value="😴">😴 Tired</option>
+                            <option value="😍">😍 Excited</option>
+                            <option value="😤">😤 Frustrated</option>
+                            <option value="🤔">🤔 Thoughtful</option>
+                            <option value="😌">😌 Peaceful</option>
+                            <option value="🥳">🥳 Celebrating</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mobile Posts List -->
+            <div class="p-6">
+                <div id="mobilePostsSidebar" class="space-y-3">
+                    <!-- Post titles will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="app" class="container mx-auto px-4 py-24 max-w-7xl">
         <!-- Enhanced Header -->
         <header class="text-center mb-12 bounce-in">
@@ -720,8 +838,8 @@
 
             <!-- Main Content Layout with Sidebar -->
             <div class="flex gap-8 min-h-screen">
-                <!-- Sidebar for Post List -->
-                <div class="w-1/3 space-y-4">
+                <!-- Desktop Sidebar for Post List -->
+                <div class="desktop-sidebar w-1/3 space-y-4">
                     <!-- Search and Filter -->
                     <div class="glass-effect rounded-2xl shadow-xl p-6 fade-in">
                         <div class="space-y-4">
@@ -927,7 +1045,7 @@
     </footer>
 
     <!-- Enhanced Success Toast -->
-    <div id="successToast" class="fixed top-20 right-6 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-8 py-4 rounded-2xl shadow-2xl transform -translate-y-full transition-all duration-500 z-50">
+    <div id="successToast" class="fixed top-20 right-6 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-8 py-4 rounded-2xl shadow-2xl transform translate-x-full opacity-0 transition-all duration-500 z-50">
         <div class="flex items-center">
             <span class="mr-3 text-xl">✅</span>
             <span id="toastMessage" class="font-bold">Entry saved successfully!</span>
@@ -957,6 +1075,11 @@
             document.getElementById('searchInput').addEventListener('input', filterPosts);
             document.getElementById('sortFilter').addEventListener('change', filterPosts);
             document.getElementById('moodFilter').addEventListener('change', filterPosts);
+            
+            // Mobile sidebar event listeners
+            document.getElementById('mobileSearchInput').addEventListener('input', filterMobilePosts);
+            document.getElementById('mobileSortFilter').addEventListener('change', filterMobilePosts);
+            document.getElementById('mobileMoodFilter').addEventListener('change', filterMobilePosts);
             
             // Close dropdown when clicking outside
             document.addEventListener('click', function(event) {
@@ -1105,20 +1228,18 @@
         function loadPostsSidebar() {
             const posts = JSON.parse(localStorage.getItem('diaryPosts') || '[]');
             const sidebar = document.getElementById('postsSidebar');
+            const mobileSidebar = document.getElementById('mobilePostsSidebar');
 
-            if (posts.length === 0) {
-                sidebar.innerHTML = `
-                    <div class="text-center py-8 text-gray-500">
-                        <div class="text-4xl mb-3">📝</div>
-                        <p class="text-sm">No entries yet</p>
-                        <p class="text-xs mt-1">Create your first entry below!</p>
-                    </div>
-                `;
-                return;
-            }
+            const emptyContent = `
+                <div class="text-center py-8 text-gray-500">
+                    <div class="text-4xl mb-3">📝</div>
+                    <p class="text-sm">No entries yet</p>
+                    <p class="text-xs mt-1">Create your first entry below!</p>
+                </div>
+            `;
 
-            sidebar.innerHTML = posts.map(post => `
-                <div class="post-item p-4 rounded-xl cursor-pointer transition-all duration-300" onclick="selectPost(${post.id})" data-post-id="${post.id}">
+            const postContent = posts.map(post => `
+                <div class="post-item p-4 rounded-xl cursor-pointer transition-all duration-300" onclick="selectPost(${post.id}); closeMobileSidebar();" data-post-id="${post.id}">
                     <div class="flex items-start justify-between mb-2">
                         <h4 class="font-bold text-gray-800 text-sm leading-tight line-clamp-2">${escapeHtml(post.title)}</h4>
                         ${post.mood ? `<span class="text-lg ml-2 flex-shrink-0">${post.mood}</span>` : ''}
@@ -1133,6 +1254,15 @@
                     <p class="text-xs text-gray-600 mt-2 line-clamp-2">${escapeHtml(post.content.substring(0, 80))}...</p>
                 </div>
             `).join('');
+
+            if (posts.length === 0) {
+                sidebar.innerHTML = emptyContent;
+                mobileSidebar.innerHTML = emptyContent;
+                return;
+            }
+
+            sidebar.innerHTML = postContent;
+            mobileSidebar.innerHTML = postContent;
         }
 
         function selectPost(postId) {
@@ -1781,6 +1911,110 @@
             }
         }
 
+        // Mobile Sidebar Functions
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('mobileSidebar');
+            const overlay = document.getElementById('mobileSidebarOverlay');
+            
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            
+            // Prevent body scroll when sidebar is open
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeMobileSidebar() {
+            const sidebar = document.getElementById('mobileSidebar');
+            const overlay = document.getElementById('mobileSidebarOverlay');
+            
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            
+            // Restore body scroll
+            document.body.style.overflow = '';
+        }
+        
+        function filterMobilePosts() {
+            const searchTerm = document.getElementById('mobileSearchInput').value.toLowerCase();
+            const sortBy = document.getElementById('mobileSortFilter').value;
+            const moodFilter = document.getElementById('mobileMoodFilter').value;
+            let posts = JSON.parse(localStorage.getItem('diaryPosts') || '[]');
+            
+            // Filter by search term
+            if (searchTerm) {
+                posts = posts.filter(post => 
+                    post.title.toLowerCase().includes(searchTerm) || 
+                    post.content.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Filter by mood
+            if (moodFilter) {
+                posts = posts.filter(post => post.mood === moodFilter);
+            }
+            
+            // Filter favorites only
+            if (sortBy === 'favorites') {
+                posts = posts.filter(post => post.favorite);
+            }
+            
+            // Sort posts
+            switch (sortBy) {
+                case 'oldest':
+                    posts.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+                    break;
+                case 'longest':
+                    posts.sort((a, b) => b.wordCount - a.wordCount);
+                    break;
+                case 'shortest':
+                    posts.sort((a, b) => a.wordCount - b.wordCount);
+                    break;
+                default: // newest or favorites
+                    posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            }
+            
+            // Re-render filtered posts in mobile sidebar
+            const mobileSidebar = document.getElementById('mobilePostsSidebar');
+            if (posts.length === 0) {
+                mobileSidebar.innerHTML = `
+                    <div class="text-center py-8 text-gray-500">
+                        <div class="text-4xl mb-3">🔍</div>
+                        <p class="text-sm">No entries found</p>
+                        <p class="text-xs mt-1">Try adjusting your search or filters</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            mobileSidebar.innerHTML = posts.map(post => {
+                let highlightedTitle = post.title;
+                let highlightedContent = post.content;
+                
+                if (searchTerm) {
+                    const regex = new RegExp(`(${searchTerm})`, 'gi');
+                    highlightedTitle = highlightedTitle.replace(regex, '<span class="bg-yellow-200 px-1 rounded">$1</span>');
+                    highlightedContent = highlightedContent.replace(regex, '<span class="bg-yellow-200 px-1 rounded">$1</span>');
+                }
+                
+                return `
+                    <div class="post-item p-4 rounded-xl cursor-pointer transition-all duration-300 ${selectedPostId === post.id ? 'selected' : ''}" onclick="selectPost(${post.id}); closeMobileSidebar();" data-post-id="${post.id}">
+                        <div class="flex items-start justify-between mb-2">
+                            <h4 class="font-bold text-gray-800 text-sm leading-tight line-clamp-2">${highlightedTitle}</h4>
+                            ${post.mood ? `<span class="text-lg ml-2 flex-shrink-0">${post.mood}</span>` : ''}
+                        </div>
+                        <div class="flex items-center justify-between text-xs text-gray-500">
+                            <span>${formatDate(post.createdAt, true)}</span>
+                            <div class="flex items-center space-x-2">
+                                ${post.favorite ? '<span class="text-yellow-500">⭐</span>' : ''}
+                                <span>${post.wordCount} words</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-600 mt-2 line-clamp-2">${highlightedContent.substring(0, 80)}...</p>
+                    </div>
+                `;
+            }).join('');
+        }
+
         // Enhanced UI Features
         function updateWritingStats() {
             const content = document.getElementById('postContent').value;
@@ -1920,11 +2154,15 @@
                 toast.classList.add('bg-gradient-to-r', 'from-green-500', 'to-emerald-500');
             }
             
-            toast.classList.remove('-translate-y-full');
+            // Show the toast by sliding in from the right
+            toast.classList.remove('translate-x-full', 'opacity-0');
+            toast.classList.add('translate-x-0', 'opacity-100');
             
+            // Hide the toast after 5 seconds
             setTimeout(() => {
-                toast.classList.add('-translate-y-full');
-            }, 4000);
+                toast.classList.remove('translate-x-0', 'opacity-100');
+                toast.classList.add('translate-x-full', 'opacity-0');
+            }, 5000);
         }
 
         function typeWriter() {
@@ -2014,5 +2252,5 @@
             });
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97a098cd43c597ab',t:'MTc1NzAyMTUxOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97a0ea0ab4477753',t:'MTc1NzAyNDg0Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
