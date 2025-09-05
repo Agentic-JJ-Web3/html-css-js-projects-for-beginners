@@ -348,6 +348,47 @@
             background: rgba(139, 92, 246, 0.3);
         }
         
+        .theme-dark .bg-purple-50 {
+            background-color: rgba(139, 92, 246, 0.1) !important;
+        }
+        
+        .theme-dark .bg-blue-50 {
+            background-color: rgba(96, 165, 250, 0.1) !important;
+        }
+        
+        .theme-dark .bg-orange-50 {
+            background-color: rgba(251, 146, 60, 0.1) !important;
+        }
+        
+        .profile-dropdown-show {
+            transform: scale(1) !important;
+            opacity: 1 !important;
+        }
+        
+        @media (max-width: 768px) {
+            #profileDropdown {
+                width: 90vw;
+                right: -10px;
+                left: auto;
+                transform-origin: top right;
+            }
+            
+            .profile-dropdown-show {
+                transform: scale(1) translateX(-10px) !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #profileDropdown {
+                width: 95vw;
+                right: -20px;
+            }
+            
+            .profile-dropdown-show {
+                transform: scale(1) translateX(-20px) !important;
+            }
+        }
+        
         .dark-glow {
             box-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
         }
@@ -432,6 +473,56 @@
                     <button onclick="toggleTheme()" class="glass-effect rounded-full p-3 hover:scale-110 transition-all duration-300 hover:shadow-lg">
                         <span id="themeIcon">🌙</span>
                     </button>
+                    <!-- Profile Dropdown -->
+                    <div class="relative">
+                        <button onclick="toggleProfileDropdown()" class="glass-effect rounded-full p-2 hover:scale-110 transition-all duration-300 hover:shadow-lg flex items-center space-x-2" id="profileButton">
+                            <div class="w-8 h-8 bg-gradient-to-r rounded-full flex items-center justify-center text-white text-sm font-bold" id="navProfileAvatar">
+                                U
+                            </div>
+                        </button>
+                        
+                        <!-- Profile Dropdown Menu -->
+                        <div id="profileDropdown" class="absolute right-0 top-12 w-80 glass-effect rounded-2xl shadow-2xl p-6 z-50 hidden transform scale-95 opacity-0 transition-all duration-300">
+                            <div class="text-center mb-6">
+                                <div class="w-16 h-16 bg-gradient-to-r rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-3 shadow-lg" id="dropdownProfileAvatar">
+                                    U
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-800 mb-1" id="dropdownProfileName">User</h3>
+                                <p class="text-gray-600 text-sm mb-3" id="dropdownProfileBio">Living life one day at a time ✨</p>
+                                <div class="flex justify-center space-x-4 text-xs text-gray-500">
+                                    <span class="flex items-center">📅 <span id="dropdownJoinDate" class="ml-1">Today</span></span>
+                                    <span class="flex items-center">🎯 Level <span id="dropdownLevel" class="ml-1">1</span></span>
+                                    <span class="flex items-center">⭐ <span id="dropdownFavorites" class="ml-1">0</span></span>
+                                </div>
+                            </div>
+                            
+                            <!-- Quick Stats -->
+                            <div class="grid grid-cols-3 gap-3 mb-6">
+                                <div class="text-center p-3 bg-purple-50 rounded-xl">
+                                    <div class="text-lg font-bold text-purple-600" id="dropdownTotalPosts">0</div>
+                                    <div class="text-xs text-gray-600">Entries</div>
+                                </div>
+                                <div class="text-center p-3 bg-blue-50 rounded-xl">
+                                    <div class="text-lg font-bold text-blue-600" id="dropdownTotalWords">0</div>
+                                    <div class="text-xs text-gray-600">Words</div>
+                                </div>
+                                <div class="text-center p-3 bg-orange-50 rounded-xl">
+                                    <div class="text-lg font-bold text-orange-600" id="dropdownStreak">0</div>
+                                    <div class="text-xs text-gray-600">Streak</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div class="space-y-3">
+                                <button onclick="editProfile(); toggleProfileDropdown();" class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-3 rounded-xl hover:scale-105 transition-all duration-300 font-bold shadow-lg">
+                                    ✏️ Edit Profile
+                                </button>
+                                <button onclick="showAnalytics(); toggleProfileDropdown();" class="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-4 py-3 rounded-xl hover:scale-105 transition-all duration-300 font-bold shadow-lg">
+                                    📊 View Analytics
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -615,27 +706,7 @@
 
         <!-- Main App -->
         <div id="mainApp" class="hidden">
-            <!-- Enhanced Profile Card -->
-            <div class="glass-effect rounded-3xl shadow-2xl p-10 mb-10 hover-lift">
-                <div class="flex flex-col md:flex-row items-center justify-between">
-                    <div class="flex flex-col md:flex-row items-center mb-6 md:mb-0">
-                        <div class="w-24 h-24 bg-gradient-to-r rounded-full flex items-center justify-center text-white text-4xl font-bold mr-8 shadow-xl mb-4 md:mb-0" id="profileAvatar">
-                        </div>
-                        <div class="text-center md:text-left">
-                            <h2 class="text-3xl font-bold text-gray-800 mb-2" id="profileDisplayName"></h2>
-                            <p class="text-gray-600 text-lg mb-3" id="profileDisplayBio"></p>
-                            <div class="flex flex-wrap items-center justify-center md:justify-start space-x-6 text-sm text-gray-500">
-                                <span class="flex items-center">📅 Joined <span id="joinDate" class="ml-1"></span></span>
-                                <span class="flex items-center">🎯 Level <span id="profileLevel" class="ml-1">1</span></span>
-                                <span class="flex items-center">⭐ <span id="totalFavorites" class="ml-1">0</span> favorites</span>
-                            </div>
-                        </div>
-                    </div>
-                    <button onclick="editProfile()" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-4 rounded-2xl hover:scale-105 transition-all duration-300 font-bold shadow-xl">
-                        ✏️ Edit Profile
-                    </button>
-                </div>
-            </div>
+
 
             <!-- Main Content Layout with Sidebar -->
             <div class="flex gap-8 min-h-screen">
@@ -858,6 +929,16 @@
             document.getElementById('sortFilter').addEventListener('change', filterPosts);
             document.getElementById('moodFilter').addEventListener('change', filterPosts);
             
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(event) {
+                const dropdown = document.getElementById('profileDropdown');
+                const button = document.getElementById('profileButton');
+                if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+                    dropdown.classList.remove('profile-dropdown-show');
+                    dropdown.classList.add('hidden');
+                }
+            });
+            
             // Mood selector
             document.querySelectorAll('.mood-emoji').forEach(emoji => {
                 emoji.addEventListener('click', function() {
@@ -885,19 +966,36 @@
             const profile = localStorage.getItem('diaryProfile');
             if (profile) {
                 const profileData = JSON.parse(profile);
-                document.getElementById('profileDisplayName').textContent = profileData.name;
-                document.getElementById('profileDisplayBio').textContent = profileData.bio || 'Living life one day at a time ✨';
-                document.getElementById('profileAvatar').textContent = profileData.name.charAt(0).toUpperCase();
-                document.getElementById('profileAvatar').className = `w-24 h-24 bg-gradient-to-r ${profileData.avatarGradient || 'from-purple-500 to-pink-500'} rounded-full flex items-center justify-center text-white text-4xl font-bold mr-8 shadow-xl mb-4 md:mb-0`;
-                document.getElementById('joinDate').textContent = formatDate(profileData.createdAt, true);
+                
+                // Update navigation avatar
+                const navAvatar = document.getElementById('navProfileAvatar');
+                const dropdownAvatar = document.getElementById('dropdownProfileAvatar');
+                const initial = profileData.name.charAt(0).toUpperCase();
+                const gradient = profileData.avatarGradient || 'from-purple-500 to-pink-500';
+                
+                navAvatar.textContent = initial;
+                navAvatar.className = `w-8 h-8 bg-gradient-to-r ${gradient} rounded-full flex items-center justify-center text-white text-sm font-bold`;
+                
+                dropdownAvatar.textContent = initial;
+                dropdownAvatar.className = `w-16 h-16 bg-gradient-to-r ${gradient} rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-3 shadow-lg`;
+                
+                // Update dropdown profile info
+                document.getElementById('dropdownProfileName').textContent = profileData.name;
+                document.getElementById('dropdownProfileBio').textContent = profileData.bio || 'Living life one day at a time ✨';
+                document.getElementById('dropdownJoinDate').textContent = formatDate(profileData.createdAt, true);
                 
                 // Calculate user level and favorites
                 const posts = JSON.parse(localStorage.getItem('diaryPosts') || '[]');
                 const level = Math.floor(posts.length / 5) + 1;
                 const favorites = posts.filter(post => post.favorite).length;
+                const totalWords = posts.reduce((sum, post) => sum + post.wordCount, 0);
+                const currentStreak = calculateCurrentStreak(posts);
                 
-                document.getElementById('profileLevel').textContent = level;
-                document.getElementById('totalFavorites').textContent = favorites;
+                document.getElementById('dropdownLevel').textContent = level;
+                document.getElementById('dropdownFavorites').textContent = favorites;
+                document.getElementById('dropdownTotalPosts').textContent = posts.length;
+                document.getElementById('dropdownTotalWords').textContent = totalWords > 999 ? `${(totalWords/1000).toFixed(1)}k` : totalWords;
+                document.getElementById('dropdownStreak').textContent = currentStreak;
                 
                 document.getElementById('profileSetup').classList.add('hidden');
                 document.getElementById('mainApp').classList.remove('hidden');
@@ -925,6 +1023,35 @@
             localStorage.setItem('diaryProfile', JSON.stringify(profile));
             showToast('Profile created successfully! 🎉');
             setTimeout(() => loadProfile(), 1000);
+        }
+
+        function toggleProfileDropdown() {
+            const dropdown = document.getElementById('profileDropdown');
+            const isHidden = dropdown.classList.contains('hidden');
+            
+            if (isHidden) {
+                dropdown.classList.remove('hidden');
+                // Update dropdown stats before showing
+                updateDropdownStats();
+                setTimeout(() => {
+                    dropdown.classList.add('profile-dropdown-show');
+                }, 10);
+            } else {
+                dropdown.classList.remove('profile-dropdown-show');
+                setTimeout(() => {
+                    dropdown.classList.add('hidden');
+                }, 300);
+            }
+        }
+        
+        function updateDropdownStats() {
+            const posts = JSON.parse(localStorage.getItem('diaryPosts') || '[]');
+            const totalWords = posts.reduce((sum, post) => sum + post.wordCount, 0);
+            const currentStreak = calculateCurrentStreak(posts);
+            
+            document.getElementById('dropdownTotalPosts').textContent = posts.length;
+            document.getElementById('dropdownTotalWords').textContent = totalWords > 999 ? `${(totalWords/1000).toFixed(1)}k` : totalWords;
+            document.getElementById('dropdownStreak').textContent = currentStreak;
         }
 
         function editProfile() {
@@ -1858,5 +1985,5 @@
             });
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97a0342fb76997ab',t:'MTc1NzAxNzM5Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97a07dbf37e293f4',t:'MTc1NzAyMDQxMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
