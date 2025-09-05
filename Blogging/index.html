@@ -6,6 +6,7 @@
     <title>My Digital Diary</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         body { font-family: 'Inter', sans-serif; }
@@ -365,7 +366,16 @@
             opacity: 1 !important;
         }
         
+        /* Mobile responsive stats - hide on small screens */
         @media (max-width: 768px) {
+            .stats-sidebar {
+                display: none !important;
+            }
+            
+            .level-progress {
+                display: none !important;
+            }
+            
             #profileDropdown {
                 width: 90vw;
                 right: -10px;
@@ -529,7 +539,7 @@
     </nav>
 
     <!-- Enhanced Stats Dashboard -->
-    <div class="fixed top-20 left-4 z-40 space-y-3 slide-in-left">
+    <div class="fixed top-20 left-4 z-40 space-y-3 slide-in-left stats-sidebar">
         <!-- Total Entries -->
         <div class="stat-card rounded-xl p-4 shadow-lg hover-lift">
             <div class="flex items-center space-x-3">
@@ -576,7 +586,7 @@
     </div>
 
     <!-- Level Progress -->
-    <div class="fixed top-20 right-4 z-40 slide-in-right">
+    <div class="fixed top-20 right-4 z-40 slide-in-right level-progress">
         <div class="stat-card rounded-xl p-4 shadow-lg hover-lift">
             <div class="text-center mb-2">
                 <div class="text-lg font-bold gradient-text">Level <span id="userLevel">1</span></div>
@@ -897,8 +907,27 @@
         </div>
     </div>
 
+    <!-- Footer -->
+    <footer class="glass-effect mt-16 py-8 border-t border-gray-200">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-6">
+                <div class="flex items-center space-x-3">
+                    <i class="fab fa-github text-2xl text-gray-600 hover:text-purple-600 transition-colors duration-300"></i>
+                    <span class="text-gray-600 font-medium">Open Source</span>
+                </div>
+                <div class="text-gray-500">•</div>
+                <div class="text-gray-600 font-medium">
+                    Created by <span class="gradient-text font-bold">JJ</span>
+                </div>
+            </div>
+            <div class="mt-4 text-sm text-gray-500">
+                Made with ❤️ for digital journaling
+            </div>
+        </div>
+    </footer>
+
     <!-- Enhanced Success Toast -->
-    <div id="successToast" class="fixed bottom-6 right-6 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-8 py-4 rounded-2xl shadow-2xl transform translate-y-full transition-all duration-500 z-50">
+    <div id="successToast" class="fixed top-20 right-6 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-8 py-4 rounded-2xl shadow-2xl transform -translate-y-full transition-all duration-500 z-50">
         <div class="flex items-center">
             <span class="mr-3 text-xl">✅</span>
             <span id="toastMessage" class="font-bold">Entry saved successfully!</span>
@@ -1891,10 +1920,10 @@
                 toast.classList.add('bg-gradient-to-r', 'from-green-500', 'to-emerald-500');
             }
             
-            toast.classList.remove('translate-y-full');
+            toast.classList.remove('-translate-y-full');
             
             setTimeout(() => {
-                toast.classList.add('translate-y-full');
+                toast.classList.add('-translate-y-full');
             }, 4000);
         }
 
@@ -1985,5 +2014,5 @@
             });
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97a07dbf37e293f4',t:'MTc1NzAyMDQxMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97a098cd43c597ab',t:'MTc1NzAyMTUxOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
