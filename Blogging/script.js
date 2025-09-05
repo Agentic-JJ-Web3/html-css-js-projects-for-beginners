@@ -1,22 +1,41 @@
-
+ 
         let selectedMood = '';
         let selectedAvatarGradient = 'from-purple-500 to-pink-500';
         let isDarkTheme = false;
         let activityChart = null;
         let moodChart = null;
+        let selectedPostId = null;
 
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
             loadProfile();
-            loadPosts();
+            loadPostsSidebar();
             updateAllStats();
             updateAchievements();
             
             // Event listeners
-            document.getElementById('postContent').addEventListener('input', updateWritingStats);
+            document.getElementById('postContent').addEventListener('input', function() {
+                updateWritingStats();
+                updatePreview();
+            });
             document.getElementById('searchInput').addEventListener('input', filterPosts);
             document.getElementById('sortFilter').addEventListener('change', filterPosts);
             document.getElementById('moodFilter').addEventListener('change', filterPosts);
+            
+            // Mobile sidebar event listeners
+            document.getElementById('mobileSearchInput').addEventListener('input', filterMobilePosts);
+            document.getElementById('mobileSortFilter').addEventListener('change', filterMobilePosts);
+            document.getElementById('mobileMoodFilter').addEventListener('change', filterMobilePosts);
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(event) {
+                const dropdown = document.getElementById('profileDropdown');
+                const button = document.getElementById('profileButton');
+                if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+                    dropdown.classList.remove('profile-dropdown-show');
+                    dropdown.classList.add('hidden');
+                }
+            });
             
             // Mood selector
             document.querySelectorAll('.mood-emoji').forEach(emoji => {
@@ -45,19 +64,36 @@
             const profile = localStorage.getItem('diaryProfile');
             if (profile) {
                 const profileData = JSON.parse(profile);
-                document.getElementById('profileDisplayName').textContent = profileData.name;
-                document.getElementById('profileDisplayBio').textContent = profileData.bio || 'Living life one day at a time ✨';
-                document.getElementById('profileAvatar').textContent = profileData.name.charAt(0).toUpperCase();
-                document.getElementById('profileAvatar').className = `w-24 h-24 bg-gradient-to-r ${profileData.avatarGradient || 'from-purple-500 to-pink-500'} rounded-full flex items-center justify-center text-white text-4xl font-bold mr-8 shadow-xl mb-4 md:mb-0`;
-                document.getElementById('joinDate').textContent = formatDate(profileData.createdAt, true);
+                
+                // Update navigation avatar
+                const navAvatar = document.getElementById('navProfileAvatar');
+                const dropdownAvatar = document.getElementById('dropdownProfileAvatar');
+                const initial = profileData.name.charAt(0).toUpperCase();
+                const gradient = profileData.avatarGradient || 'from-purple-500 to-pink-500';
+                
+                navAvatar.textContent = initial;
+                navAvatar.className = `w-8 h-8 bg-gradient-to-r ${gradient} rounded-full flex items-center justify-center text-white text-sm font-bold`;
+                
+                dropdownAvatar.textContent = initial;
+                dropdownAvatar.className = `w-16 h-16 bg-gradient-to-r ${gradient} rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-3 shadow-lg`;
+                
+                // Update dropdown profile info
+                document.getElementById('dropdownProfileName').textContent = profileData.name;
+                document.getElementById('dropdownProfileBio').textContent = profileData.bio || 'Living life one day at a time ✨';
+                document.getElementById('dropdownJoinDate').textContent = formatDate(profileData.createdAt, true);
                 
                 // Calculate user level and favorites
                 const posts = JSON.parse(localStorage.getItem('diaryPosts') || '[]');
                 const level = Math.floor(posts.length / 5) + 1;
                 const favorites = posts.filter(post => post.favorite).length;
+                const totalWords = posts.reduce((sum, post) => sum + post.wordCount, 0);
+                const currentStreak = calculateCurrentStreak(posts);
                 
-                document.getElementById('profileLevel').textContent = level;
-                document.getElementById('totalFavorites').textContent = favorites;
+                document.getElementById('dropdownLevel').textContent = level;
+                document.getElementById('dropdownFavorites').textContent = favorites;
+                document.getElementById('dropdownTotalPosts').textContent = posts.length;
+                document.getElementById('dropdownTotalWords').textContent = totalWords > 999 ? `${(totalWords/1000).toFixed(1)}k` : totalWords;
+                document.getElementById('dropdownStreak').textContent = currentStreak;
                 
                 document.getElementById('profileSetup').classList.add('hidden');
                 document.getElementById('mainApp').classList.remove('hidden');
@@ -87,6 +123,35 @@
             setTimeout(() => loadProfile(), 1000);
         }
 
+        function toggleProfileDropdown() {
+            const dropdown = document.getElementById('profileDropdown');
+            const isHidden = dropdown.classList.contains('hidden');
+            
+            if (isHidden) {
+                dropdown.classList.remove('hidden');
+                // Update dropdown stats before showing
+                updateDropdownStats();
+                setTimeout(() => {
+                    dropdown.classList.add('profile-dropdown-show');
+                }, 10);
+            } else {
+                dropdown.classList.remove('profile-dropdown-show');
+                setTimeout(() => {
+                    dropdown.classList.add('hidden');
+                }, 300);
+            }
+        }
+        
+        function updateDropdownStats() {
+            const posts = JSON.parse(localStorage.getItem('diaryPosts') || '[]');
+            const totalWords = posts.reduce((sum, post) => sum + post.wordCount, 0);
+            const currentStreak = calculateCurrentStreak(posts);
+            
+            document.getElementById('dropdownTotalPosts').textContent = posts.length;
+            document.getElementById('dropdownTotalWords').textContent = totalWords > 999 ? `${(totalWords/1000).toFixed(1)}k` : totalWords;
+            document.getElementById('dropdownStreak').textContent = currentStreak;
+        }
+
         function editProfile() {
             const profile = JSON.parse(localStorage.getItem('diaryProfile'));
             document.getElementById('profileName').value = profile.name;
@@ -105,6 +170,231 @@
             document.getElementById('profileSetup').classList.remove('hidden');
         }
 
+        // Sidebar Post Management
+        function loadPostsSidebar() {
+            const posts = JSON.parse(localStorage.getItem('diaryPosts') || '[]');
+            const sidebar = document.getElementById('postsSidebar');
+            const mobileSidebar = document.getElementById('mobilePostsSidebar');
+
+            const emptyContent = `
+                <div class="text-center py-8 text-gray-500">
+                    <div class="text-4xl mb-3">📝</div>
+                    <p class="text-sm">No entries yet</p>
+                    <p class="text-xs mt-1">Create your first entry below!</p>
+                </div>
+            `;
+
+            const postContent = posts.map(post => `
+                <div class="post-item p-4 rounded-xl cursor-pointer transition-all duration-300" onclick="selectPost(${post.id}); closeMobileSidebar();" data-post-id="${post.id}">
+                    <div class="flex items-start justify-between mb-2">
+                        <h4 class="font-bold text-gray-800 text-sm leading-tight line-clamp-2">${escapeHtml(post.title)}</h4>
+                        ${post.mood ? `<span class="text-lg ml-2 flex-shrink-0">${post.mood}</span>` : ''}
+                    </div>
+                    <div class="flex items-center justify-between text-xs text-gray-500">
+                        <span>${formatDate(post.createdAt, true)}</span>
+                        <div class="flex items-center space-x-2">
+                            ${post.favorite ? '<span class="text-yellow-500">⭐</span>' : ''}
+                            <span>${post.wordCount} words</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-600 mt-2 line-clamp-2">${escapeHtml(post.content.substring(0, 80))}...</p>
+                </div>
+            `).join('');
+
+            if (posts.length === 0) {
+                sidebar.innerHTML = emptyContent;
+                mobileSidebar.innerHTML = emptyContent;
+                return;
+            }
+
+            sidebar.innerHTML = postContent;
+            mobileSidebar.innerHTML = postContent;
+        }
+
+        function selectPost(postId) {
+            const posts = JSON.parse(localStorage.getItem('diaryPosts') || '[]');
+            const post = posts.find(p => p.id === postId);
+            
+            if (!post) return;
+
+            selectedPostId = postId;
+
+            // Update sidebar selection
+            document.querySelectorAll('.post-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            document.querySelector(`[data-post-id="${postId}"]`).classList.add('selected');
+
+            // Hide welcome message and show post content
+            document.getElementById('welcomeMessage').classList.add('hidden');
+            document.getElementById('selectedPostContent').classList.remove('hidden');
+
+            // Display the selected post
+            document.getElementById('selectedPostContent').innerHTML = `
+                <div class="fade-in">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="flex items-center space-x-4">
+                            <h2 class="text-3xl font-bold text-gray-800">${escapeHtml(post.title)}</h2>
+                            ${post.mood ? `<span class="text-4xl">${post.mood}</span>` : ''}
+                        </div>
+                        <div class="flex space-x-3">
+                            <button onclick="toggleFavorite(${post.id})" class="text-yellow-500 hover:text-yellow-600 text-3xl transition-all duration-300 hover:scale-125">
+                                ${post.favorite ? '⭐' : '☆'}
+                            </button>
+                            <button onclick="deletePost(${post.id})" class="text-red-500 hover:text-red-700 text-2xl transition-all duration-300 hover:scale-125">
+                                🗑️
+                            </button>
+                        </div>
+                    </div>
+                    <div class="text-gray-700 mb-8 leading-relaxed text-lg prose prose-lg max-w-none">${formatPostContent(post.content)}</div>
+                    <div class="flex justify-between items-center text-sm text-gray-500 border-t pt-6">
+                        <div class="flex space-x-6">
+                            <span class="flex items-center">📅 ${formatDate(post.createdAt)}</span>
+                            <span class="flex items-center">📝 ${post.wordCount} words</span>
+                            <span class="flex items-center">⏱️ ${post.readTime} min read</span>
+                        </div>
+                        <button onclick="sharePost(${post.id})" class="text-purple-600 hover:text-purple-800 font-bold transition-all duration-300 hover:scale-105">
+                            📤 Share
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Rich Text Editor Functions
+        function formatText(format) {
+            const textarea = document.getElementById('postContent');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const selectedText = textarea.value.substring(start, end);
+            let formattedText = '';
+            
+            switch (format) {
+                case 'bold':
+                    formattedText = `**${selectedText || 'bold text'}**`;
+                    break;
+                case 'italic':
+                    formattedText = `*${selectedText || 'italic text'}*`;
+                    break;
+                case 'underline':
+                    formattedText = `__${selectedText || 'underlined text'}__`;
+                    break;
+                case 'h1':
+                    formattedText = `# ${selectedText || 'Large Header'}`;
+                    break;
+                case 'h2':
+                    formattedText = `## ${selectedText || 'Medium Header'}`;
+                    break;
+                case 'h3':
+                    formattedText = `### ${selectedText || 'Small Header'}`;
+                    break;
+                case 'ul':
+                    if (selectedText) {
+                        formattedText = selectedText.split('\n').map(line => `• ${line}`).join('\n');
+                    } else {
+                        formattedText = '• List item 1\n• List item 2\n• List item 3';
+                    }
+                    break;
+                case 'ol':
+                    if (selectedText) {
+                        formattedText = selectedText.split('\n').map((line, index) => `${index + 1}. ${line}`).join('\n');
+                    } else {
+                        formattedText = '1. First item\n2. Second item\n3. Third item';
+                    }
+                    break;
+                case 'quote':
+                    if (selectedText) {
+                        formattedText = selectedText.split('\n').map(line => `> ${line}`).join('\n');
+                    } else {
+                        formattedText = '> This is a quote';
+                    }
+                    break;
+                case 'highlight':
+                    formattedText = `==${selectedText || 'highlighted text'}==`;
+                    break;
+            }
+            
+            // Replace selected text with formatted text
+            const newValue = textarea.value.substring(0, start) + formattedText + textarea.value.substring(end);
+            textarea.value = newValue;
+            
+            // Update cursor position
+            const newCursorPos = start + formattedText.length;
+            textarea.setSelectionRange(newCursorPos, newCursorPos);
+            textarea.focus();
+            
+            updateWritingStats();
+            updatePreview();
+        }
+        
+        function insertEmoji() {
+            const emojis = ['😊', '😢', '😍', '🤔', '😴', '😤', '😌', '🥳', '❤️', '🎉', '🌟', '✨', '🔥', '💪', '🙏', '🎯', '📚', '✍️', '💭', '🌈', '🎨', '🎵', '☀️', '🌙', '⭐', '🌸', '🍀', '🦋', '🌺', '🎪'];
+            
+            const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+            const textarea = document.getElementById('postContent');
+            const cursorPos = textarea.selectionStart;
+            
+            const newValue = textarea.value.substring(0, cursorPos) + randomEmoji + textarea.value.substring(cursorPos);
+            textarea.value = newValue;
+            textarea.setSelectionRange(cursorPos + randomEmoji.length, cursorPos + randomEmoji.length);
+            textarea.focus();
+            
+            updateWritingStats();
+            updatePreview();
+        }
+        
+        function togglePreview() {
+            const previewArea = document.getElementById('previewArea');
+            const isHidden = previewArea.classList.contains('hidden');
+            
+            if (isHidden) {
+                previewArea.classList.remove('hidden');
+                updatePreview();
+            } else {
+                previewArea.classList.add('hidden');
+            }
+        }
+        
+        function updatePreview() {
+            const content = document.getElementById('postContent').value;
+            const previewContent = document.getElementById('previewContent');
+            
+            if (!content.trim()) {
+                previewContent.innerHTML = '<p class="text-gray-500 italic">Start typing to see a preview...</p>';
+                return;
+            }
+            
+            // Simple markdown-like parser
+            let html = content
+                // Headers
+                .replace(/^### (.*$)/gm, '<h3 class="text-xl font-bold mb-3 mt-6">$1</h3>')
+                .replace(/^## (.*$)/gm, '<h2 class="text-2xl font-bold mb-4 mt-8">$1</h2>')
+                .replace(/^# (.*$)/gm, '<h1 class="text-3xl font-bold mb-6 mt-10">$1</h1>')
+                
+                // Bold and Italic
+                .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold">$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em class="italic">$1</em>')
+                .replace(/__(.*?)__/g, '<u class="underline">$1</u>')
+                
+                // Highlights
+                .replace(/==(.*?)==/g, '<span class="highlight bg-yellow-200 px-1 rounded">$1</span>')
+                
+                // Quotes
+                .replace(/^> (.*$)/gm, '<blockquote class="border-l-4 border-purple-400 pl-4 py-2 my-4 bg-purple-50 italic">$1</blockquote>')
+                
+                // Lists
+                .replace(/^• (.*$)/gm, '<li class="ml-4">$1</li>')
+                .replace(/^(\d+)\. (.*$)/gm, '<li class="ml-4" style="list-style-type: decimal;">$1. $2</li>')
+                
+                // Line breaks
+                .replace(/\n/g, '<br>');
+            
+            // Wrap lists
+            html = html.replace(/((<li.*?>.*?<\/li>)+)/g, '<ul class="my-4">$1</ul>');
+            
+            previewContent.innerHTML = html;
+        }
+        
         // Enhanced Post Management
         function savePost() {
             const title = document.getElementById('postTitle').value.trim();
@@ -139,57 +429,10 @@
             updateWritingStats();
 
             showToast('Entry saved successfully! 📝');
-            loadPosts();
+            loadPostsSidebar();
             updateAllStats();
             updateAchievements();
             checkForNewAchievements(posts.length, wordCount);
-        }
-
-        function loadPosts() {
-            const posts = JSON.parse(localStorage.getItem('diaryPosts') || '[]');
-            const postsList = document.getElementById('postsList');
-
-            if (posts.length === 0) {
-                postsList.innerHTML = `
-                    <div class="glass-effect rounded-3xl shadow-xl p-16 text-center fade-in">
-                        <div class="text-9xl mb-8">📝</div>
-                        <h3 class="text-3xl font-bold text-gray-800 mb-6 gradient-text">No entries yet</h3>
-                        <p class="text-gray-600 text-xl mb-4">Start writing your first diary entry above!</p>
-                        <p class="text-gray-500 text-lg">✨ Tip: Try using one of the writing templates to get started</p>
-                    </div>
-                `;
-                return;
-            }
-
-            postsList.innerHTML = posts.map((post, index) => `
-                <div class="glass-effect rounded-3xl shadow-xl p-10 hover-lift fade-in" style="animation-delay: ${index * 0.1}s">
-                    <div class="flex justify-between items-start mb-6">
-                        <div class="flex items-center space-x-4">
-                            <h3 class="text-2xl font-bold text-gray-800">${escapeHtml(post.title)}</h3>
-                            ${post.mood ? `<span class="text-3xl">${post.mood}</span>` : ''}
-                        </div>
-                        <div class="flex space-x-3">
-                            <button onclick="toggleFavorite(${post.id})" class="text-yellow-500 hover:text-yellow-600 text-2xl transition-all duration-300 hover:scale-125">
-                                ${post.favorite ? '⭐' : '☆'}
-                            </button>
-                            <button onclick="deletePost(${post.id})" class="text-red-500 hover:text-red-700 transition-all duration-300 hover:scale-125">
-                                🗑️
-                            </button>
-                        </div>
-                    </div>
-                    <p class="text-gray-700 mb-8 leading-relaxed text-lg" id="post-content-${post.id}">${escapeHtml(post.content).replace(/\n/g, '<br>')}</p>
-                    <div class="flex justify-between items-center text-sm text-gray-500 border-t pt-6">
-                        <div class="flex space-x-6">
-                            <span class="flex items-center">📅 ${formatDate(post.createdAt)}</span>
-                            <span class="flex items-center">📝 ${post.wordCount} words</span>
-                            <span class="flex items-center">⏱️ ${post.readTime} min read</span>
-                        </div>
-                        <button onclick="sharePost(${post.id})" class="text-purple-600 hover:text-purple-800 font-bold transition-all duration-300 hover:scale-105">
-                            📤 Share
-                        </button>
-                    </div>
-                </div>
-            `).join('');
         }
 
         function deletePost(postId) {
@@ -198,7 +441,15 @@
                 const filteredPosts = posts.filter(post => post.id !== postId);
                 localStorage.setItem('diaryPosts', JSON.stringify(filteredPosts));
                 showToast('Entry deleted successfully');
-                loadPosts();
+                
+                // If the deleted post was selected, show welcome message
+                if (selectedPostId === postId) {
+                    document.getElementById('selectedPostContent').classList.add('hidden');
+                    document.getElementById('welcomeMessage').classList.remove('hidden');
+                    selectedPostId = null;
+                }
+                
+                loadPostsSidebar();
                 updateAllStats();
                 updateAchievements();
             }
@@ -210,7 +461,13 @@
             if (post) {
                 post.favorite = !post.favorite;
                 localStorage.setItem('diaryPosts', JSON.stringify(posts));
-                loadPosts();
+                
+                // Refresh the selected post if it's currently displayed
+                if (selectedPostId === postId) {
+                    selectPost(postId);
+                }
+                
+                loadPostsSidebar();
                 updateAllStats();
                 showToast(post.favorite ? 'Added to favorites ⭐' : 'Removed from favorites');
             }
@@ -600,6 +857,110 @@
             }
         }
 
+        // Mobile Sidebar Functions
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('mobileSidebar');
+            const overlay = document.getElementById('mobileSidebarOverlay');
+            
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            
+            // Prevent body scroll when sidebar is open
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeMobileSidebar() {
+            const sidebar = document.getElementById('mobileSidebar');
+            const overlay = document.getElementById('mobileSidebarOverlay');
+            
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            
+            // Restore body scroll
+            document.body.style.overflow = '';
+        }
+        
+        function filterMobilePosts() {
+            const searchTerm = document.getElementById('mobileSearchInput').value.toLowerCase();
+            const sortBy = document.getElementById('mobileSortFilter').value;
+            const moodFilter = document.getElementById('mobileMoodFilter').value;
+            let posts = JSON.parse(localStorage.getItem('diaryPosts') || '[]');
+            
+            // Filter by search term
+            if (searchTerm) {
+                posts = posts.filter(post => 
+                    post.title.toLowerCase().includes(searchTerm) || 
+                    post.content.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Filter by mood
+            if (moodFilter) {
+                posts = posts.filter(post => post.mood === moodFilter);
+            }
+            
+            // Filter favorites only
+            if (sortBy === 'favorites') {
+                posts = posts.filter(post => post.favorite);
+            }
+            
+            // Sort posts
+            switch (sortBy) {
+                case 'oldest':
+                    posts.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+                    break;
+                case 'longest':
+                    posts.sort((a, b) => b.wordCount - a.wordCount);
+                    break;
+                case 'shortest':
+                    posts.sort((a, b) => a.wordCount - b.wordCount);
+                    break;
+                default: // newest or favorites
+                    posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            }
+            
+            // Re-render filtered posts in mobile sidebar
+            const mobileSidebar = document.getElementById('mobilePostsSidebar');
+            if (posts.length === 0) {
+                mobileSidebar.innerHTML = `
+                    <div class="text-center py-8 text-gray-500">
+                        <div class="text-4xl mb-3">🔍</div>
+                        <p class="text-sm">No entries found</p>
+                        <p class="text-xs mt-1">Try adjusting your search or filters</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            mobileSidebar.innerHTML = posts.map(post => {
+                let highlightedTitle = post.title;
+                let highlightedContent = post.content;
+                
+                if (searchTerm) {
+                    const regex = new RegExp(`(${searchTerm})`, 'gi');
+                    highlightedTitle = highlightedTitle.replace(regex, '<span class="bg-yellow-200 px-1 rounded">$1</span>');
+                    highlightedContent = highlightedContent.replace(regex, '<span class="bg-yellow-200 px-1 rounded">$1</span>');
+                }
+                
+                return `
+                    <div class="post-item p-4 rounded-xl cursor-pointer transition-all duration-300 ${selectedPostId === post.id ? 'selected' : ''}" onclick="selectPost(${post.id}); closeMobileSidebar();" data-post-id="${post.id}">
+                        <div class="flex items-start justify-between mb-2">
+                            <h4 class="font-bold text-gray-800 text-sm leading-tight line-clamp-2">${highlightedTitle}</h4>
+                            ${post.mood ? `<span class="text-lg ml-2 flex-shrink-0">${post.mood}</span>` : ''}
+                        </div>
+                        <div class="flex items-center justify-between text-xs text-gray-500">
+                            <span>${formatDate(post.createdAt, true)}</span>
+                            <div class="flex items-center space-x-2">
+                                ${post.favorite ? '<span class="text-yellow-500">⭐</span>' : ''}
+                                <span>${post.wordCount} words</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-600 mt-2 line-clamp-2">${highlightedContent.substring(0, 80)}...</p>
+                    </div>
+                `;
+            }).join('');
+        }
+
         // Enhanced UI Features
         function updateWritingStats() {
             const content = document.getElementById('postContent').value;
@@ -651,20 +1012,20 @@
                     posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
             }
             
-            // Re-render filtered posts
-            const postsList = document.getElementById('postsList');
+            // Re-render filtered posts in sidebar
+            const sidebar = document.getElementById('postsSidebar');
             if (posts.length === 0) {
-                postsList.innerHTML = `
-                    <div class="glass-effect rounded-3xl shadow-xl p-16 text-center">
-                        <div class="text-8xl mb-6">🔍</div>
-                        <h3 class="text-2xl font-bold text-gray-800 mb-4">No entries found</h3>
-                        <p class="text-gray-600 text-lg">Try adjusting your search or filters</p>
+                sidebar.innerHTML = `
+                    <div class="text-center py-8 text-gray-500">
+                        <div class="text-4xl mb-3">🔍</div>
+                        <p class="text-sm">No entries found</p>
+                        <p class="text-xs mt-1">Try adjusting your search or filters</p>
                     </div>
                 `;
                 return;
             }
             
-            postsList.innerHTML = posts.map((post, index) => {
+            sidebar.innerHTML = posts.map(post => {
                 let highlightedTitle = post.title;
                 let highlightedContent = post.content;
                 
@@ -675,32 +1036,19 @@
                 }
                 
                 return `
-                    <div class="glass-effect rounded-3xl shadow-xl p-10 hover-lift fade-in" style="animation-delay: ${index * 0.1}s">
-                        <div class="flex justify-between items-start mb-6">
-                            <div class="flex items-center space-x-4">
-                                <h3 class="text-2xl font-bold text-gray-800">${highlightedTitle}</h3>
-                                ${post.mood ? `<span class="text-3xl">${post.mood}</span>` : ''}
-                            </div>
-                            <div class="flex space-x-3">
-                                <button onclick="toggleFavorite(${post.id})" class="text-yellow-500 hover:text-yellow-600 text-2xl transition-all duration-300 hover:scale-125">
-                                    ${post.favorite ? '⭐' : '☆'}
-                                </button>
-                                <button onclick="deletePost(${post.id})" class="text-red-500 hover:text-red-700 transition-all duration-300 hover:scale-125">
-                                    🗑️
-                                </button>
+                    <div class="post-item p-4 rounded-xl cursor-pointer transition-all duration-300 ${selectedPostId === post.id ? 'selected' : ''}" onclick="selectPost(${post.id})" data-post-id="${post.id}">
+                        <div class="flex items-start justify-between mb-2">
+                            <h4 class="font-bold text-gray-800 text-sm leading-tight line-clamp-2">${highlightedTitle}</h4>
+                            ${post.mood ? `<span class="text-lg ml-2 flex-shrink-0">${post.mood}</span>` : ''}
+                        </div>
+                        <div class="flex items-center justify-between text-xs text-gray-500">
+                            <span>${formatDate(post.createdAt, true)}</span>
+                            <div class="flex items-center space-x-2">
+                                ${post.favorite ? '<span class="text-yellow-500">⭐</span>' : ''}
+                                <span>${post.wordCount} words</span>
                             </div>
                         </div>
-                        <p class="text-gray-700 mb-8 leading-relaxed text-lg">${highlightedContent.replace(/\n/g, '<br>')}</p>
-                        <div class="flex justify-between items-center text-sm text-gray-500 border-t pt-6">
-                            <div class="flex space-x-6">
-                                <span class="flex items-center">📅 ${formatDate(post.createdAt)}</span>
-                                <span class="flex items-center">📝 ${post.wordCount} words</span>
-                                <span class="flex items-center">⏱️ ${post.readTime} min read</span>
-                            </div>
-                            <button onclick="sharePost(${post.id})" class="text-purple-600 hover:text-purple-800 font-bold transition-all duration-300 hover:scale-105">
-                                📤 Share
-                            </button>
-                        </div>
+                        <p class="text-xs text-gray-600 mt-2 line-clamp-2">${highlightedContent.substring(0, 80)}...</p>
                     </div>
                 `;
             }).join('');
@@ -752,11 +1100,15 @@
                 toast.classList.add('bg-gradient-to-r', 'from-green-500', 'to-emerald-500');
             }
             
-            toast.classList.remove('translate-y-full');
+            // Show the toast by sliding in from the right
+            toast.classList.remove('translate-x-full', 'opacity-0');
+            toast.classList.add('translate-x-0', 'opacity-100');
             
+            // Hide the toast after 5 seconds
             setTimeout(() => {
-                toast.classList.add('translate-y-full');
-            }, 4000);
+                toast.classList.remove('translate-x-0', 'opacity-100');
+                toast.classList.add('translate-x-full', 'opacity-0');
+            }, 5000);
         }
 
         function typeWriter() {
@@ -790,6 +1142,38 @@
             type();
         }
 
+        function formatPostContent(content) {
+            // Simple markdown-like parser for displaying posts
+            let html = escapeHtml(content)
+                // Headers
+                .replace(/^### (.*$)/gm, '<h3 class="text-xl font-bold mb-3 mt-6">$1</h3>')
+                .replace(/^## (.*$)/gm, '<h2 class="text-2xl font-bold mb-4 mt-8">$1</h2>')
+                .replace(/^# (.*$)/gm, '<h1 class="text-3xl font-bold mb-6 mt-10">$1</h1>')
+                
+                // Bold and Italic
+                .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold">$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em class="italic">$1</em>')
+                .replace(/__(.*?)__/g, '<u class="underline">$1</u>')
+                
+                // Highlights
+                .replace(/==(.*?)==/g, '<span class="bg-yellow-200 px-1 rounded">$1</span>')
+                
+                // Quotes
+                .replace(/^> (.*$)/gm, '<blockquote class="border-l-4 border-purple-400 pl-4 py-2 my-4 bg-purple-50 italic">$1</blockquote>')
+                
+                // Lists
+                .replace(/^• (.*$)/gm, '<li class="ml-4">$1</li>')
+                .replace(/^(\d+)\. (.*$)/gm, '<li class="ml-4" style="list-style-type: decimal;">$1. $2</li>')
+                
+                // Line breaks
+                .replace(/\n/g, '<br>');
+            
+            // Wrap lists
+            html = html.replace(/((<li.*?>.*?<\/li>)+)/g, '<ul class="my-4">$1</ul>');
+            
+            return html;
+        }
+
         // Utility functions
         function escapeHtml(text) {
             const div = document.createElement('div');
@@ -802,7 +1186,7 @@
             if (short) {
                 return date.toLocaleDateString('en-US', {
                     month: 'short',
-                    year: 'numeric'
+                    day: 'numeric'
                 });
             }
             return date.toLocaleDateString('en-US', {
@@ -813,4 +1197,4 @@
                 minute: '2-digit'
             });
         }
-    (function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97993284964497ab',t:'MTc1Njk0MzkyOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();
+(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97a0ea0ab4477753',t:'MTc1NzAyNDg0Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();

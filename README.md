@@ -55,7 +55,7 @@ If this repository helps you in your learning journey, I'd be incredibly gratefu
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](mitlicense.com) file for details.
 
 ---
 
