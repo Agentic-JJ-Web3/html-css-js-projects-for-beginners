@@ -19,6 +19,23 @@
         }
         @keyframes blink { 0%, 50% { border-color: transparent; } 51%, 100% { border-color: #667eea; } }
         .smooth-scroll { scroll-behavior: smooth; }
+        .dark { color-scheme: dark; }
+        .dark .bg-gray-50 { background-color: #0f172a; }
+        .dark .bg-white { background-color: #1e293b; }
+        .dark .bg-gray-800 { background-color: #020617; }
+        .dark .text-gray-800 { color: #f1f5f9; }
+        .dark .text-gray-600 { color: #cbd5e1; }
+        .dark .text-gray-700 { color: #e2e8f0; }
+        .dark .text-gray-400 { color: #64748b; }
+        .dark .text-gray-300 { color: #cbd5e1; }
+        .dark .border-gray-300 { border-color: #475569; }
+        .dark .border-gray-700 { border-color: #334155; }
+        .dark .bg-gray-100 { background-color: #334155; }
+        .dark .bg-gray-200 { background-color: #475569; }
+        .dark .shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3); }
+        .dark .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2); }
+        .dark .bg-white\/90 { background-color: rgba(30, 41, 59, 0.9); }
+        .dark .border-t { border-color: #334155; }
     </style>
 </head>
 <body class="bg-gray-50 smooth-scroll">
@@ -34,9 +51,14 @@
                     <a href="#projects" class="text-gray-600 hover:text-blue-600 transition-colors">Projects</a>
                     <a href="#contact" class="text-gray-600 hover:text-blue-600 transition-colors">Contact</a>
                 </div>
-                <button id="mobile-menu-btn" class="md:hidden text-gray-600">
-                    <i class="fas fa-bars text-xl"></i>
-                </button>
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors">
+                        <i class="fas fa-sun text-yellow-500 text-lg" id="theme-icon"></i>
+                    </button>
+                    <button id="mobile-menu-btn" class="md:hidden text-gray-600">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
             </div>
         </div>
         <!-- Mobile Menu -->
@@ -541,6 +563,31 @@
         document.querySelectorAll('#skills .card-hover').forEach(card => {
             observer.observe(card);
         });
+
+        // Dark mode toggle functionality
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const body = document.body;
+
+        // Check for saved theme preference or default to light mode
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        
+        if (currentTheme === 'dark') {
+            body.classList.add('dark');
+            themeIcon.className = 'fas fa-moon text-blue-400 text-lg';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark');
+            
+            if (body.classList.contains('dark')) {
+                themeIcon.className = 'fas fa-moon text-blue-400 text-lg';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeIcon.className = 'fas fa-sun text-yellow-500 text-lg';
+                localStorage.setItem('theme', 'light');
+            }
+        });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97b0b999a241ef1b',t:'MTc1NzE5MDYzNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97b0c4a34665dacf',t:'MTc1NzE5MTA4Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
