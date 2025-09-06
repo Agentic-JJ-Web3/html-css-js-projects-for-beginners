@@ -238,6 +238,113 @@
             transform: scale(1.05);
         }
 
+        .copy-btn {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .copy-success {
+            background: #10b981 !important;
+            animation: copySuccess 0.3s ease;
+        }
+
+        @keyframes copySuccess {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .copy-code-btn {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+        }
+
+        .copy-code-btn:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            transform: translateY(-1px);
+        }
+
+        .copy-code-btn.success {
+            background: #10b981;
+        }
+
+        .delete-confirmation {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .delete-confirmation p {
+            margin-bottom: 15px;
+            color: #dc2626;
+            font-weight: 500;
+        }
+
+        .delete-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .confirm-delete-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .cancel-delete-btn {
+            background: #6b7280;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
         /* Modal Styles */
         .modal {
             display: none;
@@ -1238,8 +1345,11 @@ struct ContentView_Previews: PreviewProvider {
                         <button class="action-btn favorite-btn" onclick="toggleFavorite(${snippet.id})" title="Toggle Favorite">
                             ${snippet.favorite ? '⭐' : '☆'}
                         </button>
+                        <button class="action-btn copy-btn" onclick="copySnippetCode(${snippet.id})" title="Copy Code">
+                            📋
+                        </button>
                         <button class="action-btn edit-btn" onclick="editSnippet(${snippet.id})">Edit</button>
-                        <button class="action-btn delete-btn" onclick="deleteSnippet(${snippet.id})">Delete</button>
+                        <button class="action-btn delete-btn" onclick="confirmDeleteSnippet(${snippet.id})">Delete</button>
                     </div>
                 </div>
             `).join('');
@@ -1292,7 +1402,12 @@ struct ContentView_Previews: PreviewProvider {
                 <div style="margin-bottom: 15px;">
                     <strong>Tags:</strong> ${snippet.tags.map(tag => `<span class="snippet-tag">${tag}</span>`).join(' ')}
                 </div>
-                <div style="margin-bottom: 10px;"><strong>Code:</strong></div>
+                <div class="code-header">
+                    <strong>Code:</strong>
+                    <button class="copy-code-btn" onclick="copyCodeToClipboard(\`${snippet.code.replace(/`/g, '\\`')}\`, this)">
+                        📋 Copy Code
+                    </button>
+                </div>
                 <pre style="background: #f8f9fa; padding: 20px; border-radius: 8px; overflow-x: auto; font-family: 'Monaco', 'Menlo', monospace; font-size: 14px; line-height: 1.5;">${snippet.code}</pre>
             `;
             document.getElementById('viewModal').style.display = 'block';
@@ -1320,14 +1435,144 @@ struct ContentView_Previews: PreviewProvider {
             document.getElementById('snippetModal').style.display = 'block';
         }
 
+        // Copy snippet code from card
+        function copySnippetCode(id) {
+            const snippet = snippets.find(s => s.id === id);
+            if (!snippet) return;
+
+            copyCodeToClipboard(snippet.code);
+        }
+
+        // Copy code to clipboard
+        async function copyCodeToClipboard(code, buttonElement = null) {
+            try {
+                await navigator.clipboard.writeText(code);
+                
+                if (buttonElement) {
+                    const originalText = buttonElement.textContent;
+                    buttonElement.textContent = '✅ Copied!';
+                    buttonElement.classList.add('success');
+                    
+                    setTimeout(() => {
+                        buttonElement.textContent = originalText;
+                        buttonElement.classList.remove('success');
+                    }, 2000);
+                } else {
+                    // Show a temporary notification for card copy
+                    showCopyNotification();
+                }
+            } catch (err) {
+                console.error('Failed to copy code: ', err);
+                // Fallback for older browsers
+                fallbackCopyTextToClipboard(code, buttonElement);
+            }
+        }
+
+        // Fallback copy method for older browsers
+        function fallbackCopyTextToClipboard(text, buttonElement = null) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.position = "fixed";
+
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                const successful = document.execCommand('copy');
+                if (successful && buttonElement) {
+                    const originalText = buttonElement.textContent;
+                    buttonElement.textContent = '✅ Copied!';
+                    buttonElement.classList.add('success');
+                    
+                    setTimeout(() => {
+                        buttonElement.textContent = originalText;
+                        buttonElement.classList.remove('success');
+                    }, 2000);
+                } else if (successful) {
+                    showCopyNotification();
+                }
+            } catch (err) {
+                console.error('Fallback: Oops, unable to copy', err);
+            }
+
+            document.body.removeChild(textArea);
+        }
+
+        // Show copy notification
+        function showCopyNotification() {
+            const notification = document.createElement('div');
+            notification.textContent = '✅ Code copied to clipboard!';
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #10b981;
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 10000;
+                font-weight: 500;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 2000);
+        }
+
+        // Confirm delete snippet
+        function confirmDeleteSnippet(id) {
+            const snippet = snippets.find(s => s.id === id);
+            if (!snippet) return;
+
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style.display = 'block';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 400px;">
+                    <div class="modal-header">
+                        <h2 class="modal-title">Delete Snippet</h2>
+                        <button class="close-btn" onclick="closeDeleteModal()">&times;</button>
+                    </div>
+                    <div class="delete-confirmation">
+                        <p>Are you sure you want to delete "${snippet.title}"?</p>
+                        <p style="font-size: 14px; color: #6b7280;">This action cannot be undone.</p>
+                        <div class="delete-actions">
+                            <button class="cancel-delete-btn" onclick="closeDeleteModal()">Cancel</button>
+                            <button class="confirm-delete-btn" onclick="deleteSnippet(${id})">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            window.currentDeleteModal = modal;
+        }
+
+        // Close delete modal
+        function closeDeleteModal() {
+            if (window.currentDeleteModal) {
+                document.body.removeChild(window.currentDeleteModal);
+                window.currentDeleteModal = null;
+            }
+        }
+
         // Delete snippet
         function deleteSnippet(id) {
-            if (confirm('Are you sure you want to delete this snippet?')) {
-                snippets = snippets.filter(s => s.id !== id);
-                saveSnippets();
-                renderSnippets();
-                renderTagsFilter();
-            }
+            snippets = snippets.filter(s => s.id !== id);
+            saveSnippets();
+            renderSnippets();
+            renderTagsFilter();
+            closeDeleteModal();
         }
 
         // Toggle favorite
@@ -1403,5 +1648,5 @@ struct ContentView_Previews: PreviewProvider {
             reader.readAsText(file);
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97b11527e0fdc4f0',t:'MTc1NzE5NDM4NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97b11bc5123cc4f0',t:'MTc1NzE5NDY1NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
