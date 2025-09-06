@@ -13,9 +13,10 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             min-height: 100vh;
-            color: #333;
+            color: #1f2937;
+            transition: all 0.3s ease;
         }
 
         .container {
@@ -68,12 +69,12 @@
 
         .search-input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
         }
 
         .add-btn {
-            background: #667eea;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
             border: none;
             padding: 12px 24px;
@@ -82,11 +83,13 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
         }
 
         .add-btn:hover {
-            background: #5a6fd8;
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
             transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
         }
 
         .theme-toggle {
@@ -121,8 +124,10 @@
         }
 
         .tag-chip:hover, .tag-chip.active {
-            background: #667eea;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
         }
 
         .snippets-grid {
@@ -144,8 +149,8 @@
 
         .snippet-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-            border-color: #667eea;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.2);
+            border-color: #10b981;
         }
 
         .snippet-header {
@@ -163,12 +168,13 @@
         }
 
         .snippet-language {
-            background: #667eea;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
             padding: 4px 8px;
             border-radius: 6px;
             font-size: 12px;
             font-weight: 500;
+            box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
         }
 
         .snippet-tags {
@@ -301,7 +307,8 @@
 
         .form-input:focus, .form-select:focus, .form-textarea:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
         }
 
         .form-textarea {
@@ -327,8 +334,14 @@
         }
 
         .btn-primary {
-            background: #667eea;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
         }
 
         .btn-secondary {
@@ -353,28 +366,56 @@
 
         /* Dark Theme */
         body.dark {
-            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
-            color: #e2e8f0;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #f1f5f9;
         }
 
         body.dark .controls,
         body.dark .snippet-card,
         body.dark .modal-content {
-            background: #2d3748;
-            color: #e2e8f0;
+            background: #1e293b;
+            color: #f1f5f9;
+            border: 1px solid #334155;
         }
 
         body.dark .form-input,
         body.dark .form-select,
         body.dark .form-textarea {
-            background: #4a5568;
-            border-color: #718096;
-            color: #e2e8f0;
+            background: #334155;
+            border-color: #475569;
+            color: #f1f5f9;
+        }
+
+        body.dark .form-input:focus,
+        body.dark .form-select:focus,
+        body.dark .form-textarea:focus {
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
         }
 
         body.dark .snippet-preview {
-            background: #4a5568;
-            color: #e2e8f0;
+            background: #334155;
+            color: #f1f5f9;
+        }
+
+        body.dark .tag-chip {
+            background: #334155;
+            color: #cbd5e1;
+        }
+
+        body.dark .snippet-tag {
+            background: #334155;
+            color: #cbd5e1;
+        }
+
+        body.dark .theme-toggle {
+            background: #334155;
+            border-color: #475569;
+            color: #f1f5f9;
+        }
+
+        body.dark .theme-toggle:hover {
+            background: #475569;
         }
 
         /* Responsive Design */
@@ -438,17 +479,44 @@
                     <select class="form-select" id="languageSelect" required>
                         <option value="">Select Language</option>
                         <option value="JavaScript">JavaScript</option>
+                        <option value="TypeScript">TypeScript</option>
                         <option value="Python">Python</option>
-                        <option value="HTML">HTML</option>
-                        <option value="CSS">CSS</option>
                         <option value="Java">Java</option>
                         <option value="C++">C++</option>
-                        <option value="PHP">PHP</option>
-                        <option value="Ruby">Ruby</option>
+                        <option value="C#">C#</option>
+                        <option value="C">C</option>
                         <option value="Go">Go</option>
                         <option value="Rust">Rust</option>
-                        <option value="TypeScript">TypeScript</option>
+                        <option value="PHP">PHP</option>
+                        <option value="Ruby">Ruby</option>
+                        <option value="Swift">Swift</option>
+                        <option value="Kotlin">Kotlin</option>
+                        <option value="Dart">Dart</option>
+                        <option value="HTML">HTML</option>
+                        <option value="CSS">CSS</option>
+                        <option value="SCSS">SCSS</option>
                         <option value="SQL">SQL</option>
+                        <option value="MongoDB">MongoDB</option>
+                        <option value="GraphQL">GraphQL</option>
+                        <option value="Shell">Shell/Bash</option>
+                        <option value="PowerShell">PowerShell</option>
+                        <option value="Docker">Docker</option>
+                        <option value="YAML">YAML</option>
+                        <option value="JSON">JSON</option>
+                        <option value="XML">XML</option>
+                        <option value="Markdown">Markdown</option>
+                        <option value="R">R</option>
+                        <option value="MATLAB">MATLAB</option>
+                        <option value="Scala">Scala</option>
+                        <option value="Perl">Perl</option>
+                        <option value="Lua">Lua</option>
+                        <option value="Haskell">Haskell</option>
+                        <option value="Elixir">Elixir</option>
+                        <option value="Clojure">Clojure</option>
+                        <option value="F#">F#</option>
+                        <option value="VB.NET">VB.NET</option>
+                        <option value="Assembly">Assembly</option>
+                        <option value="Other">Other</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -568,6 +636,490 @@ matrix = [[i*j for j in range(3)] for i in range(3)]
 
 # Dictionary comprehension
 word_lengths = {word: len(word) for word in ['hello', 'world', 'python']}`,
+                        favorite: false,
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 4,
+                        title: "React Functional Component",
+                        language: "JavaScript",
+                        tags: ["react", "component", "hooks"],
+                        code: `import React, { useState, useEffect } from 'react';
+
+const MyComponent = ({ title, initialCount = 0 }) => {
+    const [count, setCount] = useState(initialCount);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        console.log('Component mounted or count changed:', count);
+    }, [count]);
+
+    const handleIncrement = () => {
+        setCount(prev => prev + 1);
+    };
+
+    return (
+        <div className="component">
+            <h2>{title}</h2>
+            <p>Count: {count}</p>
+            <button onClick={handleIncrement} disabled={loading}>
+                Increment
+            </button>
+        </div>
+    );
+};
+
+export default MyComponent;`,
+                        favorite: true,
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 5,
+                        title: "Java Generic Class",
+                        language: "Java",
+                        tags: ["java", "generics", "class"],
+                        code: `public class GenericContainer<T> {
+    private T item;
+    
+    public GenericContainer(T item) {
+        this.item = item;
+    }
+    
+    public T getItem() {
+        return item;
+    }
+    
+    public void setItem(T item) {
+        this.item = item;
+    }
+    
+    public boolean isEmpty() {
+        return item == null;
+    }
+    
+    @Override
+    public String toString() {
+        return "Container{" + "item=" + item + '}';
+    }
+}
+
+// Usage
+GenericContainer<String> stringContainer = new GenericContainer<>("Hello");
+GenericContainer<Integer> intContainer = new GenericContainer<>(42);`,
+                        favorite: false,
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 6,
+                        title: "Python Decorator Pattern",
+                        language: "Python",
+                        tags: ["python", "decorator", "pattern"],
+                        code: `import functools
+import time
+
+def timer(func):
+    """Decorator to measure function execution time"""
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        start_time = time.time()
+        result = func(*args, **kwargs)
+        end_time = time.time()
+        print(f"{func.__name__} took {end_time - start_time:.4f} seconds")
+        return result
+    return wrapper
+
+def retry(max_attempts=3, delay=1):
+    """Decorator to retry function on failure"""
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            for attempt in range(max_attempts):
+                try:
+                    return func(*args, **kwargs)
+                except Exception as e:
+                    if attempt == max_attempts - 1:
+                        raise e
+                    time.sleep(delay)
+            return None
+        return wrapper
+    return decorator
+
+# Usage
+@timer
+@retry(max_attempts=3, delay=0.5)
+def api_call():
+    # Simulate API call
+    import random
+    if random.random() < 0.7:
+        raise Exception("API Error")
+    return "Success"`,
+                        favorite: false,
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 7,
+                        title: "Go HTTP Server",
+                        language: "Go",
+                        tags: ["go", "http", "server", "api"],
+                        code: `package main
+
+import (
+    "encoding/json"
+    "fmt"
+    "log"
+    "net/http"
+    "time"
+)
+
+type Response struct {
+    Message   string    \`json:"message"\`
+    Timestamp time.Time \`json:"timestamp"\`
+    Status    string    \`json:"status"\`
+}
+
+func healthHandler(w http.ResponseWriter, r *http.Request) {
+    w.Header().Set("Content-Type", "application/json")
+    
+    response := Response{
+        Message:   "Server is healthy",
+        Timestamp: time.Now(),
+        Status:    "OK",
+    }
+    
+    json.NewEncoder(w).Encode(response)
+}
+
+func main() {
+    mux := http.NewServeMux()
+    mux.HandleFunc("/health", healthHandler)
+    
+    server := &http.Server{
+        Addr:         ":8080",
+        Handler:      mux,
+        ReadTimeout:  15 * time.Second,
+        WriteTimeout: 15 * time.Second,
+    }
+    
+    fmt.Println("Server starting on :8080")
+    log.Fatal(server.ListenAndServe())
+}`,
+                        favorite: false,
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 8,
+                        title: "SQL Query Optimization",
+                        language: "SQL",
+                        tags: ["sql", "optimization", "index", "performance"],
+                        code: `-- Create indexes for better performance
+CREATE INDEX idx_user_email ON users(email);
+CREATE INDEX idx_order_date ON orders(created_at);
+CREATE INDEX idx_product_category ON products(category_id, price);
+
+-- Optimized query with proper joins and conditions
+SELECT 
+    u.id,
+    u.name,
+    u.email,
+    COUNT(o.id) as order_count,
+    SUM(o.total_amount) as total_spent,
+    MAX(o.created_at) as last_order_date
+FROM users u
+LEFT JOIN orders o ON u.id = o.user_id 
+    AND o.created_at >= DATE_SUB(NOW(), INTERVAL 1 YEAR)
+WHERE u.status = 'active'
+    AND u.created_at >= '2023-01-01'
+GROUP BY u.id, u.name, u.email
+HAVING order_count > 0
+ORDER BY total_spent DESC
+LIMIT 100;
+
+-- Use EXPLAIN to analyze query performance
+EXPLAIN SELECT * FROM orders 
+WHERE created_at BETWEEN '2024-01-01' AND '2024-12-31'
+    AND status IN ('completed', 'shipped');`,
+                        favorite: true,
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 9,
+                        title: "Docker Multi-stage Build",
+                        language: "Docker",
+                        tags: ["docker", "build", "optimization", "nodejs"],
+                        code: `# Multi-stage build for Node.js application
+FROM node:18-alpine AS builder
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci --only=production && npm cache clean --force
+
+# Copy source code
+COPY . .
+
+# Build the application
+RUN npm run build
+
+# Production stage
+FROM node:18-alpine AS production
+
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nextjs -u 1001
+
+WORKDIR /app
+
+# Copy built application from builder stage
+COPY --from=builder --chown=nextjs:nodejs /app/dist ./dist
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
+
+# Switch to non-root user
+USER nextjs
+
+# Expose port
+EXPOSE 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \\
+    CMD curl -f http://localhost:3000/health || exit 1
+
+# Start the application
+CMD ["npm", "start"]`,
+                        favorite: false,
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 10,
+                        title: "TypeScript Interface & Type Guards",
+                        language: "TypeScript",
+                        tags: ["typescript", "interface", "types", "guards"],
+                        code: `// Define interfaces
+interface User {
+    id: number;
+    name: string;
+    email: string;
+    role: 'admin' | 'user' | 'moderator';
+    profile?: UserProfile;
+}
+
+interface UserProfile {
+    avatar: string;
+    bio: string;
+    socialLinks: Record<string, string>;
+}
+
+// Type guards
+function isUser(obj: any): obj is User {
+    return obj && 
+           typeof obj.id === 'number' &&
+           typeof obj.name === 'string' &&
+           typeof obj.email === 'string' &&
+           ['admin', 'user', 'moderator'].includes(obj.role);
+}
+
+function hasProfile(user: User): user is User & { profile: UserProfile } {
+    return user.profile !== undefined;
+}
+
+// Generic utility types
+type ApiResponse<T> = {
+    data: T;
+    status: 'success' | 'error';
+    message?: string;
+};
+
+type PartialUser = Partial<User>;
+type RequiredProfile = Required<UserProfile>;
+
+// Usage example
+function processUser(userData: unknown): ApiResponse<User> {
+    if (!isUser(userData)) {
+        return {
+            data: {} as User,
+            status: 'error',
+            message: 'Invalid user data'
+        };
+    }
+
+    if (hasProfile(userData)) {
+        console.log('User has profile:', userData.profile.bio);
+    }
+
+    return {
+        data: userData,
+        status: 'success'
+    };
+}`,
+                        favorite: true,
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 11,
+                        title: "Rust Error Handling",
+                        language: "Rust",
+                        tags: ["rust", "error", "result", "option"],
+                        code: `use std::fs::File;
+use std::io::{self, Read};
+use std::num::ParseIntError;
+
+// Custom error type
+#[derive(Debug)]
+enum AppError {
+    Io(io::Error),
+    Parse(ParseIntError),
+    Custom(String),
+}
+
+impl From<io::Error> for AppError {
+    fn from(error: io::Error) -> Self {
+        AppError::Io(error)
+    }
+}
+
+impl From<ParseIntError> for AppError {
+    fn from(error: ParseIntError) -> Self {
+        AppError::Parse(error)
+    }
+}
+
+// Function that returns Result
+fn read_number_from_file(filename: &str) -> Result<i32, AppError> {
+    let mut file = File::open(filename)?;
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)?;
+    
+    let number: i32 = contents.trim().parse()?;
+    
+    if number < 0 {
+        return Err(AppError::Custom("Number must be positive".to_string()));
+    }
+    
+    Ok(number)
+}
+
+// Using Option for nullable values
+fn find_user_by_id(id: u32) -> Option<String> {
+    let users = vec![
+        (1, "Alice".to_string()),
+        (2, "Bob".to_string()),
+        (3, "Charlie".to_string()),
+    ];
+    
+    users.into_iter()
+        .find(|(user_id, _)| *user_id == id)
+        .map(|(_, name)| name)
+}
+
+fn main() {
+    // Handle Result with match
+    match read_number_from_file("number.txt") {
+        Ok(num) => println!("Number: {}", num),
+        Err(e) => eprintln!("Error: {:?}", e),
+    }
+    
+    // Handle Option with if let
+    if let Some(user) = find_user_by_id(2) {
+        println!("Found user: {}", user);
+    } else {
+        println!("User not found");
+    }
+}`,
+                        favorite: false,
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 12,
+                        title: "Swift SwiftUI View",
+                        language: "Swift",
+                        tags: ["swift", "swiftui", "ios", "view"],
+                        code: `import SwiftUI
+
+struct ContentView: View {
+    @State private var counter = 0
+    @State private var isAnimating = false
+    @State private var showAlert = false
+    
+    var body: some View {
+        VStack(spacing: 30) {
+            Text("Counter App")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .foregroundColor(.primary)
+            
+            Text("\\(counter)")
+                .font(.system(size: 60, weight: .bold, design: .rounded))
+                .foregroundColor(.blue)
+                .scaleEffect(isAnimating ? 1.2 : 1.0)
+                .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isAnimating)
+            
+            HStack(spacing: 20) {
+                Button(action: decrementCounter) {
+                    Image(systemName: "minus.circle.fill")
+                        .font(.title)
+                        .foregroundColor(.red)
+                }
+                .disabled(counter <= 0)
+                
+                Button(action: resetCounter) {
+                    Text("Reset")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 10)
+                        .background(Color.gray)
+                        .cornerRadius(10)
+                }
+                
+                Button(action: incrementCounter) {
+                    Image(systemName: "plus.circle.fill")
+                        .font(.title)
+                        .foregroundColor(.green)
+                }
+            }
+        }
+        .padding()
+        .alert("Counter Reset", isPresented: $showAlert) {
+            Button("OK") { }
+        } message: {
+            Text("Counter has been reset to 0")
+        }
+    }
+    
+    private func incrementCounter() {
+        counter += 1
+        animateCounter()
+    }
+    
+    private func decrementCounter() {
+        if counter > 0 {
+            counter -= 1
+            animateCounter()
+        }
+    }
+    
+    private func resetCounter() {
+        counter = 0
+        showAlert = true
+        animateCounter()
+    }
+    
+    private func animateCounter() {
+        isAnimating = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            isAnimating = false
+        }
+    }
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
+}`,
                         favorite: false,
                         createdAt: new Date().toISOString()
                     }
@@ -851,5 +1403,5 @@ word_lengths = {word: len(word) for word in ['hello', 'world', 'python']}`,
             reader.readAsText(file);
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97b0facec069cd39',t:'MTc1NzE5MzMwNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97b11527e0fdc4f0',t:'MTc1NzE5NDM4NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
