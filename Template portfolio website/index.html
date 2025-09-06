@@ -944,3 +944,949 @@
     </script>
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97b0cdef91fdbee4',t:'MTc1NzE5MTQ2Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NJEI PIERRICK - Full Stack Developer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        :root {
+            /* Light Mode Colors */
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --secondary: #06b6d4;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            
+            /* Light Mode Backgrounds */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --bg-card: #ffffff;
+            --bg-nav: rgba(255, 255, 255, 0.95);
+            
+            /* Light Mode Text */
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-tertiary: #64748b;
+            --text-muted: #94a3b8;
+            
+            /* Light Mode Borders */
+            --border-primary: #e2e8f0;
+            --border-secondary: #cbd5e1;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .dark {
+            /* Dark Mode Colors */
+            --primary: #818cf8;
+            --primary-dark: #6366f1;
+            --primary-light: #a5b4fc;
+            --secondary: #22d3ee;
+            --accent: #fbbf24;
+            --success: #34d399;
+            --warning: #fbbf24;
+            --error: #f87171;
+            
+            /* Dark Mode Backgrounds */
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --bg-card: #1e293b;
+            --bg-nav: rgba(15, 23, 42, 0.95);
+            
+            /* Dark Mode Text */
+            --text-primary: #f8fafc;
+            --text-secondary: #e2e8f0;
+            --text-tertiary: #cbd5e1;
+            --text-muted: #94a3b8;
+            
+            /* Dark Mode Borders */
+            --border-primary: #334155;
+            --border-secondary: #475569;
+            
+            /* Dark Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+        }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        .gradient-bg { 
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+            position: relative;
+        }
+        
+        .gradient-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(6, 182, 212, 0.1) 50%, rgba(245, 158, 11, 0.1) 100%);
+            backdrop-filter: blur(1px);
+        }
+        
+        .card-hover { 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-primary);
+        }
+        
+        .card-hover:hover { 
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary-light);
+        }
+        
+        .skill-bar { 
+            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+        }
+        
+        .typing-animation { 
+            border-right: 3px solid var(--primary-light); 
+            animation: blink 1.2s infinite; 
+        }
+        
+        @keyframes blink { 
+            0%, 50% { border-color: transparent; } 
+            51%, 100% { border-color: var(--primary-light); } 
+        }
+        
+        .smooth-scroll { scroll-behavior: smooth; }
+        
+        /* Navigation Styles */
+        .nav-glass {
+            background: var(--bg-nav);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-primary);
+        }
+        
+        /* Button Styles */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+        }
+        
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 2px solid var(--border-primary);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* Form Styles */
+        .form-input {
+            background: var(--bg-card);
+            border: 2px solid var(--border-primary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            outline: none;
+        }
+        
+        /* Icon Containers */
+        .icon-container {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            transition: all 0.3s ease;
+        }
+        
+        .icon-container:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        /* Progress Bars */
+        .progress-bg {
+            background: var(--bg-tertiary);
+        }
+        
+        /* Theme Toggle */
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 2px solid var(--border-primary);
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+        
+        /* Glassmorphism Effects */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .dark .glass-card {
+            background: rgba(30, 41, 59, 0.3);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+        
+        /* Animated Gradients */
+        .animated-gradient {
+            background: linear-gradient(-45deg, var(--primary), var(--secondary), var(--accent), var(--primary-light));
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Floating Animation */
+        .float {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        /* Pulse Animation */
+        .pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes pulseGlow {
+            from { box-shadow: 0 0 20px rgba(99, 102, 241, 0.3); }
+            to { box-shadow: 0 0 30px rgba(99, 102, 241, 0.6); }
+        }
+        
+        /* Scroll Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--primary), var(--primary-light));
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(var(--primary-dark), var(--primary));
+        }
+    </style>
+</head>
+<body class="bg-gray-50 smooth-scroll">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full nav-glass z-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="text-xl font-bold" style="color: var(--text-primary);">NJEI PIERRICK</div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" class="nav-link" style="color: var(--text-secondary); transition: color 0.3s ease;">Home</a>
+                    <a href="#about" class="nav-link" style="color: var(--text-secondary); transition: color 0.3s ease;">About</a>
+                    <a href="#skills" class="nav-link" style="color: var(--text-secondary); transition: color 0.3s ease;">Skills</a>
+                    <a href="#projects" class="nav-link" style="color: var(--text-secondary); transition: color 0.3s ease;">Projects</a>
+                    <a href="#contact" class="nav-link" style="color: var(--text-secondary); transition: color 0.3s ease;">Contact</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="p-3 rounded-xl theme-toggle">
+                        <i class="fas fa-sun text-yellow-500 text-lg" id="theme-icon"></i>
+                    </button>
+                    <button id="mobile-menu-btn" class="md:hidden p-2" style="color: var(--text-secondary);">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden" style="background: var(--bg-card); border-top: 1px solid var(--border-primary);">
+            <div class="px-4 py-2 space-y-2">
+                <a href="#home" class="block py-3 px-2 rounded-lg transition-colors" style="color: var(--text-secondary);">Home</a>
+                <a href="#about" class="block py-3 px-2 rounded-lg transition-colors" style="color: var(--text-secondary);">About</a>
+                <a href="#skills" class="block py-3 px-2 rounded-lg transition-colors" style="color: var(--text-secondary);">Skills</a>
+                <a href="#projects" class="block py-3 px-2 rounded-lg transition-colors" style="color: var(--text-secondary);">Projects</a>
+                <a href="#contact" class="block py-3 px-2 rounded-lg transition-colors" style="color: var(--text-secondary);">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="animated-gradient min-h-screen flex items-center justify-center text-white relative overflow-hidden pt-20">
+        <div class="absolute inset-0 bg-black/20"></div>
+        <div class="text-center px-4 relative z-10">
+            <div class="w-36 h-36 mx-auto mb-8 rounded-full overflow-hidden border-4 border-white/40 pulse-glow float">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face" alt="NJEI PIERRICK" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="w-full h-full bg-white/20 flex items-center justify-center" style="display: none;">
+                    <i class="fas fa-user text-4xl text-white"></i>
+                </div>
+            </div>
+            <h1 class="text-5xl md:text-7xl font-black mb-6 tracking-tight">NJEI PIERRICK</h1>
+            <p class="text-2xl md:text-3xl mb-12 typing-animation font-light" id="typing-text">Full Stack Developer</p>
+            <div class="flex justify-center space-x-8 mb-12">
+                <a href="#" class="w-14 h-14 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/20 hover:scale-110 transition-all duration-300">
+                    <i class="fab fa-github text-xl"></i>
+                </a>
+                <a href="#" class="w-14 h-14 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/20 hover:scale-110 transition-all duration-300">
+                    <i class="fab fa-linkedin text-xl"></i>
+                </a>
+                <a href="#" class="w-14 h-14 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/20 hover:scale-110 transition-all duration-300">
+                    <i class="fab fa-twitter text-xl"></i>
+                </a>
+                <a href="#" class="w-14 h-14 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/20 hover:scale-110 transition-all duration-300">
+                    <i class="fas fa-envelope text-xl"></i>
+                </a>
+            </div>
+            <a href="#about" class="inline-block bg-white/90 backdrop-blur-md text-gray-900 px-10 py-4 rounded-full font-semibold text-lg hover:bg-white hover:scale-105 transition-all duration-300 shadow-2xl">
+                Discover My Journey
+            </a>
+        </div>
+        <!-- Floating Elements -->
+        <div class="absolute top-20 left-10 w-20 h-20 bg-white/5 rounded-full blur-xl animate-pulse"></div>
+        <div class="absolute bottom-20 right-10 w-32 h-32 bg-white/5 rounded-full blur-xl animate-pulse" style="animation-delay: 2s;"></div>
+        <div class="absolute top-1/2 left-20 w-16 h-16 bg-white/5 rounded-full blur-xl animate-pulse" style="animation-delay: 4s;"></div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24" style="background: var(--bg-primary);">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-20 reveal">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6" style="color: var(--text-primary);">About Me</h2>
+                <div class="w-24 h-1.5 mx-auto rounded-full" style="background: linear-gradient(90deg, var(--primary), var(--secondary));"></div>
+                <p class="text-xl mt-6 max-w-2xl mx-auto" style="color: var(--text-tertiary);">Crafting digital experiences with passion and precision</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div class="reveal">
+                    <div class="relative">
+                        <div class="w-80 h-80 mx-auto rounded-3xl overflow-hidden card-hover" style="box-shadow: var(--shadow-xl);">
+                            <img src="https://images.unsplash.com/photo-1556157382-97eda2d62296?w=400&h=400&fit=crop&crop=face" alt="NJEI PIERRICK working" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="w-full h-full flex items-center justify-center" style="background: var(--bg-tertiary); display: none;">
+                                <i class="fas fa-user text-6xl" style="color: var(--text-muted);"></i>
+                            </div>
+                        </div>
+                        <div class="absolute -bottom-6 -right-6 w-24 h-24 rounded-2xl glass-card flex items-center justify-center">
+                            <i class="fas fa-code text-2xl" style="color: var(--primary);"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="reveal">
+                    <h3 class="text-3xl font-bold mb-8" style="color: var(--text-primary);">Hello! I'm NJEI PIERRICK</h3>
+                    <p class="text-lg mb-6 leading-relaxed" style="color: var(--text-secondary);">
+                        I'm a passionate full-stack developer with 5+ years of experience creating digital solutions that make a difference. I love turning complex problems into simple, beautiful designs and bringing ideas to life through code.
+                    </p>
+                    <p class="text-lg mb-10 leading-relaxed" style="color: var(--text-secondary);">
+                        When I'm not coding, you can find me exploring new technologies, contributing to open-source projects, or enjoying a good cup of coffee while planning my next project.
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div class="flex items-center p-4 rounded-xl" style="background: var(--bg-secondary); border: 1px solid var(--border-primary);">
+                            <div class="w-12 h-12 rounded-lg icon-container flex items-center justify-center mr-4">
+                                <i class="fas fa-map-marker-alt text-white"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold" style="color: var(--text-primary);">Location</p>
+                                <p style="color: var(--text-tertiary);">Bamenda, Cameroon</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center p-4 rounded-xl" style="background: var(--bg-secondary); border: 1px solid var(--border-primary);">
+                            <div class="w-12 h-12 rounded-lg icon-container flex items-center justify-center mr-4">
+                                <i class="fas fa-briefcase text-white"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold" style="color: var(--text-primary);">Experience</p>
+                                <p style="color: var(--text-tertiary);">5+ Years</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center p-4 rounded-xl" style="background: var(--bg-secondary); border: 1px solid var(--border-primary);">
+                            <div class="w-12 h-12 rounded-lg icon-container flex items-center justify-center mr-4">
+                                <i class="fas fa-envelope text-white"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold" style="color: var(--text-primary);">Email</p>
+                                <p style="color: var(--text-tertiary);">njei.pierrick@example.com</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center p-4 rounded-xl" style="background: var(--bg-secondary); border: 1px solid var(--border-primary);">
+                            <div class="w-12 h-12 rounded-lg icon-container flex items-center justify-center mr-4">
+                                <i class="fas fa-phone text-white"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold" style="color: var(--text-primary);">Phone</p>
+                                <p style="color: var(--text-tertiary);">+237 6 78 90 12 34</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-24" style="background: var(--bg-secondary);">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-20 reveal">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6" style="color: var(--text-primary);">Skills & Technologies</h2>
+                <div class="w-24 h-1.5 mx-auto rounded-full" style="background: linear-gradient(90deg, var(--primary), var(--secondary));"></div>
+                <p class="text-xl mt-6 max-w-2xl mx-auto" style="color: var(--text-tertiary);">Expertise across the full development stack</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Frontend Skills -->
+                <div class="card-hover p-8 rounded-2xl reveal" style="background: var(--bg-card);">
+                    <div class="w-16 h-16 rounded-2xl icon-container flex items-center justify-center mb-6">
+                        <i class="fas fa-laptop-code text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-6" style="color: var(--text-primary);">Frontend</h3>
+                    <div class="space-y-5">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-semibold" style="color: var(--text-primary);">React</span>
+                                <span class="font-medium" style="color: var(--text-tertiary);">90%</span>
+                            </div>
+                            <div class="h-3 rounded-full progress-bg">
+                                <div class="skill-bar h-3 rounded-full" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-semibold" style="color: var(--text-primary);">JavaScript</span>
+                                <span class="font-medium" style="color: var(--text-tertiary);">95%</span>
+                            </div>
+                            <div class="h-3 rounded-full progress-bg">
+                                <div class="skill-bar h-3 rounded-full" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-semibold" style="color: var(--text-primary);">CSS/Tailwind</span>
+                                <span class="font-medium" style="color: var(--text-tertiary);">85%</span>
+                            </div>
+                            <div class="h-3 rounded-full progress-bg">
+                                <div class="skill-bar h-3 rounded-full" style="width: 85%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Backend Skills -->
+                <div class="card-hover p-8 rounded-2xl reveal" style="background: var(--bg-card);">
+                    <div class="w-16 h-16 rounded-2xl flex items-center justify-center mb-6" style="background: linear-gradient(135deg, var(--success), #059669);">
+                        <i class="fas fa-server text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-6" style="color: var(--text-primary);">Backend</h3>
+                    <div class="space-y-5">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-semibold" style="color: var(--text-primary);">Node.js</span>
+                                <span class="font-medium" style="color: var(--text-tertiary);">88%</span>
+                            </div>
+                            <div class="h-3 rounded-full progress-bg">
+                                <div class="h-3 rounded-full" style="width: 88%; background: linear-gradient(90deg, var(--success), #059669);"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-semibold" style="color: var(--text-primary);">Python</span>
+                                <span class="font-medium" style="color: var(--text-tertiary);">82%</span>
+                            </div>
+                            <div class="h-3 rounded-full progress-bg">
+                                <div class="h-3 rounded-full" style="width: 82%; background: linear-gradient(90deg, var(--success), #059669);"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-semibold" style="color: var(--text-primary);">MongoDB</span>
+                                <span class="font-medium" style="color: var(--text-tertiary);">80%</span>
+                            </div>
+                            <div class="h-3 rounded-full progress-bg">
+                                <div class="h-3 rounded-full" style="width: 80%; background: linear-gradient(90deg, var(--success), #059669);"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tools & Others -->
+                <div class="card-hover p-8 rounded-2xl reveal" style="background: var(--bg-card);">
+                    <div class="w-16 h-16 rounded-2xl flex items-center justify-center mb-6" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                        <i class="fas fa-tools text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-6" style="color: var(--text-primary);">Tools & Others</h3>
+                    <div class="space-y-5">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-semibold" style="color: var(--text-primary);">Git</span>
+                                <span class="font-medium" style="color: var(--text-tertiary);">92%</span>
+                            </div>
+                            <div class="h-3 rounded-full progress-bg">
+                                <div class="h-3 rounded-full" style="width: 92%; background: linear-gradient(90deg, #8b5cf6, #7c3aed);"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-semibold" style="color: var(--text-primary);">Docker</span>
+                                <span class="font-medium" style="color: var(--text-tertiary);">75%</span>
+                            </div>
+                            <div class="h-3 rounded-full progress-bg">
+                                <div class="h-3 rounded-full" style="width: 75%; background: linear-gradient(90deg, #8b5cf6, #7c3aed);"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-semibold" style="color: var(--text-primary);">AWS</span>
+                                <span class="font-medium" style="color: var(--text-tertiary);">70%</span>
+                            </div>
+                            <div class="h-3 rounded-full progress-bg">
+                                <div class="h-3 rounded-full" style="width: 70%; background: linear-gradient(90deg, #8b5cf6, #7c3aed);"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-24" style="background: var(--bg-primary);">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-20 reveal">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6" style="color: var(--text-primary);">Featured Projects</h2>
+                <div class="w-24 h-1.5 mx-auto rounded-full" style="background: linear-gradient(90deg, var(--primary), var(--secondary));"></div>
+                <p class="text-xl mt-6 max-w-2xl mx-auto" style="color: var(--text-tertiary);">Showcasing innovative solutions and creative implementations</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Project 1 -->
+                <div class="card-hover rounded-2xl overflow-hidden reveal" style="background: var(--bg-card);">
+                    <div class="h-56 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=300&fit=crop" alt="E-commerce platform interface" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center" style="display: none;">
+                            <i class="fas fa-shopping-cart text-5xl text-white"></i>
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold mb-3" style="color: var(--text-primary);">E-Commerce Platform</h3>
+                        <p class="mb-6 leading-relaxed" style="color: var(--text-secondary);">A full-stack e-commerce solution with React, Node.js, and Stripe integration for seamless shopping experiences.</p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="px-3 py-1.5 rounded-full text-sm font-medium" style="background: rgba(99, 102, 241, 0.1); color: var(--primary);">React</span>
+                            <span class="px-3 py-1.5 rounded-full text-sm font-medium" style="background: rgba(16, 185, 129, 0.1); color: var(--success);">Node.js</span>
+                            <span class="px-3 py-1.5 rounded-full text-sm font-medium" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;">MongoDB</span>
+                        </div>
+                        <div class="flex space-x-6">
+                            <a href="#" class="flex items-center font-semibold transition-colors" style="color: var(--primary);">
+                                <i class="fas fa-external-link-alt mr-2"></i> Live Demo
+                            </a>
+                            <a href="#" class="flex items-center font-semibold transition-colors" style="color: var(--text-tertiary);">
+                                <i class="fab fa-github mr-2"></i> Code
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="card-hover rounded-2xl overflow-hidden reveal" style="background: var(--bg-card);">
+                    <div class="h-56 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=300&fit=crop" alt="Analytics dashboard with charts" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="w-full h-full bg-gradient-to-br from-green-500 to-blue-600 flex items-center justify-center" style="display: none;">
+                            <i class="fas fa-chart-line text-5xl text-white"></i>
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold mb-3" style="color: var(--text-primary);">Analytics Dashboard</h3>
+                        <p class="mb-6 leading-relaxed" style="color: var(--text-secondary);">Real-time data visualization dashboard with interactive charts and advanced filtering capabilities.</p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="px-3 py-1.5 rounded-full text-sm font-medium" style="background: rgba(52, 211, 153, 0.1); color: var(--success);">Vue.js</span>
+                            <span class="px-3 py-1.5 rounded-full text-sm font-medium" style="background: rgba(251, 191, 36, 0.1); color: var(--accent);">D3.js</span>
+                            <span class="px-3 py-1.5 rounded-full text-sm font-medium" style="background: rgba(239, 68, 68, 0.1); color: var(--error);">Firebase</span>
+                        </div>
+                        <div class="flex space-x-6">
+                            <a href="#" class="flex items-center font-semibold transition-colors" style="color: var(--primary);">
+                                <i class="fas fa-external-link-alt mr-2"></i> Live Demo
+                            </a>
+                            <a href="#" class="flex items-center font-semibold transition-colors" style="color: var(--text-tertiary);">
+                                <i class="fab fa-github mr-2"></i> Code
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="card-hover rounded-2xl overflow-hidden reveal" style="background: var(--bg-card);">
+                    <div class="h-56 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600&h=300&fit=crop" alt="Mobile app development workspace" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="w-full h-full bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center" style="display: none;">
+                            <i class="fas fa-mobile-alt text-5xl text-white"></i>
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold mb-3" style="color: var(--text-primary);">Task Management App</h3>
+                        <p class="mb-6 leading-relaxed" style="color: var(--text-secondary);">Cross-platform mobile app for team collaboration and project management with real-time sync.</p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="px-3 py-1.5 rounded-full text-sm font-medium" style="background: rgba(99, 102, 241, 0.1); color: var(--primary);">React Native</span>
+                            <span class="px-3 py-1.5 rounded-full text-sm font-medium" style="background: rgba(16, 185, 129, 0.1); color: var(--success);">Express</span>
+                            <span class="px-3 py-1.5 rounded-full text-sm font-medium" style="background: rgba(251, 191, 36, 0.1); color: var(--accent);">PostgreSQL</span>
+                        </div>
+                        <div class="flex space-x-6">
+                            <a href="#" class="flex items-center font-semibold transition-colors" style="color: var(--primary);">
+                                <i class="fas fa-external-link-alt mr-2"></i> Live Demo
+                            </a>
+                            <a href="#" class="flex items-center font-semibold transition-colors" style="color: var(--text-tertiary);">
+                                <i class="fab fa-github mr-2"></i> Code
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24" style="background: var(--bg-secondary);">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-20 reveal">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6" style="color: var(--text-primary);">Get In Touch</h2>
+                <div class="w-24 h-1.5 mx-auto rounded-full" style="background: linear-gradient(90deg, var(--primary), var(--secondary));"></div>
+                <p class="text-xl mt-6 max-w-2xl mx-auto" style="color: var(--text-tertiary);">Have a project in mind? Let's work together to bring your ideas to life!</p>
+            </div>
+            <div class="grid lg:grid-cols-2 gap-16">
+                <!-- Contact Info -->
+                <div class="reveal">
+                    <h3 class="text-3xl font-bold mb-8" style="color: var(--text-primary);">Let's Connect</h3>
+                    <div class="space-y-6 mb-12">
+                        <div class="flex items-center p-6 rounded-2xl card-hover" style="background: var(--bg-card);">
+                            <div class="w-16 h-16 rounded-2xl icon-container flex items-center justify-center mr-6">
+                                <i class="fas fa-envelope text-xl text-white"></i>
+                            </div>
+                            <div>
+                                <p class="text-lg font-semibold mb-1" style="color: var(--text-primary);">Email</p>
+                                <p class="text-lg" style="color: var(--text-secondary);">njei.pierrick@example.com</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center p-6 rounded-2xl card-hover" style="background: var(--bg-card);">
+                            <div class="w-16 h-16 rounded-2xl icon-container flex items-center justify-center mr-6">
+                                <i class="fas fa-phone text-xl text-white"></i>
+                            </div>
+                            <div>
+                                <p class="text-lg font-semibold mb-1" style="color: var(--text-primary);">Phone</p>
+                                <p class="text-lg" style="color: var(--text-secondary);">+237 6 78 90 12 34</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center p-6 rounded-2xl card-hover" style="background: var(--bg-card);">
+                            <div class="w-16 h-16 rounded-2xl icon-container flex items-center justify-center mr-6">
+                                <i class="fas fa-map-marker-alt text-xl text-white"></i>
+                            </div>
+                            <div>
+                                <p class="text-lg font-semibold mb-1" style="color: var(--text-primary);">Location</p>
+                                <p class="text-lg" style="color: var(--text-secondary);">Bamenda, Cameroon</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-lg font-semibold mb-6" style="color: var(--text-primary);">Follow me on social media:</p>
+                        <div class="flex space-x-4">
+                            <a href="#" class="w-14 h-14 rounded-2xl flex items-center justify-center text-white transition-all duration-300 hover:scale-110" style="background: linear-gradient(135deg, #0077b5, #005885);">
+                                <i class="fab fa-linkedin text-xl"></i>
+                            </a>
+                            <a href="#" class="w-14 h-14 rounded-2xl flex items-center justify-center text-white transition-all duration-300 hover:scale-110" style="background: linear-gradient(135deg, #333, #000);">
+                                <i class="fab fa-github text-xl"></i>
+                            </a>
+                            <a href="#" class="w-14 h-14 rounded-2xl flex items-center justify-center text-white transition-all duration-300 hover:scale-110" style="background: linear-gradient(135deg, #1da1f2, #0d8bd9);">
+                                <i class="fab fa-twitter text-xl"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="reveal">
+                    <div class="p-10 rounded-3xl card-hover" style="background: var(--bg-card);">
+                        <form id="contact-form">
+                            <div class="mb-8">
+                                <label class="block text-lg font-semibold mb-3" style="color: var(--text-primary);">Name</label>
+                                <input type="text" class="w-full px-6 py-4 rounded-xl form-input text-lg" placeholder="Your Name" required>
+                            </div>
+                            <div class="mb-8">
+                                <label class="block text-lg font-semibold mb-3" style="color: var(--text-primary);">Email</label>
+                                <input type="email" class="w-full px-6 py-4 rounded-xl form-input text-lg" placeholder="your@email.com" required>
+                            </div>
+                            <div class="mb-8">
+                                <label class="block text-lg font-semibold mb-3" style="color: var(--text-primary);">Subject</label>
+                                <input type="text" class="w-full px-6 py-4 rounded-xl form-input text-lg" placeholder="Project Inquiry" required>
+                            </div>
+                            <div class="mb-8">
+                                <label class="block text-lg font-semibold mb-3" style="color: var(--text-primary);">Message</label>
+                                <textarea rows="5" class="w-full px-6 py-4 rounded-xl form-input text-lg resize-none" placeholder="Tell me about your project..." required></textarea>
+                            </div>
+                            <button type="submit" class="w-full btn-primary py-4 px-8 rounded-xl text-lg font-semibold">
+                                Send Message
+                                <i class="fas fa-paper-plane ml-2"></i>
+                            </button>
+                        </form>
+                        <div id="form-message" class="mt-6 text-center hidden"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-16" style="background: var(--bg-primary); border-top: 1px solid var(--border-primary);">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold mb-6" style="color: var(--text-primary);">Open Source & Customizable</h3>
+                <p class="text-xl mb-8 max-w-3xl mx-auto leading-relaxed" style="color: var(--text-secondary);">
+                    This portfolio template is completely customizable! Edit the name, skills, projects, and contact information to make it your own. 
+                    Perfect for developers looking to showcase their work.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6 mb-8">
+                    <a href="https://github.com/Agentic-JJ-Web3/html-css-js-projects-for-beginners" 
+                       target="_blank" 
+                       class="inline-flex items-center btn-primary px-8 py-4 rounded-2xl text-lg font-semibold">
+                        <i class="fab fa-github mr-3 text-xl"></i>
+                        View on GitHub
+                    </a>
+                    <div class="flex items-center space-x-3">
+                        <div class="w-2 h-2 rounded-full" style="background: var(--primary);"></div>
+                        <span class="text-lg font-medium" style="color: var(--text-tertiary);">Free to use & modify</span>
+                    </div>
+                </div>
+                <div class="grid sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
+                    <div class="flex items-center justify-center p-4 rounded-2xl" style="background: var(--bg-secondary);">
+                        <span class="text-2xl mr-3">🚀</span>
+                        <span style="color: var(--text-secondary);">More beginner-friendly projects available</span>
+                    </div>
+                    <div class="flex items-center justify-center p-4 rounded-2xl" style="background: var(--bg-secondary);">
+                        <span class="text-2xl mr-3">⭐</span>
+                        <span style="color: var(--text-secondary);">Star the repo if this helped you!</span>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-8 text-center" style="border-top: 1px solid var(--border-primary);">
+                <p class="text-lg mb-3" style="color: var(--text-primary);">&copy; 2024 NJEI PIERRICK. All rights reserved.</p>
+                <p class="flex items-center justify-center space-x-2" style="color: var(--text-tertiary);">
+                    <span>Built with</span>
+                    <span class="text-red-500 text-xl">❤️</span>
+                    <span>and lots of coffee</span>
+                    <span class="mx-2">|</span>
+                    <span>Template by Agentic-JJ-Web3</span>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // Close mobile menu if open
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+
+        // Typing animation
+        const typingText = document.getElementById('typing-text');
+        const texts = ['Full Stack Developer', 'Problem Solver', 'Creative Thinker', 'Code Enthusiast'];
+        let textIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function typeWriter() {
+            const currentText = texts[textIndex];
+            
+            if (isDeleting) {
+                typingText.textContent = currentText.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typingText.textContent = currentText.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            if (!isDeleting && charIndex === currentText.length) {
+                setTimeout(() => isDeleting = true, 2000);
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                textIndex = (textIndex + 1) % texts.length;
+            }
+
+            setTimeout(typeWriter, isDeleting ? 50 : 100);
+        }
+
+        typeWriter();
+
+        // Contact form handling
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const messageDiv = document.getElementById('form-message');
+            messageDiv.className = 'mt-4 text-center p-4 bg-green-100 text-green-700 rounded-lg';
+            messageDiv.textContent = 'Thank you for your message! I\'ll get back to you soon.';
+            messageDiv.classList.remove('hidden');
+            this.reset();
+            
+            setTimeout(() => {
+                messageDiv.classList.add('hidden');
+            }, 5000);
+        });
+
+        // Animate skill bars on scroll
+        const observerOptions = {
+            threshold: 0.5,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const skillBars = entry.target.querySelectorAll('.skill-bar');
+                    skillBars.forEach(bar => {
+                        const width = bar.style.width;
+                        bar.style.width = '0%';
+                        setTimeout(() => {
+                            bar.style.width = width;
+                        }, 200);
+                    });
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('#skills .card-hover').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Dark mode toggle functionality
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const body = document.body;
+
+        // Check for saved theme preference or default to light mode
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        
+        if (currentTheme === 'dark') {
+            body.classList.add('dark');
+            themeIcon.className = 'fas fa-moon text-blue-400 text-lg';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark');
+            
+            if (body.classList.contains('dark')) {
+                themeIcon.className = 'fas fa-moon text-blue-400 text-lg';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeIcon.className = 'fas fa-sun text-yellow-500 text-lg';
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Navigation hover effects
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('mouseenter', function() {
+                this.style.color = 'var(--primary)';
+                this.style.transform = 'translateY(-2px)';
+            });
+            
+            link.addEventListener('mouseleave', function() {
+                this.style.color = 'var(--text-secondary)';
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Mobile menu hover effects
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('mouseenter', function() {
+                this.style.background = 'var(--bg-secondary)';
+                this.style.color = 'var(--primary)';
+            });
+            
+            link.addEventListener('mouseleave', function() {
+                this.style.background = 'transparent';
+                this.style.color = 'var(--text-secondary)';
+            });
+        });
+
+        // Scroll reveal animation
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            revealObserver.observe(el);
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97b0d1805693bee4',t:'MTc1NzE5MTYxMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
