@@ -112,6 +112,51 @@
             margin-top: 15px;
         }
 
+        .filter-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-mode-toggle {
+            background: #f1f3f4;
+            border: 2px solid #e1e5e9;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .filter-mode-toggle.active {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border-color: #10b981;
+        }
+
+        .customize-btn {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .customize-btn:hover {
+            background: #4f46e5;
+            transform: translateY(-1px);
+        }
+
+        .hidden-tag {
+            opacity: 0.3;
+            text-decoration: line-through;
+        }
+
         .tag-chip {
             background: #f1f3f4;
             color: #5f6368;
@@ -563,6 +608,10 @@
                 <button class="add-btn" onclick="openAddModal()">+ Add Snippet</button>
                 <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
             </div>
+            <div class="filter-controls">
+                <span style="font-weight: 500; color: #6b7280;">Filter by tags:</span>
+                <button class="customize-btn" onclick="openFilterModal()">🎯 Customize Filters</button>
+            </div>
             <div class="tags-filter" id="tagsFilter"></div>
         </div>
 
@@ -653,15 +702,45 @@
         </div>
     </div>
 
+    <!-- Filter Customization Modal -->
+    <div class="modal" id="filterModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">🎯 Customize Your Filters</h2>
+                <button class="close-btn" onclick="closeFilterModal()">&times;</button>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <p style="color: #6b7280; margin-bottom: 15px;">
+                    Hide tags you don't use to keep your filter bar clean and focused on your tech stack.
+                </p>
+                <div class="filter-controls">
+                    <button class="filter-mode-toggle active" onclick="toggleFilterMode('show')">Show Selected</button>
+                    <button class="filter-mode-toggle" onclick="toggleFilterMode('hide')">Hide Selected</button>
+                    <span style="font-size: 14px; color: #6b7280;">|</span>
+                    <button class="btn btn-secondary" onclick="selectAllTags()">Select All</button>
+                    <button class="btn btn-secondary" onclick="clearAllTags()">Clear All</button>
+                </div>
+            </div>
+            <div id="tagCustomizationList"></div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="resetFilterSettings()">Reset to Default</button>
+                <button type="button" class="btn btn-primary" onclick="saveFilterSettings()">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Application State
         let snippets = [];
         let currentEditId = null;
         let activeTagFilter = null;
+        let hiddenTags = [];
+        let filterMode = 'show'; // 'show' or 'hide'
 
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
             loadSnippets();
+            loadFilterSettings();
             setupEventListeners();
             createSampleData();
             renderSnippets();
@@ -679,6 +758,25 @@
         // Save snippets to localStorage
         function saveSnippets() {
             localStorage.setItem('codeSnippets', JSON.stringify(snippets));
+        }
+
+        // Load filter settings from localStorage
+        function loadFilterSettings() {
+            const stored = localStorage.getItem('filterSettings');
+            if (stored) {
+                const settings = JSON.parse(stored);
+                hiddenTags = settings.hiddenTags || [];
+                filterMode = settings.filterMode || 'show';
+            }
+        }
+
+        // Save filter settings to localStorage
+        function saveFilterSettingsToStorage() {
+            const settings = {
+                hiddenTags,
+                filterMode
+            };
+            localStorage.setItem('filterSettings', JSON.stringify(settings));
         }
 
         // Create sample data if no snippets exist
@@ -1247,8 +1345,10 @@ struct ContentView_Previews: PreviewProvider {
             window.addEventListener('click', function(e) {
                 const snippetModal = document.getElementById('snippetModal');
                 const viewModal = document.getElementById('viewModal');
+                const filterModal = document.getElementById('filterModal');
                 if (e.target === snippetModal) closeModal();
                 if (e.target === viewModal) closeViewModal();
+                if (e.target === filterModal) closeFilterModal();
             });
         }
 
@@ -1361,17 +1461,24 @@ struct ContentView_Previews: PreviewProvider {
             const allTags = [...new Set(snippets.flatMap(snippet => snippet.tags))];
             
             if (allTags.length === 0) {
-                tagsFilter.innerHTML = '';
+                tagsFilter.innerHTML = '<p style="color: #9ca3af; font-style: italic;">No tags available</p>';
+                return;
+            }
+
+            // Filter tags based on user preferences
+            const visibleTags = allTags.filter(tag => !hiddenTags.includes(tag));
+            
+            if (visibleTags.length === 0) {
+                tagsFilter.innerHTML = '<p style="color: #9ca3af; font-style: italic;">All tags are hidden. <button class="customize-btn" onclick="openFilterModal()">Customize filters</button></p>';
                 return;
             }
 
             tagsFilter.innerHTML = `
-                <span style="font-weight: 500; color: #6b7280;">Filter by tags:</span>
-                ${allTags.map(tag => `
+                ${visibleTags.map(tag => `
                     <span class="tag-chip ${activeTagFilter === tag ? 'active' : ''}" 
                           onclick="filterByTag('${tag}')">${tag}</span>
                 `).join('')}
-                ${activeTagFilter ? '<span class="tag-chip" onclick="clearTagFilter()">Clear Filter</span>' : ''}
+                ${activeTagFilter ? '<span class="tag-chip" onclick="clearTagFilter()">✕ Clear Filter</span>' : ''}
             `;
         }
 
@@ -1596,6 +1703,127 @@ struct ContentView_Previews: PreviewProvider {
             document.getElementById('viewModal').style.display = 'none';
         }
 
+        // Open filter customization modal
+        function openFilterModal() {
+            renderTagCustomizationList();
+            document.getElementById('filterModal').style.display = 'block';
+        }
+
+        // Close filter modal
+        function closeFilterModal() {
+            document.getElementById('filterModal').style.display = 'none';
+        }
+
+        // Render tag customization list
+        function renderTagCustomizationList() {
+            const container = document.getElementById('tagCustomizationList');
+            const allTags = [...new Set(snippets.flatMap(snippet => snippet.tags))].sort();
+            
+            if (allTags.length === 0) {
+                container.innerHTML = '<p style="color: #9ca3af; text-align: center; padding: 20px;">No tags available to customize</p>';
+                return;
+            }
+
+            container.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; max-height: 300px; overflow-y: auto; padding: 10px; border: 1px solid #e1e5e9; border-radius: 8px;">
+                    ${allTags.map(tag => {
+                        const isHidden = hiddenTags.includes(tag);
+                        const snippetCount = snippets.filter(s => s.tags.includes(tag)).length;
+                        return `
+                            <label style="display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: 6px; cursor: pointer; transition: background-color 0.2s;" 
+                                   onmouseover="this.style.backgroundColor='#f8f9fa'" 
+                                   onmouseout="this.style.backgroundColor='transparent'">
+                                <input type="checkbox" 
+                                       ${isHidden ? '' : 'checked'} 
+                                       onchange="toggleTagVisibility('${tag}')"
+                                       style="margin: 0;">
+                                <span style="flex: 1; font-size: 14px;">${tag}</span>
+                                <span style="font-size: 12px; color: #6b7280; background: #f1f3f4; padding: 2px 6px; border-radius: 10px;">${snippetCount}</span>
+                            </label>
+                        `;
+                    }).join('')}
+                </div>
+                <div style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 6px; font-size: 14px; color: #6b7280;">
+                    💡 <strong>Tip:</strong> Uncheck tags you don't use to keep your filter bar clean and focused on your preferred tech stack.
+                </div>
+            `;
+        }
+
+        // Toggle tag visibility
+        function toggleTagVisibility(tag) {
+            const index = hiddenTags.indexOf(tag);
+            if (index > -1) {
+                hiddenTags.splice(index, 1);
+            } else {
+                hiddenTags.push(tag);
+            }
+        }
+
+        // Toggle filter mode
+        function toggleFilterMode(mode) {
+            filterMode = mode;
+            document.querySelectorAll('.filter-mode-toggle').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update the list display based on mode
+            renderTagCustomizationList();
+        }
+
+        // Select all tags
+        function selectAllTags() {
+            hiddenTags = [];
+            renderTagCustomizationList();
+        }
+
+        // Clear all tags (hide all)
+        function clearAllTags() {
+            const allTags = [...new Set(snippets.flatMap(snippet => snippet.tags))];
+            hiddenTags = [...allTags];
+            renderTagCustomizationList();
+        }
+
+        // Reset filter settings
+        function resetFilterSettings() {
+            hiddenTags = [];
+            filterMode = 'show';
+            renderTagCustomizationList();
+        }
+
+        // Save filter settings
+        function saveFilterSettings() {
+            saveFilterSettingsToStorage();
+            renderTagsFilter();
+            closeFilterModal();
+            
+            // Show success message
+            const notification = document.createElement('div');
+            notification.textContent = '✅ Filter settings saved!';
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #10b981;
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 10000;
+                font-weight: 500;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 2000);
+        }
+
         // Toggle theme
         function toggleTheme() {
             document.body.classList.toggle('dark');
@@ -1648,5 +1876,5 @@ struct ContentView_Previews: PreviewProvider {
             reader.readAsText(file);
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97b11bc5123cc4f0',t:'MTc1NzE5NDY1NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97b125d2f32647cf',t:'MTc1NzE5NTA2Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
