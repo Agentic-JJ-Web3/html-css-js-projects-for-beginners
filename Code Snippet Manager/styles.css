@@ -1,4 +1,4 @@
-
+  
         * {
             margin: 0;
             padding: 0;
@@ -192,6 +192,10 @@
             border-color: #10b981;
         }
 
+        .snippet-card:hover .snippet-title {
+            color: #059669;
+        }
+
         .snippet-header {
             display: flex;
             justify-content: space-between;
@@ -204,6 +208,7 @@
             font-weight: 600;
             color: #2d3748;
             margin-bottom: 4px;
+            transition: color 0.3s ease;
         }
 
         .snippet-language {
@@ -544,6 +549,13 @@
             color: #f1f5f9;
         }
 
+        /* Dark mode code display in view modal */
+        body.dark pre {
+            background: #1e293b !important;
+            color: #f1f5f9 !important;
+            border: 1px solid #475569;
+        }
+
         body.dark .tag-chip {
             background: #334155;
             color: #cbd5e1;
@@ -554,6 +566,16 @@
             color: #cbd5e1;
         }
 
+        body.dark .snippet-title {
+            color: #f1f5f9;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark .snippet-card:hover .snippet-title {
+            color: #10b981;
+            text-shadow: 0 0 8px rgba(16, 185, 129, 0.3);
+        }
+
         body.dark .theme-toggle {
             background: #334155;
             border-color: #475569;
@@ -562,6 +584,12 @@
 
         body.dark .theme-toggle:hover {
             background: #475569;
+        }
+
+        body.dark .snippet-card:hover {
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+            border-color: #10b981;
+            background: #334155;
         }
 
         /* Footer Styles */
