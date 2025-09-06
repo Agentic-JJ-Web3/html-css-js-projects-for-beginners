@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Snippet Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .controls {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .search-section {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .add-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+
+        .theme-toggle {
+            background: #f8f9fa;
+            border: 2px solid #e1e5e9;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: #e9ecef;
+        }
+
+        .tags-filter {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .tag-chip {
+            background: #f1f3f4;
+            color: #5f6368;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .tag-chip:hover, .tag-chip.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .snippets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .snippet-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .snippet-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+
+        .snippet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .snippet-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .snippet-language {
+            background: #667eea;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .snippet-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .snippet-tag {
+            background: #f7fafc;
+            color: #4a5568;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+        }
+
+        .snippet-preview {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 13px;
+            color: #495057;
+            overflow: hidden;
+            max-height: 80px;
+            position: relative;
+        }
+
+        .snippet-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .edit-btn {
+            background: #ffd93d;
+            color: #333;
+        }
+
+        .delete-btn {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .favorite-btn {
+            background: #51cf66;
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-textarea {
+            min-height: 200px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6b7280;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        /* Dark Theme */
+        body.dark {
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+            color: #e2e8f0;
+        }
+
+        body.dark .controls,
+        body.dark .snippet-card,
+        body.dark .modal-content {
+            background: #2d3748;
+            color: #e2e8f0;
+        }
+
+        body.dark .form-input,
+        body.dark .form-select,
+        body.dark .form-textarea {
+            background: #4a5568;
+            border-color: #718096;
+            color: #e2e8f0;
+        }
+
+        body.dark .snippet-preview {
+            background: #4a5568;
+            color: #e2e8f0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .snippets-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-section {
+                flex-direction: column;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 Code Snippet Manager</h1>
+            <p>Organize and manage your code snippets efficiently</p>
+        </div>
+
+        <div class="controls">
+            <div class="search-section">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search snippets by title, language, or tags...">
+                <button class="add-btn" onclick="openAddModal()">+ Add Snippet</button>
+                <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+            </div>
+            <div class="tags-filter" id="tagsFilter"></div>
+        </div>
+
+        <div class="snippets-grid" id="snippetsGrid"></div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div class="modal" id="snippetModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Add New Snippet</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="snippetForm">
+                <div class="form-group">
+                    <label class="form-label">Title</label>
+                    <input type="text" class="form-input" id="titleInput" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Language</label>
+                    <select class="form-select" id="languageSelect" required>
+                        <option value="">Select Language</option>
+                        <option value="JavaScript">JavaScript</option>
+                        <option value="Python">Python</option>
+                        <option value="HTML">HTML</option>
+                        <option value="CSS">CSS</option>
+                        <option value="Java">Java</option>
+                        <option value="C++">C++</option>
+                        <option value="PHP">PHP</option>
+                        <option value="Ruby">Ruby</option>
+                        <option value="Go">Go</option>
+                        <option value="Rust">Rust</option>
+                        <option value="TypeScript">TypeScript</option>
+                        <option value="SQL">SQL</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tags (comma-separated)</label>
+                    <input type="text" class="form-input" id="tagsInput" placeholder="e.g., function, utility, api">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Code</label>
+                    <textarea class="form-textarea" id="codeInput" required placeholder="Paste your code here..."></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Snippet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- View Modal -->
+    <div class="modal" id="viewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="viewTitle"></h2>
+                <button class="close-btn" onclick="closeViewModal()">&times;</button>
+            </div>
+            <div id="viewContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Application State
+        let snippets = [];
+        let currentEditId = null;
+        let activeTagFilter = null;
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSnippets();
+            setupEventListeners();
+            createSampleData();
+            renderSnippets();
+            renderTagsFilter();
+        });
+
+        // Load snippets from localStorage
+        function loadSnippets() {
+            const stored = localStorage.getItem('codeSnippets');
+            if (stored) {
+                snippets = JSON.parse(stored);
+            }
+        }
+
+        // Save snippets to localStorage
+        function saveSnippets() {
+            localStorage.setItem('codeSnippets', JSON.stringify(snippets));
+        }
+
+        // Create sample data if no snippets exist
+        function createSampleData() {
+            if (snippets.length === 0) {
+                snippets = [
+                    {
+                        id: 1,
+                        title: "Array Shuffle Function",
+                        language: "JavaScript",
+                        tags: ["array", "utility", "random"],
+                        code: `function shuffleArray(array) {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+}
+
+// Usage
+const numbers = [1, 2, 3, 4, 5];
+console.log(shuffleArray(numbers));`,
+                        favorite: false,
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 2,
+                        title: "CSS Flexbox Center",
+                        language: "CSS",
+                        tags: ["css", "layout", "flexbox"],
+                        code: `.center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.centered-content {
+    text-align: center;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}`,
+                        favorite: true,
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 3,
+                        title: "Python List Comprehension",
+                        language: "Python",
+                        tags: ["python", "list", "comprehension"],
+                        code: `# Basic list comprehension
+squares = [x**2 for x in range(10)]
+
+# With condition
+even_squares = [x**2 for x in range(10) if x % 2 == 0]
+
+# Nested comprehension
+matrix = [[i*j for j in range(3)] for i in range(3)]
+
+# Dictionary comprehension
+word_lengths = {word: len(word) for word in ['hello', 'world', 'python']}`,
+                        favorite: false,
+                        createdAt: new Date().toISOString()
+                    }
+                ];
+                saveSnippets();
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', handleSearch);
+
+            const snippetForm = document.getElementById('snippetForm');
+            snippetForm.addEventListener('submit', handleFormSubmit);
+
+            // Close modals when clicking outside
+            window.addEventListener('click', function(e) {
+                const snippetModal = document.getElementById('snippetModal');
+                const viewModal = document.getElementById('viewModal');
+                if (e.target === snippetModal) closeModal();
+                if (e.target === viewModal) closeViewModal();
+            });
+        }
+
+        // Handle search functionality
+        function handleSearch(e) {
+            const query = e.target.value.toLowerCase();
+            renderSnippets(query);
+        }
+
+        // Handle form submission
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('titleInput').value;
+            const language = document.getElementById('languageSelect').value;
+            const tags = document.getElementById('tagsInput').value.split(',').map(tag => tag.trim()).filter(tag => tag);
+            const code = document.getElementById('codeInput').value;
+
+            if (currentEditId) {
+                // Update existing snippet
+                const index = snippets.findIndex(s => s.id === currentEditId);
+                snippets[index] = {
+                    ...snippets[index],
+                    title,
+                    language,
+                    tags,
+                    code,
+                    updatedAt: new Date().toISOString()
+                };
+            } else {
+                // Create new snippet
+                const newSnippet = {
+                    id: Date.now(),
+                    title,
+                    language,
+                    tags,
+                    code,
+                    favorite: false,
+                    createdAt: new Date().toISOString()
+                };
+                snippets.unshift(newSnippet);
+            }
+
+            saveSnippets();
+            renderSnippets();
+            renderTagsFilter();
+            closeModal();
+        }
+
+        // Render snippets grid
+        function renderSnippets(searchQuery = '') {
+            const grid = document.getElementById('snippetsGrid');
+            let filteredSnippets = snippets;
+
+            // Apply search filter
+            if (searchQuery) {
+                filteredSnippets = snippets.filter(snippet => 
+                    snippet.title.toLowerCase().includes(searchQuery) ||
+                    snippet.language.toLowerCase().includes(searchQuery) ||
+                    snippet.tags.some(tag => tag.toLowerCase().includes(searchQuery))
+                );
+            }
+
+            // Apply tag filter
+            if (activeTagFilter) {
+                filteredSnippets = filteredSnippets.filter(snippet => 
+                    snippet.tags.includes(activeTagFilter)
+                );
+            }
+
+            if (filteredSnippets.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No snippets found</h3>
+                        <p>Try adjusting your search or add a new snippet</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filteredSnippets.map(snippet => `
+                <div class="snippet-card" onclick="viewSnippet(${snippet.id})">
+                    <div class="snippet-header">
+                        <div>
+                            <div class="snippet-title">${snippet.title}</div>
+                        </div>
+                        <div class="snippet-language">${snippet.language}</div>
+                    </div>
+                    <div class="snippet-tags">
+                        ${snippet.tags.map(tag => `<span class="snippet-tag">${tag}</span>`).join('')}
+                    </div>
+                    <div class="snippet-preview">${snippet.code.substring(0, 100)}${snippet.code.length > 100 ? '...' : ''}</div>
+                    <div class="snippet-actions" onclick="event.stopPropagation()">
+                        <button class="action-btn favorite-btn" onclick="toggleFavorite(${snippet.id})" title="Toggle Favorite">
+                            ${snippet.favorite ? '⭐' : '☆'}
+                        </button>
+                        <button class="action-btn edit-btn" onclick="editSnippet(${snippet.id})">Edit</button>
+                        <button class="action-btn delete-btn" onclick="deleteSnippet(${snippet.id})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render tags filter
+        function renderTagsFilter() {
+            const tagsFilter = document.getElementById('tagsFilter');
+            const allTags = [...new Set(snippets.flatMap(snippet => snippet.tags))];
+            
+            if (allTags.length === 0) {
+                tagsFilter.innerHTML = '';
+                return;
+            }
+
+            tagsFilter.innerHTML = `
+                <span style="font-weight: 500; color: #6b7280;">Filter by tags:</span>
+                ${allTags.map(tag => `
+                    <span class="tag-chip ${activeTagFilter === tag ? 'active' : ''}" 
+                          onclick="filterByTag('${tag}')">${tag}</span>
+                `).join('')}
+                ${activeTagFilter ? '<span class="tag-chip" onclick="clearTagFilter()">Clear Filter</span>' : ''}
+            `;
+        }
+
+        // Filter by tag
+        function filterByTag(tag) {
+            activeTagFilter = activeTagFilter === tag ? null : tag;
+            renderSnippets();
+            renderTagsFilter();
+        }
+
+        // Clear tag filter
+        function clearTagFilter() {
+            activeTagFilter = null;
+            renderSnippets();
+            renderTagsFilter();
+        }
+
+        // View snippet in modal
+        function viewSnippet(id) {
+            const snippet = snippets.find(s => s.id === id);
+            if (!snippet) return;
+
+            document.getElementById('viewTitle').textContent = snippet.title;
+            document.getElementById('viewContent').innerHTML = `
+                <div style="margin-bottom: 15px;">
+                    <strong>Language:</strong> <span class="snippet-language">${snippet.language}</span>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <strong>Tags:</strong> ${snippet.tags.map(tag => `<span class="snippet-tag">${tag}</span>`).join(' ')}
+                </div>
+                <div style="margin-bottom: 10px;"><strong>Code:</strong></div>
+                <pre style="background: #f8f9fa; padding: 20px; border-radius: 8px; overflow-x: auto; font-family: 'Monaco', 'Menlo', monospace; font-size: 14px; line-height: 1.5;">${snippet.code}</pre>
+            `;
+            document.getElementById('viewModal').style.display = 'block';
+        }
+
+        // Open add modal
+        function openAddModal() {
+            currentEditId = null;
+            document.getElementById('modalTitle').textContent = 'Add New Snippet';
+            document.getElementById('snippetForm').reset();
+            document.getElementById('snippetModal').style.display = 'block';
+        }
+
+        // Edit snippet
+        function editSnippet(id) {
+            const snippet = snippets.find(s => s.id === id);
+            if (!snippet) return;
+
+            currentEditId = id;
+            document.getElementById('modalTitle').textContent = 'Edit Snippet';
+            document.getElementById('titleInput').value = snippet.title;
+            document.getElementById('languageSelect').value = snippet.language;
+            document.getElementById('tagsInput').value = snippet.tags.join(', ');
+            document.getElementById('codeInput').value = snippet.code;
+            document.getElementById('snippetModal').style.display = 'block';
+        }
+
+        // Delete snippet
+        function deleteSnippet(id) {
+            if (confirm('Are you sure you want to delete this snippet?')) {
+                snippets = snippets.filter(s => s.id !== id);
+                saveSnippets();
+                renderSnippets();
+                renderTagsFilter();
+            }
+        }
+
+        // Toggle favorite
+        function toggleFavorite(id) {
+            const snippet = snippets.find(s => s.id === id);
+            if (snippet) {
+                snippet.favorite = !snippet.favorite;
+                saveSnippets();
+                renderSnippets();
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('snippetModal').style.display = 'none';
+            currentEditId = null;
+        }
+
+        // Close view modal
+        function closeViewModal() {
+            document.getElementById('viewModal').style.display = 'none';
+        }
+
+        // Toggle theme
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+            const isDark = document.body.classList.contains('dark');
+            localStorage.setItem('darkTheme', isDark);
+            
+            const themeToggle = document.querySelector('.theme-toggle');
+            themeToggle.textContent = isDark ? '☀️' : '🌙';
+        }
+
+        // Load theme preference
+        document.addEventListener('DOMContentLoaded', function() {
+            const isDark = localStorage.getItem('darkTheme') === 'true';
+            if (isDark) {
+                document.body.classList.add('dark');
+                document.querySelector('.theme-toggle').textContent = '☀️';
+            }
+        });
+
+        // Export snippets
+        function exportSnippets() {
+            const dataStr = JSON.stringify(snippets, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'code-snippets.json';
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Import snippets
+        function importSnippets(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedSnippets = JSON.parse(e.target.result);
+                    snippets = [...snippets, ...importedSnippets];
+                    saveSnippets();
+                    renderSnippets();
+                    renderTagsFilter();
+                    alert('Snippets imported successfully!');
+                } catch (error) {
+                    alert('Error importing snippets. Please check the file format.');
+                }
+            };
+            reader.readAsText(file);
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97b0facec069cd39',t:'MTc1NzE5MzMwNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
