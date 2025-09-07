@@ -859,6 +859,387 @@
         .modal-icon {
             animation: bounceIn 0.8s ease forwards;
         }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-subtitle {
+            color: #666;
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+        }
+
+        body.dark .section-subtitle {
+            color: #bbb;
+        }
+
+        /* Course Filters */
+        .course-filters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #ff6b35;
+            background: transparent;
+            color: #ff6b35;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: #ff6b35;
+            color: white;
+        }
+
+        body.dark .filter-btn {
+            border-color: #ff8c42;
+            color: #ff8c42;
+        }
+
+        body.dark .filter-btn:hover, body.dark .filter-btn.active {
+            background: #ff8c42;
+            color: #1a1a1a;
+        }
+
+        /* Progress Details */
+        .progress-details {
+            margin-top: 2rem;
+        }
+
+        /* Goals Section */
+        .goal-setting {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .goal-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        body.dark .goal-card {
+            background: rgba(26, 26, 26, 0.95);
+            color: white;
+        }
+
+        .goal-card h3 {
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+
+        body.dark .goal-card h3 {
+            color: white;
+        }
+
+        .goal-input {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .goal-input input {
+            width: 80px;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.1rem;
+            outline: none;
+        }
+
+        .goal-input input:focus {
+            border-color: #ff6b35;
+        }
+
+        body.dark .goal-input input {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #555;
+            color: white;
+        }
+
+        .goal-btn {
+            background: linear-gradient(45deg, #ff6b35, #ff8c42);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .goal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+        }
+
+        .goal-progress {
+            text-align: left;
+        }
+
+        .goal-progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        body.dark .goal-progress-bar {
+            background: #555;
+        }
+
+        .goal-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b35, #ff8c42);
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+
+        .goal-text {
+            text-align: center;
+            color: #666;
+            font-weight: 500;
+        }
+
+        body.dark .goal-text {
+            color: #bbb;
+        }
+
+        /* Achievements */
+        .achievements {
+            margin-top: 2rem;
+        }
+
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .achievement-badge {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        body.dark .achievement-badge {
+            background: rgba(26, 26, 26, 0.95);
+            color: white;
+        }
+
+        .achievement-badge.earned {
+            border: 2px solid #ff6b35;
+            transform: scale(1.02);
+        }
+
+        .achievement-badge.locked {
+            opacity: 0.5;
+            filter: grayscale(100%);
+        }
+
+        .achievement-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .achievement-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        body.dark .achievement-title {
+            color: white;
+        }
+
+        .achievement-description {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        body.dark .achievement-description {
+            color: #bbb;
+        }
+
+        /* Settings */
+        .settings-group {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark .settings-group {
+            background: rgba(26, 26, 26, 0.95);
+            color: white;
+        }
+
+        .settings-group h3 {
+            margin-bottom: 1.5rem;
+            color: #333;
+            font-size: 1.3rem;
+        }
+
+        body.dark .settings-group h3 {
+            color: white;
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+
+        .setting-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .setting-item label {
+            font-weight: 500;
+            color: #333;
+        }
+
+        body.dark .setting-item label {
+            color: white;
+        }
+
+        .setting-input, .setting-select {
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            outline: none;
+            min-width: 200px;
+        }
+
+        .setting-input:focus, .setting-select:focus {
+            border-color: #ff6b35;
+        }
+
+        body.dark .setting-input, body.dark .setting-select {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #555;
+            color: white;
+        }
+
+        .setting-btn {
+            background: linear-gradient(45deg, #ff6b35, #ff8c42);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .setting-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+        }
+
+        .setting-btn.danger {
+            background: linear-gradient(45deg, #ff6b6b, #ff5252);
+        }
+
+        .setting-btn.danger:hover {
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        /* Toggle Switch */
+        .setting-toggle {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            gap: 1rem;
+        }
+
+        .setting-toggle input {
+            display: none;
+        }
+
+        .toggle-slider {
+            width: 50px;
+            height: 24px;
+            background: #ccc;
+            border-radius: 12px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-slider:before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .setting-toggle input:checked + .toggle-slider {
+            background: #ff6b35;
+        }
+
+        .setting-toggle input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        body.dark .toggle-slider {
+            background: #555;
+        }
+
+        body.dark .setting-toggle input:checked + .toggle-slider {
+            background: #ff8c42;
+        }
+
+        .setting-item small {
+            display: block;
+            color: #666;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        body.dark .setting-item small {
+            color: #bbb;
+        }
     </style>
 </head>
 <body>
@@ -879,31 +1260,31 @@
             <div class="logo">🤖 AI Academy</div>
             <ul class="nav-menu">
                 <li class="nav-item">
-                    <a href="#" class="nav-link active">
+                    <a href="#" class="nav-link active" data-section="dashboard">
                         <span class="nav-icon">📊</span>
                         Dashboard
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="#" class="nav-link" data-section="courses">
                         <span class="nav-icon">📚</span>
                         Courses
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="#" class="nav-link" data-section="progress">
                         <span class="nav-icon">📈</span>
                         Progress
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="#" class="nav-link" data-section="goals">
                         <span class="nav-icon">🎯</span>
                         Goals
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="#" class="nav-link" data-section="settings">
                         <span class="nav-icon">⚙️</span>
                         Settings
                     </a>
@@ -929,45 +1310,207 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Welcome Section -->
-            <section class="welcome-section">
-                <h1 class="welcome-title">Welcome back, Alex! 👋</h1>
-                <p class="welcome-subtitle">Ready to continue your AI learning journey? You're making great progress!</p>
-            </section>
+            <!-- Dashboard Section -->
+            <div id="dashboard-section" class="content-section active">
+                <!-- Welcome Section -->
+                <section class="welcome-section">
+                    <h1 class="welcome-title">Welcome back, Alex! 👋</h1>
+                    <p class="welcome-subtitle">Ready to continue your AI learning journey? You're making great progress!</p>
+                </section>
 
-            <!-- Progress Overview -->
-            <section class="progress-overview">
-                <div class="stat-card">
-                    <div class="stat-number" id="totalCourses">6</div>
-                    <div class="stat-label">Total Courses</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="completedLessons">24</div>
-                    <div class="stat-label">Completed Lessons</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="learningStreak">12</div>
-                    <div class="stat-label">Day Streak 🔥</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="totalHours">48</div>
-                    <div class="stat-label">Hours Learned</div>
-                </div>
-            </section>
+                <!-- Progress Overview -->
+                <section class="progress-overview">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalCourses">0</div>
+                        <div class="stat-label">Enrolled Courses</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="completedLessons">0</div>
+                        <div class="stat-label">Completed Lessons</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="learningStreak">0</div>
+                        <div class="stat-label">Day Streak 🔥</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalHours">0</div>
+                        <div class="stat-label">Hours Learned</div>
+                    </div>
+                </section>
 
-            <!-- Course Grid -->
-            <h2 class="section-title">Your Courses</h2>
-            <section class="course-grid" id="courseGrid">
-                <!-- Courses will be dynamically generated here -->
-            </section>
+                <!-- Enrolled Courses -->
+                <h2 class="section-title">Your Enrolled Courses</h2>
+                <section class="course-grid" id="enrolledCoursesGrid">
+                    <div class="no-courses">
+                        <h3>No courses enrolled yet! 📚</h3>
+                        <p>Visit the Courses section to browse and enroll in available courses.</p>
+                    </div>
+                </section>
 
-            <!-- Upcoming Lessons -->
-            <section class="upcoming-section">
-                <h3 class="upcoming-title">Upcoming Lessons & Tasks</h3>
-                <div id="upcomingLessons">
-                    <!-- Lessons will be dynamically generated here -->
+                <!-- Upcoming Lessons -->
+                <section class="upcoming-section">
+                    <h3 class="upcoming-title">Upcoming Lessons & Tasks</h3>
+                    <div id="upcomingLessons">
+                        <div class="no-courses">No upcoming lessons yet. Enroll in courses to see your schedule!</div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Courses Section -->
+            <div id="courses-section" class="content-section">
+                <div class="section-header">
+                    <h1 class="section-title">Available Courses</h1>
+                    <p class="section-subtitle">Discover and enroll in AI courses tailored to your learning goals</p>
                 </div>
-            </section>
+
+                <!-- Course Filters -->
+                <div class="course-filters">
+                    <button class="filter-btn active" data-filter="all">All Courses</button>
+                    <button class="filter-btn" data-filter="Beginner">Beginner</button>
+                    <button class="filter-btn" data-filter="Intermediate">Intermediate</button>
+                    <button class="filter-btn" data-filter="Advanced">Advanced</button>
+                    <button class="filter-btn" data-filter="Essential">Essential</button>
+                </div>
+
+                <section class="course-grid" id="allCoursesGrid">
+                    <!-- All courses will be displayed here -->
+                </section>
+            </div>
+
+            <!-- Progress Section -->
+            <div id="progress-section" class="content-section">
+                <div class="section-header">
+                    <h1 class="section-title">Your Progress</h1>
+                    <p class="section-subtitle">Track your learning journey and achievements</p>
+                </div>
+
+                <!-- Progress Stats -->
+                <section class="progress-overview">
+                    <div class="stat-card">
+                        <div class="stat-number" id="progressTotalCourses">0</div>
+                        <div class="stat-label">Enrolled Courses</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="progressCompletedCourses">0</div>
+                        <div class="stat-label">Completed Courses</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="progressCompletedLessons">0</div>
+                        <div class="stat-label">Completed Lessons</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="progressAverage">0%</div>
+                        <div class="stat-label">Average Progress</div>
+                    </div>
+                </section>
+
+                <!-- Detailed Progress -->
+                <section class="progress-details">
+                    <h2 class="section-title">Course Progress Details</h2>
+                    <div id="progressDetailsGrid" class="course-grid">
+                        <div class="no-courses">No enrolled courses to track yet!</div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Goals Section -->
+            <div id="goals-section" class="content-section">
+                <div class="section-header">
+                    <h1 class="section-title">Learning Goals</h1>
+                    <p class="section-subtitle">Set and track your learning objectives</p>
+                </div>
+
+                <!-- Goal Setting -->
+                <section class="goal-setting">
+                    <div class="goal-card">
+                        <h3>Weekly Learning Goal</h3>
+                        <div class="goal-input">
+                            <input type="number" id="weeklyGoal" min="1" max="50" value="5" />
+                            <span>lessons per week</span>
+                        </div>
+                        <button class="goal-btn" onclick="setWeeklyGoal()">Set Goal</button>
+                    </div>
+                    
+                    <div class="goal-card">
+                        <h3>This Week's Progress</h3>
+                        <div class="goal-progress">
+                            <div class="goal-progress-bar">
+                                <div class="goal-progress-fill" id="weeklyProgressFill" style="width: 0%"></div>
+                            </div>
+                            <div class="goal-text">
+                                <span id="weeklyProgressText">0 / 5 lessons completed</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Achievement Badges -->
+                <section class="achievements">
+                    <h2 class="section-title">Achievements</h2>
+                    <div class="achievement-grid" id="achievementGrid">
+                        <!-- Achievements will be populated here -->
+                    </div>
+                </section>
+            </div>
+
+            <!-- Settings Section -->
+            <div id="settings-section" class="content-section">
+                <div class="section-header">
+                    <h1 class="section-title">Settings</h1>
+                    <p class="section-subtitle">Customize your learning experience</p>
+                </div>
+
+                <!-- Profile Settings -->
+                <section class="settings-group">
+                    <h3>Profile Settings</h3>
+                    <div class="setting-item">
+                        <label for="displayName">Display Name</label>
+                        <input type="text" id="displayName" class="setting-input" />
+                        <button class="setting-btn" onclick="updateDisplayName()">Update</button>
+                    </div>
+                </section>
+
+                <!-- Notification Settings -->
+                <section class="settings-group">
+                    <h3>Notifications</h3>
+                    <div class="setting-item">
+                        <label class="setting-toggle">
+                            <input type="checkbox" id="emailNotifications" checked />
+                            <span class="toggle-slider"></span>
+                            Email notifications for new lessons
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label class="setting-toggle">
+                            <input type="checkbox" id="reminderNotifications" checked />
+                            <span class="toggle-slider"></span>
+                            Daily learning reminders
+                        </label>
+                    </div>
+                </section>
+
+                <!-- Learning Preferences -->
+                <section class="settings-group">
+                    <h3>Learning Preferences</h3>
+                    <div class="setting-item">
+                        <label for="learningPace">Learning Pace</label>
+                        <select id="learningPace" class="setting-select">
+                            <option value="relaxed">Relaxed (2-3 lessons/week)</option>
+                            <option value="moderate" selected>Moderate (4-6 lessons/week)</option>
+                            <option value="intensive">Intensive (7+ lessons/week)</option>
+                        </select>
+                    </div>
+                </section>
+
+                <!-- Data Management -->
+                <section class="settings-group">
+                    <h3>Data Management</h3>
+                    <div class="setting-item">
+                        <button class="setting-btn danger" onclick="resetProgress()">Reset All Progress</button>
+                        <small>This will remove all your course progress and cannot be undone.</small>
+                    </div>
+                </section>
+            </div>
         </main>
     </div>
 
@@ -1138,12 +1681,22 @@
             }
         }
 
-        // Render courses (both available and enrolled)
+        // Render enrolled courses on dashboard
         function renderCourses() {
-            const courseGrid = document.getElementById('courseGrid');
+            const courseGrid = document.getElementById('enrolledCoursesGrid');
             courseGrid.innerHTML = '';
 
-            // Show enrolled courses first
+            if (enrolledCourses.length === 0) {
+                courseGrid.innerHTML = `
+                    <div class="no-courses">
+                        <h3>No courses enrolled yet! 📚</h3>
+                        <p>Visit the Courses section to browse and enroll in available courses.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Show enrolled courses
             enrolledCourses.forEach(course => {
                 const courseCard = document.createElement('div');
                 courseCard.className = 'course-card enrolled';
@@ -1178,14 +1731,23 @@
                 `;
                 courseGrid.appendChild(courseCard);
             });
+        }
 
-            // Show available courses (not enrolled)
-            const enrolledIds = enrolledCourses.map(c => c.id);
-            const availableToEnroll = availableCourses.filter(c => !enrolledIds.includes(c.id));
+        // Render all courses in courses section
+        function renderAllCourses() {
+            const courseGrid = document.getElementById('allCoursesGrid');
+            courseGrid.innerHTML = '';
             
-            availableToEnroll.forEach(course => {
+            const enrolledIds = enrolledCourses.map(c => c.id);
+            
+            availableCourses.forEach(course => {
+                const isEnrolled = enrolledIds.includes(course.id);
+                const enrolledCourse = enrolledCourses.find(c => c.id === course.id);
+                
                 const courseCard = document.createElement('div');
-                courseCard.className = 'course-card available';
+                courseCard.className = `course-card ${isEnrolled ? 'enrolled' : 'available'}`;
+                courseCard.setAttribute('data-difficulty', course.difficulty);
+                
                 courseCard.innerHTML = `
                     <div class="course-header">
                         <div class="course-icon">${course.icon}</div>
@@ -1193,28 +1755,204 @@
                             <h3 class="course-title">${course.title}</h3>
                             <p class="course-lessons">${course.lessons} lessons • ${course.difficulty}</p>
                         </div>
+                        ${isEnrolled ? '<div class="enrolled-badge">Enrolled ✓</div>' : ''}
                     </div>
                     <div class="course-description">${course.description}</div>
-                    <div class="course-details">
-                        <div class="detail-item">
-                            <span class="detail-label">Duration:</span>
-                            <span class="detail-value">${course.duration}</span>
+                    ${isEnrolled ? `
+                        <div class="progress-section">
+                            <div class="progress-label">
+                                <span>Progress</span>
+                                <span>${enrolledCourse.progress}%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${enrolledCourse.progress}%"></div>
+                            </div>
+                            <div class="lesson-info">
+                                Lesson ${enrolledCourse.currentLesson} of ${enrolledCourse.lessons}
+                            </div>
                         </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Topics:</span>
-                            <span class="detail-value">${course.topics.slice(0, 2).join(', ')}${course.topics.length > 2 ? '...' : ''}</span>
+                        <div class="course-actions">
+                            <button class="continue-btn" onclick="continueCourse(${course.id})">
+                                ${enrolledCourse.progress === 0 ? 'Start Learning' : enrolledCourse.progress === 100 ? 'Review Course' : 'Continue Learning'}
+                            </button>
+                            ${enrolledCourse.progress < 100 ? `<button class="lesson-btn" onclick="completeLesson(${course.id})">Complete Current Lesson</button>` : ''}
                         </div>
-                    </div>
-                    <button class="enroll-btn" onclick="enrollInCourse(${course.id})">
-                        Enroll Now 🚀
-                    </button>
+                    ` : `
+                        <div class="course-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Duration:</span>
+                                <span class="detail-value">${course.duration}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Topics:</span>
+                                <span class="detail-value">${course.topics.slice(0, 2).join(', ')}${course.topics.length > 2 ? '...' : ''}</span>
+                            </div>
+                        </div>
+                        <button class="enroll-btn" onclick="enrollInCourse(${course.id})">
+                            Enroll Now 🚀
+                        </button>
+                    `}
                 `;
                 courseGrid.appendChild(courseCard);
             });
+        }
 
-            // Show message if no courses
-            if (enrolledCourses.length === 0 && availableToEnroll.length === 0) {
-                courseGrid.innerHTML = '<p class="no-courses">No courses available at the moment.</p>';
+        // Course filtering
+        function filterCourses(difficulty) {
+            const courseCards = document.querySelectorAll('#allCoursesGrid .course-card');
+            
+            courseCards.forEach(card => {
+                if (difficulty === 'all' || card.getAttribute('data-difficulty') === difficulty) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Update filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-filter="${difficulty}"]`).classList.add('active');
+        }
+
+        // Progress section
+        function renderProgressSection() {
+            updateProgressStats();
+            renderProgressDetails();
+        }
+
+        function updateProgressStats() {
+            const totalCourses = enrolledCourses.length;
+            const completedCourses = enrolledCourses.filter(course => course.progress === 100).length;
+            const completedLessons = enrolledCourses.reduce((sum, course) => sum + course.completedLessons, 0);
+            const averageProgress = totalCourses > 0 ? Math.round(enrolledCourses.reduce((sum, course) => sum + course.progress, 0) / totalCourses) : 0;
+            
+            document.getElementById('progressTotalCourses').textContent = totalCourses;
+            document.getElementById('progressCompletedCourses').textContent = completedCourses;
+            document.getElementById('progressCompletedLessons').textContent = completedLessons;
+            document.getElementById('progressAverage').textContent = averageProgress + '%';
+        }
+
+        function renderProgressDetails() {
+            const progressGrid = document.getElementById('progressDetailsGrid');
+            progressGrid.innerHTML = '';
+            
+            if (enrolledCourses.length === 0) {
+                progressGrid.innerHTML = '<div class="no-courses">No enrolled courses to track yet!</div>';
+                return;
+            }
+            
+            enrolledCourses.forEach(course => {
+                const progressCard = document.createElement('div');
+                progressCard.className = 'course-card';
+                progressCard.innerHTML = `
+                    <div class="course-header">
+                        <div class="course-icon">${course.icon}</div>
+                        <div>
+                            <h3 class="course-title">${course.title}</h3>
+                            <p class="course-lessons">${course.completedLessons}/${course.lessons} lessons completed</p>
+                        </div>
+                    </div>
+                    <div class="progress-section">
+                        <div class="progress-label">
+                            <span>Progress</span>
+                            <span>${course.progress}%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${course.progress}%"></div>
+                        </div>
+                        <div class="lesson-info">
+                            ${course.progress === 100 ? 'Course Completed! 🎉' : `Next: Lesson ${course.currentLesson}`}
+                        </div>
+                    </div>
+                `;
+                progressGrid.appendChild(progressCard);
+            });
+        }
+
+        // Goals section
+        let weeklyGoal = 5;
+        let weeklyProgress = 0;
+
+        function renderGoalsSection() {
+            updateWeeklyProgress();
+            renderAchievements();
+        }
+
+        function setWeeklyGoal() {
+            const goalInput = document.getElementById('weeklyGoal');
+            weeklyGoal = parseInt(goalInput.value) || 5;
+            localStorage.setItem('weeklyGoal', weeklyGoal);
+            updateWeeklyProgress();
+            alert(`Weekly goal set to ${weeklyGoal} lessons! 🎯`);
+        }
+
+        function updateWeeklyProgress() {
+            // Calculate lessons completed this week (simplified)
+            weeklyProgress = Math.min(enrolledCourses.reduce((sum, course) => sum + course.completedLessons, 0) % 7, weeklyGoal);
+            
+            const progressPercentage = (weeklyProgress / weeklyGoal) * 100;
+            document.getElementById('weeklyProgressFill').style.width = progressPercentage + '%';
+            document.getElementById('weeklyProgressText').textContent = `${weeklyProgress} / ${weeklyGoal} lessons completed`;
+        }
+
+        function renderAchievements() {
+            const achievements = [
+                { id: 1, title: "First Steps", description: "Complete your first lesson", icon: "🎯", earned: enrolledCourses.some(c => c.completedLessons > 0) },
+                { id: 2, title: "Course Starter", description: "Enroll in your first course", icon: "📚", earned: enrolledCourses.length > 0 },
+                { id: 3, title: "Dedicated Learner", description: "Complete 10 lessons", icon: "🔥", earned: enrolledCourses.reduce((sum, c) => sum + c.completedLessons, 0) >= 10 },
+                { id: 4, title: "Course Master", description: "Complete your first course", icon: "🏆", earned: enrolledCourses.some(c => c.progress === 100) },
+                { id: 5, title: "AI Explorer", description: "Enroll in 3 different courses", icon: "🚀", earned: enrolledCourses.length >= 3 },
+                { id: 6, title: "Knowledge Seeker", description: "Complete 25 lessons", icon: "🧠", earned: enrolledCourses.reduce((sum, c) => sum + c.completedLessons, 0) >= 25 }
+            ];
+            
+            const achievementGrid = document.getElementById('achievementGrid');
+            achievementGrid.innerHTML = '';
+            
+            achievements.forEach(achievement => {
+                const badge = document.createElement('div');
+                badge.className = `achievement-badge ${achievement.earned ? 'earned' : 'locked'}`;
+                badge.innerHTML = `
+                    <div class="achievement-icon">${achievement.icon}</div>
+                    <div class="achievement-title">${achievement.title}</div>
+                    <div class="achievement-description">${achievement.description}</div>
+                `;
+                achievementGrid.appendChild(badge);
+            });
+        }
+
+        // Settings section
+        function loadSettings() {
+            const displayName = document.getElementById('displayName');
+            displayName.value = userProfile.name || '';
+            
+            // Load saved settings
+            const savedGoal = localStorage.getItem('weeklyGoal');
+            if (savedGoal) {
+                weeklyGoal = parseInt(savedGoal);
+                document.getElementById('weeklyGoal').value = weeklyGoal;
+            }
+        }
+
+        function updateDisplayName() {
+            const newName = document.getElementById('displayName').value.trim();
+            if (newName) {
+                userProfile.name = newName;
+                userProfile.avatar = generateAvatar(newName);
+                localStorage.setItem('aiAcademyProfile', JSON.stringify(userProfile));
+                updateUserInterface();
+                alert('Display name updated successfully! ✅');
+            }
+        }
+
+        function resetProgress() {
+            if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+                enrolledCourses = [];
+                localStorage.removeItem('enrolledCourses');
+                updateStats();
+                renderCourses();
+                alert('All progress has been reset. 🔄');
             }
         }
 
@@ -1264,11 +2002,38 @@
         }
 
         // Navigation functionality
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionName + '-section').classList.add('active');
+            
+            // Update navigation
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.querySelector(`[data-section="${sectionName}"]`).classList.add('active');
+            
+            // Load section-specific content
+            if (sectionName === 'courses') {
+                renderAllCourses();
+            } else if (sectionName === 'progress') {
+                renderProgressSection();
+            } else if (sectionName === 'goals') {
+                renderGoalsSection();
+            } else if (sectionName === 'settings') {
+                loadSettings();
+            }
+        }
+
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
-                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-                link.classList.add('active');
+                const sectionName = link.getAttribute('data-section');
+                if (sectionName) {
+                    showSection(sectionName);
+                }
             });
         });
 
@@ -1397,6 +2162,14 @@
                     e.target.style.borderColor = '#e0e0e0';
                 }
             });
+
+            // Add filter button event listeners
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const filter = btn.getAttribute('data-filter');
+                    filterCourses(filter);
+                });
+            });
         });
 
         // Update stats dynamically
@@ -1412,5 +2185,5 @@
             document.getElementById('totalHours').textContent = totalHours;
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97b2e317805e47cf',t:'MTc1NzIxMzMwNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97b2eb1e33fa47cf',t:'MTc1NzIxMzYzNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
