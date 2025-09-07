@@ -423,7 +423,7 @@
         .continue-btn {
             width: 100%;
             padding: 0.75rem;
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            background: linear-gradient(45deg, #ff6b35, #ff8c42);
             color: white;
             border: none;
             border-radius: 10px;
@@ -435,7 +435,143 @@
 
         .continue-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+        }
+
+        .enroll-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(45deg, #ff6b35, #ff8c42);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .enroll-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+        }
+
+        .lesson-btn {
+            width: 100%;
+            padding: 0.5rem;
+            background: rgba(255, 107, 53, 0.1);
+            color: #ff6b35;
+            border: 2px solid #ff6b35;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .lesson-btn:hover {
+            background: #ff6b35;
+            color: white;
+        }
+
+        body.dark .lesson-btn {
+            color: #ff8c42;
+            border-color: #ff8c42;
+            background: rgba(255, 140, 66, 0.1);
+        }
+
+        body.dark .lesson-btn:hover {
+            background: #ff8c42;
+            color: #1a1a1a;
+        }
+
+        .enrolled-badge {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .course-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 1rem 0;
+            line-height: 1.4;
+        }
+
+        body.dark .course-description {
+            color: #bbb;
+        }
+
+        .course-details {
+            margin: 1rem 0;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .detail-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            color: #333;
+        }
+
+        body.dark .detail-label {
+            color: #bbb;
+        }
+
+        body.dark .detail-value {
+            color: white;
+        }
+
+        .lesson-info {
+            text-align: center;
+            color: #666;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        body.dark .lesson-info {
+            color: #bbb;
+        }
+
+        .course-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .course-card.enrolled {
+            border-left: 4px solid #ff6b35;
+        }
+
+        .course-card.available {
+            opacity: 0.9;
+        }
+
+        .course-card.available:hover {
+            opacity: 1;
+        }
+
+        .no-courses {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 2rem;
+        }
+
+        body.dark .no-courses {
+            color: #bbb;
         }
 
         /* Upcoming Lessons */
@@ -448,7 +584,7 @@
         }
 
         body.dark .upcoming-section {
-            background: rgba(44, 62, 80, 0.95);
+            background: rgba(26, 26, 26, 0.95);
             color: white;
         }
 
@@ -473,7 +609,7 @@
         }
 
         .lesson-item:hover {
-            background: rgba(102, 126, 234, 0.1);
+            background: rgba(255, 107, 53, 0.1);
         }
 
         .lesson-item.overdue {
@@ -500,9 +636,13 @@
         }
 
         .lesson-date {
-            color: #667eea;
+            color: #ff6b35;
             font-weight: 600;
             font-size: 0.9rem;
+        }
+
+        body.dark .lesson-date {
+            color: #ff8c42;
         }
 
         .lesson-date.overdue {
@@ -592,7 +732,7 @@
         }
 
         body.dark .welcome-modal {
-            background: rgba(44, 62, 80, 0.95);
+            background: rgba(26, 26, 26, 0.95);
             color: white;
         }
 
@@ -640,8 +780,8 @@
         }
 
         .name-input:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #ff6b35;
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
         }
 
         body.dark .name-input {
@@ -655,7 +795,7 @@
         }
 
         .start-btn {
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            background: linear-gradient(45deg, #ff6b35, #ff8c42);
             color: white;
             border: none;
             padding: 1rem 2rem;
@@ -669,7 +809,7 @@
 
         .start-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
         }
 
         .start-btn:disabled {
@@ -842,63 +982,78 @@
             }
         };
 
-        // Sample data
-        const coursesData = [
+        // Available courses catalog
+        const availableCourses = [
             {
                 id: 1,
-                title: "Introduction to Machine Learning",
-                lessons: 15,
-                completedLessons: 12,
-                progress: 80,
-                icon: "🤖",
-                category: "Beginner"
+                title: "Generative AI Fundamentals",
+                description: "Master the basics of GenAI, from GPT to image generation",
+                lessons: 12,
+                duration: "6 weeks",
+                difficulty: "Beginner",
+                icon: "🎨",
+                category: "GenAI",
+                topics: ["Large Language Models", "Prompt Engineering", "Image Generation", "AI Ethics"]
             },
             {
                 id: 2,
-                title: "Deep Learning Fundamentals",
-                lessons: 20,
-                completedLessons: 8,
-                progress: 40,
-                icon: "🧠",
-                category: "Intermediate"
+                title: "Introduction to Machine Learning",
+                description: "Learn the fundamentals of ML algorithms and applications",
+                lessons: 15,
+                duration: "8 weeks",
+                difficulty: "Beginner",
+                icon: "🤖",
+                category: "Machine Learning",
+                topics: ["Supervised Learning", "Unsupervised Learning", "Model Evaluation", "Feature Engineering"]
             },
             {
                 id: 3,
-                title: "Natural Language Processing",
-                lessons: 18,
-                completedLessons: 15,
-                progress: 83,
-                icon: "💬",
-                category: "Advanced"
+                title: "Deep Learning Fundamentals",
+                description: "Dive deep into neural networks and deep learning",
+                lessons: 20,
+                duration: "10 weeks",
+                difficulty: "Intermediate",
+                icon: "🧠",
+                category: "Deep Learning",
+                topics: ["Neural Networks", "Backpropagation", "CNNs", "RNNs"]
             },
             {
                 id: 4,
-                title: "Computer Vision Basics",
-                lessons: 12,
-                completedLessons: 3,
-                progress: 25,
-                icon: "👁️",
-                category: "Intermediate"
+                title: "Natural Language Processing",
+                description: "Process and understand human language with AI",
+                lessons: 18,
+                duration: "9 weeks",
+                difficulty: "Advanced",
+                icon: "💬",
+                category: "NLP",
+                topics: ["Text Processing", "Sentiment Analysis", "Named Entity Recognition", "Transformers"]
             },
             {
                 id: 5,
-                title: "AI Ethics & Bias",
-                lessons: 8,
-                completedLessons: 8,
-                progress: 100,
-                icon: "⚖️",
-                category: "Essential"
+                title: "Computer Vision Basics",
+                description: "Teach machines to see and understand images",
+                lessons: 12,
+                duration: "7 weeks",
+                difficulty: "Intermediate",
+                icon: "👁️",
+                category: "Computer Vision",
+                topics: ["Image Processing", "Object Detection", "Face Recognition", "Image Classification"]
             },
             {
                 id: 6,
-                title: "Reinforcement Learning",
-                lessons: 16,
-                completedLessons: 0,
-                progress: 0,
-                icon: "🎮",
-                category: "Advanced"
+                title: "AI Ethics & Bias",
+                description: "Build responsible and fair AI systems",
+                lessons: 8,
+                duration: "4 weeks",
+                difficulty: "Essential",
+                icon: "⚖️",
+                category: "Ethics",
+                topics: ["Algorithmic Bias", "Fairness Metrics", "Privacy", "Transparency"]
             }
         ];
+
+        // User's enrolled courses (stored in localStorage)
+        let enrolledCourses = [];
 
         const upcomingLessons = [
             {
@@ -927,22 +1082,81 @@
             }
         ];
 
-        // Render courses
+        // Course enrollment functions
+        function enrollInCourse(courseId) {
+            const course = availableCourses.find(c => c.id === courseId);
+            if (!course) return;
+
+            const enrolledCourse = {
+                ...course,
+                enrolledDate: new Date().toISOString(),
+                completedLessons: 0,
+                progress: 0,
+                currentLesson: 1,
+                lastAccessed: new Date().toISOString()
+            };
+
+            enrolledCourses.push(enrolledCourse);
+            saveEnrolledCourses();
+            renderCourses();
+            updateStats();
+            
+            alert(`🎉 Successfully enrolled in "${course.title}"!\n\nYou can now start your learning journey. Good luck!`);
+        }
+
+        function saveEnrolledCourses() {
+            localStorage.setItem('enrolledCourses', JSON.stringify(enrolledCourses));
+        }
+
+        function loadEnrolledCourses() {
+            const saved = localStorage.getItem('enrolledCourses');
+            if (saved) {
+                enrolledCourses = JSON.parse(saved);
+            }
+        }
+
+        function completeLesson(courseId) {
+            const courseIndex = enrolledCourses.findIndex(c => c.id === courseId);
+            if (courseIndex === -1) return;
+
+            const course = enrolledCourses[courseIndex];
+            if (course.completedLessons < course.lessons) {
+                course.completedLessons++;
+                course.currentLesson = course.completedLessons + 1;
+                course.progress = Math.round((course.completedLessons / course.lessons) * 100);
+                course.lastAccessed = new Date().toISOString();
+                
+                saveEnrolledCourses();
+                renderCourses();
+                updateStats();
+                
+                if (course.progress === 100) {
+                    alert(`🎊 Congratulations! You've completed "${course.title}"!\n\nYou've mastered all ${course.lessons} lessons. Well done!`);
+                } else {
+                    alert(`✅ Lesson ${course.completedLessons} completed!\n\nProgress: ${course.progress}%\nNext: Lesson ${course.currentLesson}`);
+                }
+            }
+        }
+
+        // Render courses (both available and enrolled)
         function renderCourses() {
             const courseGrid = document.getElementById('courseGrid');
             courseGrid.innerHTML = '';
 
-            coursesData.forEach(course => {
+            // Show enrolled courses first
+            enrolledCourses.forEach(course => {
                 const courseCard = document.createElement('div');
-                courseCard.className = 'course-card';
+                courseCard.className = 'course-card enrolled';
                 courseCard.innerHTML = `
                     <div class="course-header">
                         <div class="course-icon">${course.icon}</div>
                         <div>
                             <h3 class="course-title">${course.title}</h3>
-                            <p class="course-lessons">${course.lessons} lessons • ${course.category}</p>
+                            <p class="course-lessons">${course.lessons} lessons • ${course.difficulty}</p>
                         </div>
+                        <div class="enrolled-badge">Enrolled ✓</div>
                     </div>
+                    <div class="course-description">${course.description}</div>
                     <div class="progress-section">
                         <div class="progress-label">
                             <span>Progress</span>
@@ -951,13 +1165,57 @@
                         <div class="progress-bar">
                             <div class="progress-fill" style="width: ${course.progress}%"></div>
                         </div>
+                        <div class="lesson-info">
+                            Lesson ${course.currentLesson} of ${course.lessons}
+                        </div>
                     </div>
-                    <button class="continue-btn" onclick="continueCourse(${course.id})">
-                        ${course.progress === 0 ? 'Start Course' : course.progress === 100 ? 'Review' : 'Continue'}
+                    <div class="course-actions">
+                        <button class="continue-btn" onclick="continueCourse(${course.id})">
+                            ${course.progress === 0 ? 'Start Learning' : course.progress === 100 ? 'Review Course' : 'Continue Learning'}
+                        </button>
+                        ${course.progress < 100 ? `<button class="lesson-btn" onclick="completeLesson(${course.id})">Complete Current Lesson</button>` : ''}
+                    </div>
+                `;
+                courseGrid.appendChild(courseCard);
+            });
+
+            // Show available courses (not enrolled)
+            const enrolledIds = enrolledCourses.map(c => c.id);
+            const availableToEnroll = availableCourses.filter(c => !enrolledIds.includes(c.id));
+            
+            availableToEnroll.forEach(course => {
+                const courseCard = document.createElement('div');
+                courseCard.className = 'course-card available';
+                courseCard.innerHTML = `
+                    <div class="course-header">
+                        <div class="course-icon">${course.icon}</div>
+                        <div>
+                            <h3 class="course-title">${course.title}</h3>
+                            <p class="course-lessons">${course.lessons} lessons • ${course.difficulty}</p>
+                        </div>
+                    </div>
+                    <div class="course-description">${course.description}</div>
+                    <div class="course-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Duration:</span>
+                            <span class="detail-value">${course.duration}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Topics:</span>
+                            <span class="detail-value">${course.topics.slice(0, 2).join(', ')}${course.topics.length > 2 ? '...' : ''}</span>
+                        </div>
+                    </div>
+                    <button class="enroll-btn" onclick="enrollInCourse(${course.id})">
+                        Enroll Now 🚀
                     </button>
                 `;
                 courseGrid.appendChild(courseCard);
             });
+
+            // Show message if no courses
+            if (enrolledCourses.length === 0 && availableToEnroll.length === 0) {
+                courseGrid.innerHTML = '<p class="no-courses">No courses available at the moment.</p>';
+            }
         }
 
         // Render upcoming lessons
@@ -993,8 +1251,10 @@
         }
 
         function continueCourse(courseId) {
-            const course = coursesData.find(c => c.id === courseId);
-            alert(`Starting "${course.title}"! 🚀\n\nThis would normally navigate to the course content.`);
+            const course = enrolledCourses.find(c => c.id === courseId);
+            if (!course) return;
+            
+            alert(`Continuing "${course.title}"! 🚀\n\nLesson ${course.currentLesson}: Ready to learn!\n\nThis would normally open the lesson content.`);
         }
 
         function toggleTheme() {
@@ -1105,6 +1365,9 @@
 
         // Initialize dashboard
         document.addEventListener('DOMContentLoaded', () => {
+            // Load enrolled courses first
+            loadEnrolledCourses();
+            
             // Check if user already has a profile
             if (!loadExistingProfile()) {
                 // Show welcome modal for new users
@@ -1128,7 +1391,7 @@
                 const startBtn = document.getElementById('startBtn');
                 if (e.target.value.trim()) {
                     startBtn.disabled = false;
-                    e.target.style.borderColor = '#667eea';
+                    e.target.style.borderColor = '#ff6b35';
                 } else {
                     startBtn.disabled = true;
                     e.target.style.borderColor = '#e0e0e0';
@@ -1138,15 +1401,16 @@
 
         // Update stats dynamically
         function updateStats() {
-            const totalCourses = coursesData.length;
-            const completedLessons = coursesData.reduce((sum, course) => sum + course.completedLessons, 0);
-            const totalLessons = coursesData.reduce((sum, course) => sum + course.lessons, 0);
+            const totalCourses = enrolledCourses.length;
+            const completedLessons = enrolledCourses.reduce((sum, course) => sum + course.completedLessons, 0);
+            const completedCourses = enrolledCourses.filter(course => course.progress === 100).length;
+            const totalHours = Math.floor(completedLessons * 1.5); // Estimate 1.5 hours per lesson
             
             document.getElementById('totalCourses').textContent = totalCourses;
             document.getElementById('completedLessons').textContent = completedLessons;
+            document.getElementById('learningStreak').textContent = Math.min(completedLessons, 30); // Cap at 30 days
+            document.getElementById('totalHours').textContent = totalHours;
         }
-
-        updateStats();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97b2d926545e134c',t:'MTc1NzIxMjg5OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97b2e317805e47cf',t:'MTc1NzIxMzMwNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
