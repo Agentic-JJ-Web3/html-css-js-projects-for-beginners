@@ -13,13 +13,13 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #f8f9fa 0%, #fff5f0 100%);
             min-height: 100vh;
             transition: all 0.3s ease;
         }
 
         body.dark {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d1810 100%);
         }
 
         .dashboard {
@@ -43,7 +43,7 @@
         }
 
         body.dark .sidebar {
-            background: rgba(44, 62, 80, 0.95);
+            background: rgba(26, 26, 26, 0.95);
             color: white;
         }
 
@@ -52,11 +52,11 @@
             margin-bottom: 2rem;
             font-size: 1.5rem;
             font-weight: bold;
-            color: #667eea;
+            color: #ff6b35;
         }
 
         body.dark .logo {
-            color: #74b9ff;
+            color: #ff8c42;
         }
 
         .nav-menu {
@@ -82,15 +82,15 @@
         }
 
         .nav-link:hover, .nav-link.active {
-            background: rgba(102, 126, 234, 0.1);
-            border-left-color: #667eea;
-            color: #667eea;
+            background: rgba(255, 107, 53, 0.1);
+            border-left-color: #ff6b35;
+            color: #ff6b35;
         }
 
         body.dark .nav-link:hover, body.dark .nav-link.active {
-            background: rgba(116, 185, 255, 0.1);
-            border-left-color: #74b9ff;
-            color: #74b9ff;
+            background: rgba(255, 140, 66, 0.1);
+            border-left-color: #ff8c42;
+            color: #ff8c42;
         }
 
         .nav-icon {
@@ -112,7 +112,7 @@
         }
 
         body.dark .topbar {
-            background: rgba(44, 62, 80, 0.95);
+            background: rgba(26, 26, 26, 0.95);
             color: white;
         }
 
@@ -132,8 +132,8 @@
         }
 
         .search-input:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #ff6b35;
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
         }
 
         body.dark .search-input {
@@ -150,8 +150,8 @@
 
         .theme-toggle {
             background: none;
-            border: 2px solid #667eea;
-            color: #667eea;
+            border: 2px solid #ff6b35;
+            color: #ff6b35;
             padding: 0.5rem;
             border-radius: 50%;
             cursor: pointer;
@@ -159,23 +159,23 @@
         }
 
         .theme-toggle:hover {
-            background: #667eea;
+            background: #ff6b35;
             color: white;
         }
 
         body.dark .theme-toggle {
-            border-color: #74b9ff;
-            color: #74b9ff;
+            border-color: #ff8c42;
+            color: #ff8c42;
         }
 
         body.dark .theme-toggle:hover {
-            background: #74b9ff;
-            color: #2c3e50;
+            background: #ff8c42;
+            color: #1a1a1a;
         }
 
         .notifications {
             position: relative;
-            background: #667eea;
+            background: #ff6b35;
             color: white;
             border: none;
             padding: 0.75rem;
@@ -207,7 +207,7 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            background: linear-gradient(45deg, #ff6b35, #ff8c42);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -237,7 +237,7 @@
         }
 
         body.dark .welcome-section {
-            background: rgba(44, 62, 80, 0.95);
+            background: rgba(26, 26, 26, 0.95);
             color: white;
         }
 
@@ -279,7 +279,7 @@
         }
 
         body.dark .stat-card {
-            background: rgba(44, 62, 80, 0.95);
+            background: rgba(26, 26, 26, 0.95);
             color: white;
         }
 
@@ -291,12 +291,12 @@
         .stat-number {
             font-size: 2.5rem;
             font-weight: bold;
-            color: #667eea;
+            color: #ff6b35;
             margin-bottom: 0.5rem;
         }
 
         body.dark .stat-number {
-            color: #74b9ff;
+            color: #ff8c42;
         }
 
         .stat-label {
@@ -312,8 +312,12 @@
         .section-title {
             font-size: 1.5rem;
             margin-bottom: 1.5rem;
-            color: white;
+            color: #333;
             font-weight: 600;
+        }
+
+        body.dark .section-title {
+            color: white;
         }
 
         .course-grid {
@@ -334,7 +338,7 @@
         }
 
         body.dark .course-card {
-            background: rgba(44, 62, 80, 0.95);
+            background: rgba(26, 26, 26, 0.95);
             color: white;
         }
 
@@ -353,7 +357,7 @@
             width: 50px;
             height: 50px;
             border-radius: 12px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            background: linear-gradient(45deg, #ff6b35, #ff8c42);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -411,7 +415,7 @@
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
+            background: linear-gradient(90deg, #ff6b35, #ff8c42);
             border-radius: 4px;
             transition: width 1s ease;
         }
@@ -1144,5 +1148,5 @@
 
         updateStats();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97b2d04fb166134c',t:'MTc1NzIxMjUzNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97b2d926545e134c',t:'MTc1NzIxMjg5OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
