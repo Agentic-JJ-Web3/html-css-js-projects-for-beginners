@@ -203,6 +203,137 @@
             justify-content: center;
         }
 
+        /* Notification Panel */
+        .notification-panel {
+            position: absolute;
+            top: 70px;
+            right: 2rem;
+            width: 350px;
+            max-height: 400px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        body.dark .notification-panel {
+            background: rgba(26, 26, 26, 0.95);
+            color: white;
+        }
+
+        .notification-panel.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .notification-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 107, 53, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        body.dark .notification-title {
+            color: white;
+        }
+
+        .clear-all-btn {
+            background: none;
+            border: none;
+            color: #ff6b35;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        body.dark .clear-all-btn {
+            color: #ff8c42;
+        }
+
+        .notification-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        body.dark .notification-item {
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .notification-item:hover {
+            background: rgba(255, 107, 53, 0.05);
+        }
+
+        .notification-item.unread {
+            background: rgba(255, 107, 53, 0.1);
+            border-left: 3px solid #ff6b35;
+        }
+
+        .notification-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .notification-icon {
+            font-size: 1.5rem;
+            margin-top: 0.2rem;
+        }
+
+        .notification-text {
+            flex: 1;
+        }
+
+        .notification-message {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            color: #333;
+        }
+
+        body.dark .notification-message {
+            color: white;
+        }
+
+        .notification-time {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        body.dark .notification-time {
+            color: #bbb;
+        }
+
+        .no-notifications {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        body.dark .no-notifications {
+            color: #bbb;
+        }
+
         .user-avatar {
             width: 40px;
             height: 40px;
@@ -1299,12 +1430,23 @@
             </div>
             <div class="user-section">
                 <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
-                <button class="notifications">
+                <button class="notifications" onclick="toggleNotifications()">
                     🔔
-                    <span class="notification-badge">3</span>
+                    <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
                 </button>
                 <div class="user-avatar">AS</div>
                 <span class="user-name">Alex Smith</span>
+            </div>
+            
+            <!-- Notification Panel -->
+            <div class="notification-panel" id="notificationPanel">
+                <div class="notification-header">
+                    <h3 class="notification-title">Notifications</h3>
+                    <button class="clear-all-btn" onclick="clearAllNotifications()">Clear All</button>
+                </div>
+                <div class="notification-list" id="notificationList">
+                    <div class="no-notifications">No notifications yet</div>
+                </div>
             </div>
         </header>
 
@@ -1347,11 +1489,11 @@
                     </div>
                 </section>
 
-                <!-- Upcoming Lessons -->
+                <!-- Recent Activity -->
                 <section class="upcoming-section">
-                    <h3 class="upcoming-title">Upcoming Lessons & Tasks</h3>
-                    <div id="upcomingLessons">
-                        <div class="no-courses">No upcoming lessons yet. Enroll in courses to see your schedule!</div>
+                    <h3 class="upcoming-title">Recent Activity</h3>
+                    <div id="recentActivity">
+                        <div class="no-courses">No recent activity yet. Start learning to see your progress!</div>
                     </div>
                 </section>
             </div>
@@ -1598,32 +1740,133 @@
         // User's enrolled courses (stored in localStorage)
         let enrolledCourses = [];
 
-        const upcomingLessons = [
-            {
-                title: "Neural Network Architecture",
-                course: "Deep Learning Fundamentals",
-                dueDate: "2024-01-15",
-                overdue: false
-            },
-            {
-                title: "Convolutional Neural Networks",
-                course: "Computer Vision Basics",
-                dueDate: "2024-01-12",
-                overdue: true
-            },
-            {
-                title: "Q-Learning Introduction",
-                course: "Reinforcement Learning",
-                dueDate: "2024-01-18",
-                overdue: false
-            },
-            {
-                title: "Transformer Models",
-                course: "Natural Language Processing",
-                dueDate: "2024-01-20",
-                overdue: false
+        // Notification system
+        let notifications = [];
+        let notificationCount = 0;
+
+
+
+        // Notification system functions
+        function addNotification(type, message, courseTitle = '') {
+            const notification = {
+                id: Date.now(),
+                type: type,
+                message: message,
+                courseTitle: courseTitle,
+                timestamp: new Date(),
+                read: false
+            };
+            
+            notifications.unshift(notification);
+            notificationCount++;
+            updateNotificationBadge();
+            renderNotifications();
+            
+            // Auto-save notifications
+            localStorage.setItem('aiAcademyNotifications', JSON.stringify(notifications));
+        }
+
+        function updateNotificationBadge() {
+            const badge = document.getElementById('notificationBadge');
+            const unreadCount = notifications.filter(n => !n.read).length;
+            
+            if (unreadCount > 0) {
+                badge.textContent = unreadCount;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
             }
-        ];
+        }
+
+        function toggleNotifications() {
+            const panel = document.getElementById('notificationPanel');
+            panel.classList.toggle('active');
+            
+            // Mark all as read when opened
+            if (panel.classList.contains('active')) {
+                markAllAsRead();
+            }
+        }
+
+        function markAllAsRead() {
+            notifications.forEach(n => n.read = true);
+            updateNotificationBadge();
+            renderNotifications();
+            localStorage.setItem('aiAcademyNotifications', JSON.stringify(notifications));
+        }
+
+        function clearAllNotifications() {
+            notifications = [];
+            notificationCount = 0;
+            updateNotificationBadge();
+            renderNotifications();
+            localStorage.removeItem('aiAcademyNotifications');
+        }
+
+        function renderNotifications() {
+            const notificationList = document.getElementById('notificationList');
+            
+            if (notifications.length === 0) {
+                notificationList.innerHTML = '<div class="no-notifications">No notifications yet</div>';
+                return;
+            }
+            
+            notificationList.innerHTML = '';
+            
+            notifications.forEach(notification => {
+                const notificationItem = document.createElement('div');
+                notificationItem.className = `notification-item ${!notification.read ? 'unread' : ''}`;
+                
+                const icon = getNotificationIcon(notification.type);
+                const timeAgo = getTimeAgo(notification.timestamp);
+                
+                notificationItem.innerHTML = `
+                    <div class="notification-content">
+                        <div class="notification-icon">${icon}</div>
+                        <div class="notification-text">
+                            <div class="notification-message">${notification.message}</div>
+                            <div class="notification-time">${timeAgo}</div>
+                        </div>
+                    </div>
+                `;
+                
+                notificationList.appendChild(notificationItem);
+            });
+        }
+
+        function getNotificationIcon(type) {
+            const icons = {
+                'enrollment': '📚',
+                'completion': '✅',
+                'achievement': '🏆',
+                'goal': '🎯',
+                'course_complete': '🎉',
+                'welcome': '👋'
+            };
+            return icons[type] || '📢';
+        }
+
+        function getTimeAgo(timestamp) {
+            const now = new Date();
+            const diff = now - new Date(timestamp);
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+            
+            if (minutes < 1) return 'Just now';
+            if (minutes < 60) return `${minutes}m ago`;
+            if (hours < 24) return `${hours}h ago`;
+            return `${days}d ago`;
+        }
+
+        function loadNotifications() {
+            const saved = localStorage.getItem('aiAcademyNotifications');
+            if (saved) {
+                notifications = JSON.parse(saved);
+                updateNotificationBadge();
+                renderNotifications();
+            }
+        }
 
         // Course enrollment functions
         function enrollInCourse(courseId) {
@@ -1643,6 +1886,9 @@
             saveEnrolledCourses();
             renderCourses();
             updateStats();
+            
+            // Add notification
+            addNotification('enrollment', `Successfully enrolled in "${course.title}"! Ready to start learning?`, course.title);
             
             alert(`🎉 Successfully enrolled in "${course.title}"!\n\nYou can now start your learning journey. Good luck!`);
         }
@@ -1674,8 +1920,12 @@
                 updateStats();
                 
                 if (course.progress === 100) {
+                    // Course completed notification
+                    addNotification('course_complete', `🎊 Course completed! You've mastered "${course.title}" with all ${course.lessons} lessons!`, course.title);
                     alert(`🎊 Congratulations! You've completed "${course.title}"!\n\nYou've mastered all ${course.lessons} lessons. Well done!`);
                 } else {
+                    // Lesson completed notification
+                    addNotification('completion', `Lesson ${course.completedLessons} completed in "${course.title}"! Progress: ${course.progress}%`, course.title);
                     alert(`✅ Lesson ${course.completedLessons} completed!\n\nProgress: ${course.progress}%\nNext: Lesson ${course.currentLesson}`);
                 }
             }
@@ -1885,6 +2135,10 @@
             weeklyGoal = parseInt(goalInput.value) || 5;
             localStorage.setItem('weeklyGoal', weeklyGoal);
             updateWeeklyProgress();
+            
+            // Add notification
+            addNotification('goal', `Weekly learning goal set to ${weeklyGoal} lessons! Stay motivated! 🎯`);
+            
             alert(`Weekly goal set to ${weeklyGoal} lessons! 🎯`);
         }
 
@@ -1956,29 +2210,36 @@
             }
         }
 
-        // Render upcoming lessons
-        function renderUpcomingLessons() {
-            const upcomingContainer = document.getElementById('upcomingLessons');
-            upcomingContainer.innerHTML = '';
+        // Render recent activity
+        function renderRecentActivity() {
+            const activityContainer = document.getElementById('recentActivity');
+            activityContainer.innerHTML = '';
 
-            upcomingLessons.forEach(lesson => {
-                const lessonItem = document.createElement('div');
-                lessonItem.className = `lesson-item ${lesson.overdue ? 'overdue' : ''}`;
+            if (notifications.length === 0) {
+                activityContainer.innerHTML = '<div class="no-courses">No recent activity yet. Start learning to see your progress!</div>';
+                return;
+            }
+
+            // Show last 3 notifications as recent activity
+            const recentNotifications = notifications.slice(0, 3);
+            
+            recentNotifications.forEach(notification => {
+                const activityItem = document.createElement('div');
+                activityItem.className = 'lesson-item';
                 
-                const dueDate = new Date(lesson.dueDate);
-                const today = new Date();
-                const isOverdue = dueDate < today;
+                const icon = getNotificationIcon(notification.type);
+                const timeAgo = getTimeAgo(notification.timestamp);
                 
-                lessonItem.innerHTML = `
+                activityItem.innerHTML = `
                     <div class="lesson-info">
-                        <h4>${lesson.title}</h4>
-                        <p class="lesson-course">${lesson.course}</p>
+                        <h4>${icon} ${notification.message}</h4>
+                        <p class="lesson-course">${notification.courseTitle || 'System'}</p>
                     </div>
-                    <div class="lesson-date ${isOverdue ? 'overdue' : ''}">
-                        ${isOverdue ? 'Overdue' : formatDate(dueDate)}
+                    <div class="lesson-date">
+                        ${timeAgo}
                     </div>
                 `;
-                upcomingContainer.appendChild(lessonItem);
+                activityContainer.appendChild(activityItem);
             });
         }
 
@@ -2083,6 +2344,9 @@
             const modal = document.getElementById('welcomeModal');
             modal.classList.remove('active');
             
+            // Add welcome notification for new users
+            addNotification('welcome', `Welcome to AI Academy, ${userProfile.name}! Start your learning journey today! 🚀`);
+            
             // Initialize dashboard after modal closes
             setTimeout(() => {
                 initializeDashboard();
@@ -2114,7 +2378,7 @@
 
         function initializeDashboard() {
             renderCourses();
-            renderUpcomingLessons();
+            renderRecentActivity();
             
             // Animate progress bars
             setTimeout(() => {
@@ -2132,6 +2396,9 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Load enrolled courses first
             loadEnrolledCourses();
+            
+            // Load notifications
+            loadNotifications();
             
             // Check if user already has a profile
             if (!loadExistingProfile()) {
@@ -2170,6 +2437,16 @@
                     filterCourses(filter);
                 });
             });
+
+            // Close notification panel when clicking outside
+            document.addEventListener('click', (e) => {
+                const panel = document.getElementById('notificationPanel');
+                const notificationBtn = document.querySelector('.notifications');
+                
+                if (!panel.contains(e.target) && !notificationBtn.contains(e.target)) {
+                    panel.classList.remove('active');
+                }
+            });
         });
 
         // Update stats dynamically
@@ -2185,5 +2462,5 @@
             document.getElementById('totalHours').textContent = totalHours;
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97b2eb1e33fa47cf',t:'MTc1NzIxMzYzNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97b2f56705e247cf',t:'MTc1NzIxNDA1NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
