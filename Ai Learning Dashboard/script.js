@@ -1,5 +1,4 @@
 
-    <script>
         // User profile data
         let userProfile = {
             name: '',
