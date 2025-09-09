@@ -11,3 +11,7 @@ An interactive learning tool built using HTML CSS and JAVASCRIPT to help users l
 * CSS3  
 * JAVASCRIPT
 
+## Technologies Used
+* HTML5
+* CSS3  
+* JAVASCRIPT
