@@ -14,3 +14,5 @@ An interactive learning tool built using HTML CSS and JAVASCRIPT to help users l
 ## Getting Started  
 1. Clone the repository: `git clone https:
 2. Open `index.html` in your preferred web browser
+
+## Usage 
