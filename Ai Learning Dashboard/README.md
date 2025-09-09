@@ -16,3 +16,8 @@ An interactive learning tool built using HTML CSS and JAVASCRIPT to help users l
 2. Open `index.html` in your preferred web browser
 
 ## Usage 
+* Navigate through the lessons and exercises
+* Complete the assessements to track your progress
+* Use the feedback to improve your understanding
+
+##
