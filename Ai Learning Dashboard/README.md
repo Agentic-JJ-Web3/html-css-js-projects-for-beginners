@@ -7,4 +7,5 @@ An interactive learning tool built using HTML CSS and JAVASCRIPT to help users l
 * User-friendly interface
  
 ## Technologies Used
-*HTML5
+* HTML5
+* CSS3  
