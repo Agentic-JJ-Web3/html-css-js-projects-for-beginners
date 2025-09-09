@@ -5,3 +5,6 @@ An interactive learning tool built using HTML CSS and JAVASCRIPT to help users l
 * Interactive lessons and exercises
 * Real-time feedback and assessment
 * User-friendly interface
+ 
+## Technologies Used
+*HTML5
