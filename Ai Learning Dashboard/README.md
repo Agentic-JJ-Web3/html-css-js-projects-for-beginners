@@ -14,4 +14,3 @@ An interactive learning tool built using HTML CSS and JAVASCRIPT to help users l
 ## Getting Started  
 * HTML5
 * CSS3  
-* JAVASCRIPT
