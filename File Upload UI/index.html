@@ -561,6 +561,240 @@
         #fileInput {
             display: none;
         }
+
+        /* Profile Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .profile-modal {
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active .profile-modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .profile-picture-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-picture-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .profile-picture {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-orange), #ff8c42);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            border: 4px solid var(--border);
+        }
+
+        .profile-picture:hover {
+            transform: scale(1.05);
+            border-color: var(--accent-orange);
+        }
+
+        .profile-picture img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .picture-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            cursor: pointer;
+        }
+
+        .profile-picture-container:hover .picture-overlay {
+            opacity: 1;
+        }
+
+        .camera-icon {
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .picture-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .picture-btn {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .picture-btn:hover {
+            background-color: var(--accent-orange);
+            border-color: var(--accent-orange);
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--bg-primary);
+        }
+
+        .btn-primary {
+            background-color: var(--accent-orange);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-orange-hover);
+        }
+
+        #profilePictureInput {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -656,6 +890,59 @@
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
+    <!-- Profile Modal -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="profile-modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Edit Profile</h2>
+                <button class="close-btn" id="closeProfileModal">✕</button>
+            </div>
+            
+            <div class="profile-picture-section">
+                <div class="profile-picture-container">
+                    <div class="profile-picture" id="modalProfilePicture">
+                        JD
+                    </div>
+                    <div class="picture-overlay" id="pictureOverlay">
+                        <span class="camera-icon">📷</span>
+                    </div>
+                </div>
+                <div class="picture-buttons">
+                    <button class="picture-btn" id="uploadPictureBtn">Upload Photo</button>
+                    <button class="picture-btn" id="removePictureBtn">Remove</button>
+                </div>
+                <input type="file" id="profilePictureInput" accept="image/*">
+            </div>
+
+            <form id="profileForm">
+                <div class="form-group">
+                    <label class="form-label" for="firstName">First Name</label>
+                    <input type="text" id="firstName" class="form-input" placeholder="Enter your first name">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="lastName">Last Name</label>
+                    <input type="text" id="lastName" class="form-input" placeholder="Enter your last name">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="email">Email</label>
+                    <input type="email" id="email" class="form-input" placeholder="Enter your email">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="bio">Bio</label>
+                    <textarea id="bio" class="form-input form-textarea" placeholder="Tell us about yourself..."></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelProfileBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         class FileUploadDashboard {
             constructor() {
@@ -664,12 +951,14 @@
                 this.isDarkTheme = true;
                 this.sidebarCollapsed = false;
                 this.currentPage = 'uploads';
+                this.profile = this.loadProfile();
                 this.init();
             }
 
             init() {
                 this.setupEventListeners();
                 this.updateFileDisplay();
+                this.updateProfileDisplay();
             }
 
             setupEventListeners() {
@@ -723,6 +1012,29 @@
                         e.preventDefault();
                         this.switchPage(item.dataset.page);
                     });
+                });
+
+                // Profile modal
+                document.querySelector('.user-avatar').addEventListener('click', () => this.openProfileModal());
+                document.getElementById('closeProfileModal').addEventListener('click', () => this.closeProfileModal());
+                document.getElementById('cancelProfileBtn').addEventListener('click', () => this.closeProfileModal());
+                document.getElementById('profileForm').addEventListener('submit', (e) => this.saveProfile(e));
+                
+                // Profile picture
+                document.getElementById('uploadPictureBtn').addEventListener('click', () => {
+                    document.getElementById('profilePictureInput').click();
+                });
+                document.getElementById('pictureOverlay').addEventListener('click', () => {
+                    document.getElementById('profilePictureInput').click();
+                });
+                document.getElementById('removePictureBtn').addEventListener('click', () => this.removeProfilePicture());
+                document.getElementById('profilePictureInput').addEventListener('change', (e) => this.handleProfilePicture(e));
+
+                // Close modal on overlay click
+                document.getElementById('profileModal').addEventListener('click', (e) => {
+                    if (e.target.id === 'profileModal') {
+                        this.closeProfileModal();
+                    }
                 });
             }
 
@@ -1184,10 +1496,166 @@
                 }
                 this.showToast('Upload history cleared', 'success');
             }
+
+            // Profile Management Methods
+            loadProfile() {
+                const stored = localStorage.getItem('userProfile');
+                if (stored) {
+                    return JSON.parse(stored);
+                }
+                return {
+                    firstName: '',
+                    lastName: '',
+                    email: '',
+                    bio: '',
+                    profilePicture: null,
+                    initials: 'JD'
+                };
+            }
+
+            saveProfileToStorage() {
+                try {
+                    localStorage.setItem('userProfile', JSON.stringify(this.profile));
+                    return true;
+                } catch (error) {
+                    console.error('Failed to save profile:', error);
+                    // If saving fails due to large image, try without profile picture
+                    if (this.profile.profilePicture) {
+                        const profileCopy = { ...this.profile };
+                        profileCopy.profilePicture = null;
+                        try {
+                            localStorage.setItem('userProfile', JSON.stringify(profileCopy));
+                            this.showToast('Profile saved (image too large, removed)', 'success');
+                            return false;
+                        } catch (e) {
+                            console.error('Failed to save even without image:', e);
+                            return false;
+                        }
+                    }
+                    return false;
+                }
+            }
+
+            updateProfileDisplay() {
+                const avatar = document.querySelector('.user-avatar');
+                const modalPicture = document.getElementById('modalProfilePicture');
+                
+                if (this.profile.profilePicture) {
+                    avatar.innerHTML = `<img src="${this.profile.profilePicture}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                    modalPicture.innerHTML = `<img src="${this.profile.profilePicture}" alt="Profile">`;
+                } else {
+                    const initials = this.getInitials();
+                    avatar.textContent = initials;
+                    modalPicture.textContent = initials;
+                }
+            }
+
+            getInitials() {
+                if (this.profile.firstName || this.profile.lastName) {
+                    const first = this.profile.firstName ? this.profile.firstName.charAt(0).toUpperCase() : '';
+                    const last = this.profile.lastName ? this.profile.lastName.charAt(0).toUpperCase() : '';
+                    return first + last || 'U';
+                }
+                return this.profile.initials || 'JD';
+            }
+
+            openProfileModal() {
+                // Populate form with current profile data
+                document.getElementById('firstName').value = this.profile.firstName || '';
+                document.getElementById('lastName').value = this.profile.lastName || '';
+                document.getElementById('email').value = this.profile.email || '';
+                document.getElementById('bio').value = this.profile.bio || '';
+                
+                // Update modal profile picture
+                this.updateModalProfilePicture();
+                
+                // Show modal
+                document.getElementById('profileModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            closeProfileModal() {
+                document.getElementById('profileModal').classList.remove('active');
+                document.body.style.overflow = 'auto';
+                
+                // Reset form
+                document.getElementById('profileForm').reset();
+            }
+
+            updateModalProfilePicture() {
+                const modalPicture = document.getElementById('modalProfilePicture');
+                
+                if (this.profile.profilePicture) {
+                    modalPicture.innerHTML = `<img src="${this.profile.profilePicture}" alt="Profile">`;
+                } else {
+                    modalPicture.textContent = this.getInitials();
+                }
+            }
+
+            handleProfilePicture(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                    this.showToast('Please select an image file', 'error');
+                    return;
+                }
+
+                // Validate file size (5MB limit)
+                if (file.size > 5 * 1024 * 1024) {
+                    this.showToast('Image too large. Please choose a file under 5MB', 'error');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.profile.profilePicture = e.target.result;
+                    this.updateModalProfilePicture();
+                    this.showToast('Profile picture updated', 'success');
+                };
+                reader.readAsDataURL(file);
+            }
+
+            removeProfilePicture() {
+                this.profile.profilePicture = null;
+                this.updateModalProfilePicture();
+                this.showToast('Profile picture removed', 'success');
+            }
+
+            saveProfile(event) {
+                event.preventDefault();
+                
+                // Get form data
+                const formData = new FormData(event.target);
+                this.profile.firstName = document.getElementById('firstName').value.trim();
+                this.profile.lastName = document.getElementById('lastName').value.trim();
+                this.profile.email = document.getElementById('email').value.trim();
+                this.profile.bio = document.getElementById('bio').value.trim();
+                
+                // Validate required fields
+                if (!this.profile.firstName && !this.profile.lastName) {
+                    this.showToast('Please enter at least your first or last name', 'error');
+                    return;
+                }
+
+                // Save to localStorage
+                const saved = this.saveProfileToStorage();
+                
+                if (saved) {
+                    this.showToast('Profile saved successfully!', 'success');
+                } else {
+                    this.showToast('Profile saved (some data may have been reduced)', 'success');
+                }
+                
+                // Update displays
+                this.updateProfileDisplay();
+                this.closeProfileModal();
+            }
         }
 
         // Initialize the dashboard
         const dashboard = new FileUploadDashboard();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97cc5466a4155592',t:'MTc1NzQ4MDA5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97cc631f24b483df',t:'MTc1NzQ4MDY5NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
