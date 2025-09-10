@@ -773,9 +773,17 @@
                         // Save completed uploads to history
                         this.saveToHistory(fileObj);
                         
+                        // Remove from current uploads after a short delay
+                        setTimeout(() => {
+                            this.files = this.files.filter(f => f.id !== fileObj.id);
+                            if (this.currentPage === 'uploads') {
+                                this.updateFileDisplay();
+                            }
+                        }, 2000);
+                        
                         const message = fileObj.status === 'success' 
-                            ? `${fileObj.name} uploaded successfully`
-                            : `Failed to upload ${fileObj.name}`;
+                            ? `${fileObj.name} uploaded successfully - moved to history`
+                            : `Failed to upload ${fileObj.name} - moved to history`;
                         this.showToast(message, fileObj.status);
                     }
                     
@@ -804,7 +812,10 @@
                     container.innerHTML = sortedHistory.map(file => `
                         <div class="file-item">
                             <div class="file-preview">
-                                <div class="file-icon">${this.getFileIcon(file.type)}</div>
+                                ${file.preview 
+                                    ? `<img src="${file.preview}" alt="${file.name}">` 
+                                    : `<div class="file-icon">${this.getFileIcon(file.type)}</div>`
+                                }
                             </div>
                             <div class="file-info">
                                 <div class="file-name">${file.name}</div>
@@ -1131,13 +1142,16 @@
             saveToHistory(fileObj) {
                 const history = this.loadHistoryFromStorage();
                 const historyItem = {
-                    ...fileObj,
+                    id: fileObj.id,
+                    name: fileObj.name,
+                    size: fileObj.size,
+                    type: fileObj.type,
+                    status: fileObj.status,
+                    progress: 100,
                     uploadDate: new Date().toISOString(),
-                    completedAt: new Date().toLocaleString()
+                    completedAt: new Date().toLocaleString(),
+                    preview: fileObj.preview || null
                 };
-                
-                // Remove the actual file object to avoid storage issues
-                delete historyItem.file;
                 
                 history.unshift(historyItem);
                 
@@ -1146,7 +1160,21 @@
                     history.splice(100);
                 }
                 
-                localStorage.setItem('fileUploadHistory', JSON.stringify(history));
+                try {
+                    localStorage.setItem('fileUploadHistory', JSON.stringify(history));
+                    console.log('File saved to history:', historyItem.name);
+                } catch (error) {
+                    console.error('Failed to save to localStorage:', error);
+                    // If storage fails due to size, try without preview
+                    if (historyItem.preview) {
+                        historyItem.preview = null;
+                        try {
+                            localStorage.setItem('fileUploadHistory', JSON.stringify(history));
+                        } catch (e) {
+                            console.error('Failed to save even without preview:', e);
+                        }
+                    }
+                }
             }
 
             clearHistory() {
@@ -1161,5 +1189,5 @@
         // Initialize the dashboard
         const dashboard = new FileUploadDashboard();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97cc4a5360b903b9',t:'MTc1NzQ3OTY3OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97cc5466a4155592',t:'MTc1NzQ4MDA5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
