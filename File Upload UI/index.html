@@ -795,6 +795,356 @@
         #profilePictureInput {
             display: none;
         }
+
+        /* Settings Styles */
+        .settings-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .settings-section {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        .settings-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            gap: 2rem;
+        }
+
+        .setting-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .setting-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            min-width: 200px;
+            flex-shrink: 0;
+        }
+
+        .setting-control {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .setting-value {
+            color: var(--accent-orange);
+            font-weight: 600;
+            min-width: 80px;
+        }
+
+        .setting-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+            flex-basis: 100%;
+        }
+
+        /* Slider Styles */
+        .slider {
+            width: 200px;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--bg-secondary);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent-orange);
+            cursor: pointer;
+            border: 2px solid var(--bg-card);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent-orange);
+            cursor: pointer;
+            border: 2px solid var(--bg-card);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Select Styles */
+        .setting-select {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            min-width: 200px;
+            cursor: pointer;
+        }
+
+        .setting-select:focus {
+            outline: none;
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            transition: 0.3s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 2px;
+            bottom: 2px;
+            background-color: var(--text-secondary);
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--accent-orange);
+            border-color: var(--accent-orange);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+            background-color: white;
+        }
+
+        /* Checkbox Group */
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .checkbox-label:hover {
+            background-color: var(--bg-primary);
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            display: none;
+        }
+
+        .checkbox-label input[type="checkbox"]:checked + .checkmark {
+            opacity: 1;
+        }
+
+        .checkbox-label input[type="checkbox"]:checked ~ * {
+            color: var(--accent-orange);
+        }
+
+        .checkbox-label input[type="checkbox"]:checked {
+            background-color: rgba(255, 107, 53, 0.1);
+            border-color: var(--accent-orange);
+        }
+
+        .checkmark {
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Radio Group */
+        .radio-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .radio-label:hover {
+            background-color: var(--bg-primary);
+        }
+
+        .radio-label input[type="radio"] {
+            display: none;
+        }
+
+        .radio-mark {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .radio-label input[type="radio"]:checked + .radio-mark {
+            border-color: var(--accent-orange);
+            background-color: var(--accent-orange);
+        }
+
+        .radio-label input[type="radio"]:checked + .radio-mark:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: white;
+        }
+
+        /* Danger Zone */
+        .danger-zone {
+            border-top: 1px solid var(--error);
+            padding-top: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .danger-btn {
+            background-color: var(--error);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            margin-right: 1rem;
+        }
+
+        .danger-btn:hover {
+            background-color: #dc2626;
+            transform: translateY(-1px);
+        }
+
+        .export-btn {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .export-btn:hover {
+            background-color: var(--accent-orange);
+            border-color: var(--accent-orange);
+            color: white;
+        }
+
+        /* Settings Actions */
+        .settings-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 2rem;
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        /* Responsive Settings */
+        @media (max-width: 768px) {
+            .setting-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .setting-label {
+                min-width: auto;
+            }
+
+            .setting-control {
+                width: 100%;
+            }
+
+            .slider {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .setting-select {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .checkbox-group,
+            .radio-group {
+                width: 100%;
+            }
+
+            .settings-actions {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 <body>
@@ -952,6 +1302,7 @@
                 this.sidebarCollapsed = false;
                 this.currentPage = 'uploads';
                 this.profile = this.loadProfile();
+                this.settings = this.loadSettings();
                 this.init();
             }
 
@@ -959,6 +1310,77 @@
                 this.setupEventListeners();
                 this.updateFileDisplay();
                 this.updateProfileDisplay();
+                this.applySettings();
+            }
+
+            loadSettings() {
+                const stored = localStorage.getItem('fileFlowSettings');
+                if (stored) {
+                    return { ...this.getDefaultSettings(), ...JSON.parse(stored) };
+                }
+                return this.getDefaultSettings();
+            }
+
+            getDefaultSettings() {
+                return {
+                    // Upload Settings
+                    maxFileSize: 50, // MB
+                    allowedTypes: {
+                        images: true,
+                        documents: true,
+                        videos: true,
+                        audio: true
+                    },
+                    uploadBehavior: 'auto',
+                    concurrentUploads: 3,
+                    
+                    // Interface Preferences
+                    defaultView: 'list',
+                    defaultSort: 'name',
+                    listSpacing: 'comfortable',
+                    showPreviews: true,
+                    toastDuration: 3,
+                    
+                    // Advanced Features
+                    autoRename: true,
+                    compressImages: false,
+                    autoClearHistory: 'never',
+                    maxHistoryItems: 100,
+                    
+                    // Privacy & Security
+                    privacyMode: false,
+                    autoLogout: 'never'
+                };
+            }
+
+            saveSettings() {
+                try {
+                    localStorage.setItem('fileFlowSettings', JSON.stringify(this.settings));
+                    return true;
+                } catch (error) {
+                    console.error('Failed to save settings:', error);
+                    return false;
+                }
+            }
+
+            applySettings() {
+                // Apply current settings to the interface
+                this.currentSort = this.settings.defaultSort;
+                
+                // Update sort buttons
+                document.querySelectorAll('.sort-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.sort === this.currentSort);
+                });
+                
+                // Apply list spacing
+                const fileItems = document.querySelectorAll('.file-item');
+                fileItems.forEach(item => {
+                    if (this.settings.listSpacing === 'compact') {
+                        item.style.padding = '0.5rem';
+                    } else {
+                        item.style.padding = '1rem';
+                    }
+                });
             }
 
             setupEventListeners() {
@@ -1038,12 +1460,206 @@
                 });
             }
 
+            setupSettingsEventListeners() {
+                // File size slider
+                const maxFileSizeSlider = document.getElementById('maxFileSize');
+                if (maxFileSizeSlider) {
+                    maxFileSizeSlider.addEventListener('input', (e) => {
+                        document.querySelector('#maxFileSize + .setting-value').textContent = e.target.value + ' MB';
+                    });
+                }
+
+                // Toast duration slider
+                const toastDurationSlider = document.getElementById('toastDuration');
+                if (toastDurationSlider) {
+                    toastDurationSlider.addEventListener('input', (e) => {
+                        document.querySelector('#toastDuration + .setting-value').textContent = e.target.value + ' seconds';
+                    });
+                }
+
+                // Max history items slider
+                const maxHistorySlider = document.getElementById('maxHistoryItems');
+                if (maxHistorySlider) {
+                    maxHistorySlider.addEventListener('input', (e) => {
+                        document.querySelector('#maxHistoryItems + .setting-value').textContent = e.target.value + ' items';
+                    });
+                }
+
+                // Save settings button
+                const saveBtn = document.getElementById('saveSettings');
+                if (saveBtn) {
+                    saveBtn.addEventListener('click', () => this.saveSettingsFromForm());
+                }
+
+                // Reset settings button
+                const resetBtn = document.getElementById('resetSettings');
+                if (resetBtn) {
+                    resetBtn.addEventListener('click', () => this.resetSettings());
+                }
+
+                // Clear all data button
+                const clearBtn = document.getElementById('clearAllData');
+                if (clearBtn) {
+                    clearBtn.addEventListener('click', () => this.clearAllData());
+                }
+
+                // Export data button
+                const exportBtn = document.getElementById('exportData');
+                if (exportBtn) {
+                    exportBtn.addEventListener('click', () => this.exportData());
+                }
+            }
+
+            saveSettingsFromForm() {
+                // Collect all settings from the form
+                this.settings.maxFileSize = parseInt(document.getElementById('maxFileSize')?.value || 50);
+                this.settings.uploadBehavior = document.getElementById('uploadBehavior')?.value || 'auto';
+                this.settings.concurrentUploads = parseInt(document.getElementById('concurrentUploads')?.value || 3);
+                this.settings.defaultSort = document.getElementById('defaultSort')?.value || 'name';
+                this.settings.toastDuration = parseInt(document.getElementById('toastDuration')?.value || 3);
+                this.settings.maxHistoryItems = parseInt(document.getElementById('maxHistoryItems')?.value || 100);
+                this.settings.autoClearHistory = document.getElementById('autoClearHistory')?.value || 'never';
+                this.settings.autoLogout = document.getElementById('autoLogout')?.value || 'never';
+
+                // Checkboxes and toggles
+                this.settings.showPreviews = document.getElementById('showPreviews')?.checked || false;
+                this.settings.autoRename = document.getElementById('autoRename')?.checked || false;
+                this.settings.compressImages = document.getElementById('compressImages')?.checked || false;
+                this.settings.privacyMode = document.getElementById('privacyMode')?.checked || false;
+
+                // File types
+                const typeCheckboxes = document.querySelectorAll('[data-type]');
+                typeCheckboxes.forEach(checkbox => {
+                    const type = checkbox.dataset.type;
+                    this.settings.allowedTypes[type] = checkbox.checked;
+                });
+
+                // Radio buttons
+                const defaultViewRadio = document.querySelector('input[name="defaultView"]:checked');
+                if (defaultViewRadio) {
+                    this.settings.defaultView = defaultViewRadio.value;
+                }
+
+                const listSpacingRadio = document.querySelector('input[name="listSpacing"]:checked');
+                if (listSpacingRadio) {
+                    this.settings.listSpacing = listSpacingRadio.value;
+                }
+
+                // Save to localStorage
+                if (this.saveSettings()) {
+                    this.showToast('Settings saved successfully!', 'success');
+                    this.applySettings();
+                } else {
+                    this.showToast('Failed to save settings', 'error');
+                }
+            }
+
+            resetSettings() {
+                if (confirm('Are you sure you want to reset all settings to defaults?')) {
+                    this.settings = this.getDefaultSettings();
+                    this.saveSettings();
+                    this.renderSettingsPage();
+                    this.applySettings();
+                    this.showToast('Settings reset to defaults', 'success');
+                }
+            }
+
+            clearAllData() {
+                if (confirm('Are you sure you want to clear ALL data? This cannot be undone.')) {
+                    localStorage.removeItem('fileUploadHistory');
+                    localStorage.removeItem('userProfile');
+                    localStorage.removeItem('fileFlowSettings');
+                    
+                    // Reset to defaults
+                    this.profile = this.loadProfile();
+                    this.settings = this.getDefaultSettings();
+                    this.files = [];
+                    
+                    this.updateProfileDisplay();
+                    this.updateFileDisplay();
+                    this.showToast('All data cleared', 'success');
+                }
+            }
+
+            exportData() {
+                const data = {
+                    profile: this.profile,
+                    settings: this.settings,
+                    history: this.loadHistoryFromStorage(),
+                    exportDate: new Date().toISOString()
+                };
+
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `fileflow-backup-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                this.showToast('Data exported successfully', 'success');
+            }
+
+            validateFile(file) {
+                // Check file size
+                const maxSizeBytes = this.settings.maxFileSize * 1024 * 1024;
+                if (file.size > maxSizeBytes) {
+                    this.showToast(`File "${file.name}" is too large (max ${this.settings.maxFileSize}MB)`, 'error');
+                    return false;
+                }
+
+                // Check file type
+                const fileType = this.getFileType(file.name);
+                const typeMap = {
+                    'Image': 'images',
+                    'PDF Document': 'documents',
+                    'Word Document': 'documents',
+                    'Excel Spreadsheet': 'documents',
+                    'PowerPoint': 'documents',
+                    'Document': 'documents',
+                    'Archive': 'documents',
+                    'Video': 'videos',
+                    'Audio': 'audio'
+                };
+
+                const category = typeMap[fileType] || 'documents';
+                if (!this.settings.allowedTypes[category]) {
+                    this.showToast(`File type "${fileType}" is not allowed`, 'error');
+                    return false;
+                }
+
+                return true;
+            }
+
             handleFiles(fileList) {
-                Array.from(fileList).forEach(file => {
+                const validFiles = Array.from(fileList).filter(file => this.validateFile(file));
+                
+                if (validFiles.length === 0) {
+                    return;
+                }
+
+                validFiles.forEach(file => {
+                    let fileName = file.name;
+                    
+                    // Auto-rename duplicates if enabled
+                    if (this.settings.autoRename) {
+                        const existingNames = this.files.map(f => f.name);
+                        let counter = 1;
+                        const baseName = fileName.substring(0, fileName.lastIndexOf('.')) || fileName;
+                        const extension = fileName.substring(fileName.lastIndexOf('.')) || '';
+                        
+                        while (existingNames.includes(fileName)) {
+                            fileName = `${baseName} (${counter})${extension}`;
+                            counter++;
+                        }
+                    }
+
                     const fileObj = {
                         id: Date.now() + Math.random(),
                         file: file,
-                        name: file.name,
+                        name: fileName,
                         size: this.formatFileSize(file.size),
                         type: this.getFileType(file.name),
                         status: 'uploading',
@@ -1051,8 +1667,8 @@
                         preview: null
                     };
 
-                    // Generate preview for images
-                    if (file.type.startsWith('image/')) {
+                    // Generate preview for images if enabled
+                    if (file.type.startsWith('image/') && this.settings.showPreviews) {
                         const reader = new FileReader();
                         reader.onload = (e) => {
                             fileObj.preview = e.target.result;
@@ -1066,7 +1682,7 @@
                 });
 
                 this.updateFileDisplay();
-                this.showToast(`${fileList.length} file(s) added to upload queue`, 'success');
+                this.showToast(`${validFiles.length} file(s) added to upload queue`, 'success');
             }
 
             simulateUpload(fileObj) {
@@ -1082,8 +1698,10 @@
                         fileObj.status = Math.random() > 0.1 ? 'success' : 'error'; // 90% success rate
                         clearInterval(progressInterval);
                         
-                        // Save completed uploads to history
-                        this.saveToHistory(fileObj);
+                        // Save completed uploads to history (unless privacy mode is on)
+                        if (!this.settings.privacyMode) {
+                            this.saveToHistory(fileObj);
+                        }
                         
                         // Remove from current uploads after a short delay
                         setTimeout(() => {
@@ -1094,8 +1712,8 @@
                         }, 2000);
                         
                         const message = fileObj.status === 'success' 
-                            ? `${fileObj.name} uploaded successfully - moved to history`
-                            : `Failed to upload ${fileObj.name} - moved to history`;
+                            ? `${fileObj.name} uploaded successfully${this.settings.privacyMode ? '' : ' - moved to history'}`
+                            : `Failed to upload ${fileObj.name}${this.settings.privacyMode ? '' : ' - moved to history'}`;
                         this.showToast(message, fileObj.status);
                     }
                     
@@ -1122,9 +1740,9 @@
                     }
                     
                     container.innerHTML = sortedHistory.map(file => `
-                        <div class="file-item">
+                        <div class="file-item" style="padding: ${this.settings.listSpacing === 'compact' ? '0.5rem' : '1rem'}">
                             <div class="file-preview">
-                                ${file.preview 
+                                ${file.preview && this.settings.showPreviews
                                     ? `<img src="${file.preview}" alt="${file.name}">` 
                                     : `<div class="file-icon">${this.getFileIcon(file.type)}</div>`
                                 }
@@ -1167,9 +1785,9 @@
                     }
                     
                     container.innerHTML = sortedFiles.map(file => `
-                        <div class="file-item">
+                        <div class="file-item" style="padding: ${this.settings.listSpacing === 'compact' ? '0.5rem' : '1rem'}">
                             <div class="file-preview">
-                                ${file.preview 
+                                ${file.preview && this.settings.showPreviews
                                     ? `<img src="${file.preview}" alt="${file.name}">` 
                                     : `<div class="file-icon">${this.getFileIcon(file.type)}</div>`
                                 }
@@ -1397,8 +2015,12 @@
 
             updatePageSpecificControls(page) {
                 const sortControls = document.querySelector('.sort-controls');
+                const fileListSection = document.querySelector('.file-list');
                 
                 if (page === 'history') {
+                    // Show file list section
+                    fileListSection.style.display = 'block';
+                    
                     // Add clear history button if not exists
                     if (!document.getElementById('clearHistoryBtn')) {
                         const clearBtn = document.createElement('button');
@@ -1411,25 +2033,269 @@
                         clearBtn.addEventListener('click', () => this.clearHistory());
                         sortControls.appendChild(clearBtn);
                     }
-                } else {
+                } else if (page === 'uploads') {
+                    // Show file list section
+                    fileListSection.style.display = 'block';
+                    
                     // Remove clear history button if exists
                     const clearBtn = document.getElementById('clearHistoryBtn');
                     if (clearBtn) {
                         clearBtn.remove();
                     }
+                } else if (page === 'settings') {
+                    // Hide file list section and show settings
+                    fileListSection.style.display = 'none';
+                    
+                    // Remove clear history button if exists
+                    const clearBtn = document.getElementById('clearHistoryBtn');
+                    if (clearBtn) {
+                        clearBtn.remove();
+                    }
+                    
+                    // Create settings container if it doesn't exist
+                    let settingsContainer = document.getElementById('settingsContainer');
+                    if (!settingsContainer) {
+                        settingsContainer = document.createElement('div');
+                        settingsContainer.id = 'settingsContainer';
+                        settingsContainer.className = 'settings-container';
+                        fileListSection.parentNode.insertBefore(settingsContainer, fileListSection.nextSibling);
+                    }
+                    
+                    // Show settings content
+                    settingsContainer.style.display = 'block';
+                    this.renderSettingsPage();
+                } else {
+                    // Hide settings container if it exists
+                    const settingsContainer = document.getElementById('settingsContainer');
+                    if (settingsContainer) {
+                        settingsContainer.style.display = 'none';
+                    }
                 }
+            }
 
-                if (page === 'settings') {
-                    // Show settings content instead of file list
-                    const container = document.getElementById('fileListContainer');
-                    container.innerHTML = `
-                        <div style="padding: 2rem; text-align: center; color: var(--text-secondary);">
-                            <div style="font-size: 3rem; margin-bottom: 1rem;">⚙️</div>
-                            <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">Settings</div>
-                            <div style="font-size: 0.9rem;">Upload settings and preferences will be available here</div>
+            renderSettingsPage() {
+                const container = document.getElementById('settingsContainer');
+                container.innerHTML = `
+                    <div class="settings-container">
+                        <!-- Upload Settings -->
+                        <div class="settings-section">
+                            <h3 class="settings-title">📤 Upload Settings</h3>
+                            
+                            <div class="setting-item">
+                                <label class="setting-label">Maximum File Size</label>
+                                <div class="setting-control">
+                                    <input type="range" id="maxFileSize" min="1" max="100" value="${this.settings.maxFileSize}" class="slider">
+                                    <span class="setting-value">${this.settings.maxFileSize} MB</span>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label class="setting-label">Allowed File Types</label>
+                                <div class="setting-control checkbox-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" ${this.settings.allowedTypes.images ? 'checked' : ''} data-type="images">
+                                        <span class="checkmark">🖼️</span> Images
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" ${this.settings.allowedTypes.documents ? 'checked' : ''} data-type="documents">
+                                        <span class="checkmark">📄</span> Documents
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" ${this.settings.allowedTypes.videos ? 'checked' : ''} data-type="videos">
+                                        <span class="checkmark">🎥</span> Videos
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" ${this.settings.allowedTypes.audio ? 'checked' : ''} data-type="audio">
+                                        <span class="checkmark">🎵</span> Audio
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label class="setting-label">Upload Behavior</label>
+                                <div class="setting-control">
+                                    <select id="uploadBehavior" class="setting-select">
+                                        <option value="auto" ${this.settings.uploadBehavior === 'auto' ? 'selected' : ''}>Auto-upload immediately</option>
+                                        <option value="manual" ${this.settings.uploadBehavior === 'manual' ? 'selected' : ''}>Manual confirmation</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label class="setting-label">Concurrent Uploads</label>
+                                <div class="setting-control">
+                                    <select id="concurrentUploads" class="setting-select">
+                                        <option value="1" ${this.settings.concurrentUploads === 1 ? 'selected' : ''}>1 file at a time</option>
+                                        <option value="3" ${this.settings.concurrentUploads === 3 ? 'selected' : ''}>3 files at a time</option>
+                                        <option value="5" ${this.settings.concurrentUploads === 5 ? 'selected' : ''}>5 files at a time</option>
+                                        <option value="10" ${this.settings.concurrentUploads === 10 ? 'selected' : ''}>10 files at a time</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                    `;
-                }
+
+                        <!-- Interface Preferences -->
+                        <div class="settings-section">
+                            <h3 class="settings-title">🎨 Interface Preferences</h3>
+                            
+                            <div class="setting-item">
+                                <label class="setting-label">Default View</label>
+                                <div class="setting-control">
+                                    <div class="radio-group">
+                                        <label class="radio-label">
+                                            <input type="radio" name="defaultView" value="list" ${this.settings.defaultView === 'list' ? 'checked' : ''}>
+                                            <span class="radio-mark"></span> List View
+                                        </label>
+                                        <label class="radio-label">
+                                            <input type="radio" name="defaultView" value="grid" ${this.settings.defaultView === 'grid' ? 'checked' : ''}>
+                                            <span class="radio-mark"></span> Grid View
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label class="setting-label">Default Sort Order</label>
+                                <div class="setting-control">
+                                    <select id="defaultSort" class="setting-select">
+                                        <option value="name" ${this.settings.defaultSort === 'name' ? 'selected' : ''}>Name</option>
+                                        <option value="size" ${this.settings.defaultSort === 'size' ? 'selected' : ''}>Size</option>
+                                        <option value="type" ${this.settings.defaultSort === 'type' ? 'selected' : ''}>Type</option>
+                                        <option value="date" ${this.settings.defaultSort === 'date' ? 'selected' : ''}>Date</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label class="setting-label">File List Spacing</label>
+                                <div class="setting-control">
+                                    <div class="radio-group">
+                                        <label class="radio-label">
+                                            <input type="radio" name="listSpacing" value="compact" ${this.settings.listSpacing === 'compact' ? 'checked' : ''}>
+                                            <span class="radio-mark"></span> Compact
+                                        </label>
+                                        <label class="radio-label">
+                                            <input type="radio" name="listSpacing" value="comfortable" ${this.settings.listSpacing === 'comfortable' ? 'checked' : ''}>
+                                            <span class="radio-mark"></span> Comfortable
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label class="setting-label">Show File Previews</label>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="showPreviews" ${this.settings.showPreviews ? 'checked' : ''}>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label class="setting-label">Toast Duration</label>
+                                <div class="setting-control">
+                                    <input type="range" id="toastDuration" min="1" max="10" value="${this.settings.toastDuration}" class="slider">
+                                    <span class="setting-value">${this.settings.toastDuration} seconds</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Advanced Features -->
+                        <div class="settings-section">
+                            <h3 class="settings-title">⚡ Advanced Features</h3>
+                            
+                            <div class="setting-item">
+                                <label class="setting-label">Auto-rename Duplicates</label>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="autoRename" ${this.settings.autoRename ? 'checked' : ''}>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                    <span class="setting-description">Automatically add numbers to duplicate filenames</span>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label class="setting-label">Compress Images</label>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="compressImages" ${this.settings.compressImages ? 'checked' : ''}>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                    <span class="setting-description">Reduce image file sizes automatically</span>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label class="setting-label">Auto-clear History</label>
+                                <div class="setting-control">
+                                    <select id="autoClearHistory" class="setting-select">
+                                        <option value="never" ${this.settings.autoClearHistory === 'never' ? 'selected' : ''}>Never</option>
+                                        <option value="7" ${this.settings.autoClearHistory === '7' ? 'selected' : ''}>After 7 days</option>
+                                        <option value="30" ${this.settings.autoClearHistory === '30' ? 'selected' : ''}>After 30 days</option>
+                                        <option value="90" ${this.settings.autoClearHistory === '90' ? 'selected' : ''}>After 90 days</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label class="setting-label">Maximum History Items</label>
+                                <div class="setting-control">
+                                    <input type="range" id="maxHistoryItems" min="10" max="500" step="10" value="${this.settings.maxHistoryItems}" class="slider">
+                                    <span class="setting-value">${this.settings.maxHistoryItems} items</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Privacy & Security -->
+                        <div class="settings-section">
+                            <h3 class="settings-title">🔒 Privacy & Security</h3>
+                            
+                            <div class="setting-item">
+                                <label class="setting-label">Privacy Mode</label>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="privacyMode" ${this.settings.privacyMode ? 'checked' : ''}>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                    <span class="setting-description">Don't save upload history or file previews</span>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label class="setting-label">Auto-logout Timer</label>
+                                <div class="setting-control">
+                                    <select id="autoLogout" class="setting-select">
+                                        <option value="never" ${this.settings.autoLogout === 'never' ? 'selected' : ''}>Never</option>
+                                        <option value="15" ${this.settings.autoLogout === '15' ? 'selected' : ''}>15 minutes</option>
+                                        <option value="30" ${this.settings.autoLogout === '30' ? 'selected' : ''}>30 minutes</option>
+                                        <option value="60" ${this.settings.autoLogout === '60' ? 'selected' : ''}>1 hour</option>
+                                        <option value="240" ${this.settings.autoLogout === '240' ? 'selected' : ''}>4 hours</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="setting-item danger-zone">
+                                <label class="setting-label">Data Management</label>
+                                <div class="setting-control">
+                                    <button class="danger-btn" id="clearAllData">Clear All Data</button>
+                                    <button class="export-btn" id="exportData">Export Data</button>
+                                    <span class="setting-description">Clear all stored data or export for backup</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Save Settings -->
+                        <div class="settings-actions">
+                            <button class="btn btn-secondary" id="resetSettings">Reset to Defaults</button>
+                            <button class="btn btn-primary" id="saveSettings">Save Settings</button>
+                        </div>
+                    </div>
+                `;
+
+                // Setup settings event listeners
+                this.setupSettingsEventListeners();
             }
 
             showToast(message, type = 'info') {
@@ -1439,11 +2305,12 @@
 
                 document.getElementById('toastContainer').appendChild(toast);
 
-                // Auto remove after 3 seconds
+                // Auto remove after duration from settings
+                const duration = this.settings.toastDuration * 1000;
                 setTimeout(() => {
                     toast.style.animation = 'slideIn 0.3s ease reverse';
                     setTimeout(() => toast.remove(), 300);
-                }, 3000);
+                }, duration);
             }
 
             loadHistoryFromStorage() {
@@ -1467,9 +2334,9 @@
                 
                 history.unshift(historyItem);
                 
-                // Keep only last 100 items to prevent storage overflow
-                if (history.length > 100) {
-                    history.splice(100);
+                // Keep only max items from settings
+                if (history.length > this.settings.maxHistoryItems) {
+                    history.splice(this.settings.maxHistoryItems);
                 }
                 
                 try {
@@ -1657,5 +2524,5 @@
         // Initialize the dashboard
         const dashboard = new FileUploadDashboard();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97cc631f24b483df',t:'MTc1NzQ4MDY5NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97cc772a2301de7d',t:'MTc1NzQ4MTUxNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
