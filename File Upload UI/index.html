@@ -663,12 +663,13 @@
                 this.currentSort = 'name';
                 this.isDarkTheme = true;
                 this.sidebarCollapsed = false;
+                this.currentPage = 'uploads';
                 this.init();
             }
 
             init() {
                 this.setupEventListeners();
-                this.loadSampleFiles();
+                this.updateFileDisplay();
             }
 
             setupEventListeners() {
@@ -769,6 +770,9 @@
                         fileObj.status = Math.random() > 0.1 ? 'success' : 'error'; // 90% success rate
                         clearInterval(progressInterval);
                         
+                        // Save completed uploads to history
+                        this.saveToHistory(fileObj);
+                        
                         const message = fileObj.status === 'success' 
                             ? `${fileObj.name} uploaded successfully`
                             : `Failed to upload ${fileObj.name}`;
@@ -781,38 +785,95 @@
 
             updateFileDisplay() {
                 const container = document.getElementById('fileListContainer');
-                const sortedFiles = this.getSortedFiles();
-
-                container.innerHTML = sortedFiles.map(file => `
-                    <div class="file-item">
-                        <div class="file-preview">
-                            ${file.preview 
-                                ? `<img src="${file.preview}" alt="${file.name}">` 
-                                : `<div class="file-icon">${this.getFileIcon(file.type)}</div>`
-                            }
-                        </div>
-                        <div class="file-info">
-                            <div class="file-name">${file.name}</div>
-                            <div class="file-details">${file.size} • ${file.type}</div>
-                        </div>
-                        <div class="file-progress">
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: ${file.progress}%"></div>
+                
+                if (this.currentPage === 'history') {
+                    const history = this.loadHistoryFromStorage();
+                    const sortedHistory = this.getSortedHistory(history);
+                    
+                    if (sortedHistory.length === 0) {
+                        container.innerHTML = `
+                            <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                                <div style="font-size: 3rem; margin-bottom: 1rem;">📋</div>
+                                <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">No upload history yet</div>
+                                <div style="font-size: 0.9rem;">Files you upload will appear here</div>
                             </div>
-                            <div class="progress-text">${Math.round(file.progress)}%</div>
-                        </div>
-                        <div class="file-status">
-                            <div class="status-icon status-${file.status}">
-                                ${this.getStatusIcon(file.status)}
+                        `;
+                        return;
+                    }
+                    
+                    container.innerHTML = sortedHistory.map(file => `
+                        <div class="file-item">
+                            <div class="file-preview">
+                                <div class="file-icon">${this.getFileIcon(file.type)}</div>
+                            </div>
+                            <div class="file-info">
+                                <div class="file-name">${file.name}</div>
+                                <div class="file-details">${file.size} • ${file.type} • ${file.completedAt}</div>
+                            </div>
+                            <div class="file-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 100%"></div>
+                                </div>
+                                <div class="progress-text">Completed</div>
+                            </div>
+                            <div class="file-status">
+                                <div class="status-icon status-${file.status}">
+                                    ${this.getStatusIcon(file.status)}
+                                </div>
+                            </div>
+                            <div class="file-actions">
+                                <button class="action-btn remove-btn" onclick="dashboard.removeFromHistory('${file.id}')">
+                                    ✖
+                                </button>
                             </div>
                         </div>
-                        <div class="file-actions">
-                            <button class="action-btn remove-btn" onclick="dashboard.removeFile('${file.id}')">
-                                ✖
-                            </button>
+                    `).join('');
+                } else {
+                    // Current uploads view
+                    const sortedFiles = this.getSortedFiles();
+                    
+                    if (sortedFiles.length === 0) {
+                        container.innerHTML = `
+                            <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                                <div style="font-size: 3rem; margin-bottom: 1rem;">📤</div>
+                                <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">No active uploads</div>
+                                <div style="font-size: 0.9rem;">Upload files to see them here</div>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    container.innerHTML = sortedFiles.map(file => `
+                        <div class="file-item">
+                            <div class="file-preview">
+                                ${file.preview 
+                                    ? `<img src="${file.preview}" alt="${file.name}">` 
+                                    : `<div class="file-icon">${this.getFileIcon(file.type)}</div>`
+                                }
+                            </div>
+                            <div class="file-info">
+                                <div class="file-name">${file.name}</div>
+                                <div class="file-details">${file.size} • ${file.type}</div>
+                            </div>
+                            <div class="file-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${file.progress}%"></div>
+                                </div>
+                                <div class="progress-text">${Math.round(file.progress)}%</div>
+                            </div>
+                            <div class="file-status">
+                                <div class="status-icon status-${file.status}">
+                                    ${this.getStatusIcon(file.status)}
+                                </div>
+                            </div>
+                            <div class="file-actions">
+                                <button class="action-btn remove-btn" onclick="dashboard.removeFile('${file.id}')">
+                                    ✖
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                `).join('');
+                    `).join('');
+                }
             }
 
             getSortedFiles() {
@@ -830,6 +891,42 @@
                             return 0;
                     }
                 });
+            }
+
+            getSortedHistory(history) {
+                return [...history].sort((a, b) => {
+                    switch (this.currentSort) {
+                        case 'name':
+                            return a.name.localeCompare(b.name);
+                        case 'size':
+                            // Parse size strings for comparison
+                            const sizeA = this.parseSizeString(a.size);
+                            const sizeB = this.parseSizeString(b.size);
+                            return sizeA - sizeB;
+                        case 'type':
+                            return a.type.localeCompare(b.type);
+                        case 'status':
+                            return a.status.localeCompare(b.status);
+                        default:
+                            return new Date(b.uploadDate) - new Date(a.uploadDate); // Most recent first
+                    }
+                });
+            }
+
+            parseSizeString(sizeStr) {
+                const units = { 'Bytes': 1, 'KB': 1024, 'MB': 1024*1024, 'GB': 1024*1024*1024 };
+                const parts = sizeStr.split(' ');
+                const value = parseFloat(parts[0]);
+                const unit = parts[1];
+                return value * (units[unit] || 1);
+            }
+
+            removeFromHistory(fileId) {
+                const history = this.loadHistoryFromStorage();
+                const updatedHistory = history.filter(file => file.id != fileId);
+                localStorage.setItem('fileUploadHistory', JSON.stringify(updatedHistory));
+                this.updateFileDisplay();
+                this.showToast('File removed from history', 'success');
             }
 
             sortFiles(sortBy) {
@@ -925,19 +1022,91 @@
             }
 
             switchPage(page) {
+                this.currentPage = page;
+                
                 // Update active nav item
                 document.querySelectorAll('.nav-item').forEach(item => {
                     item.classList.toggle('active', item.dataset.page === page);
                 });
 
-                // Simple page switching simulation
+                // Update page content
                 const titles = {
                     'uploads': 'File Uploads',
                     'history': 'Upload History',
                     'settings': 'Settings'
                 };
 
+                const subtitles = {
+                    'uploads': 'Drag and drop files or click to upload',
+                    'history': 'View your previously uploaded files',
+                    'settings': 'Configure your upload preferences'
+                };
+
                 document.querySelector('.page-title').textContent = titles[page] || 'File Uploads';
+                document.querySelector('.page-subtitle').textContent = subtitles[page] || '';
+
+                // Update file list header
+                const listHeaders = {
+                    'uploads': 'Current Uploads',
+                    'history': 'Upload History',
+                    'settings': 'Configuration'
+                };
+
+                const headerElement = document.querySelector('.file-list-header h2');
+                if (headerElement) {
+                    headerElement.textContent = listHeaders[page] || 'Files';
+                }
+
+                // Show/hide upload section based on page
+                const uploadSection = document.getElementById('uploadSection');
+                if (page === 'uploads') {
+                    uploadSection.style.display = 'block';
+                } else {
+                    uploadSection.style.display = 'none';
+                }
+
+                // Add clear history button for history page
+                this.updatePageSpecificControls(page);
+
+                // Refresh display
+                this.updateFileDisplay();
+            }
+
+            updatePageSpecificControls(page) {
+                const sortControls = document.querySelector('.sort-controls');
+                
+                if (page === 'history') {
+                    // Add clear history button if not exists
+                    if (!document.getElementById('clearHistoryBtn')) {
+                        const clearBtn = document.createElement('button');
+                        clearBtn.id = 'clearHistoryBtn';
+                        clearBtn.className = 'sort-btn';
+                        clearBtn.textContent = 'Clear All';
+                        clearBtn.style.backgroundColor = 'var(--error)';
+                        clearBtn.style.borderColor = 'var(--error)';
+                        clearBtn.style.color = 'white';
+                        clearBtn.addEventListener('click', () => this.clearHistory());
+                        sortControls.appendChild(clearBtn);
+                    }
+                } else {
+                    // Remove clear history button if exists
+                    const clearBtn = document.getElementById('clearHistoryBtn');
+                    if (clearBtn) {
+                        clearBtn.remove();
+                    }
+                }
+
+                if (page === 'settings') {
+                    // Show settings content instead of file list
+                    const container = document.getElementById('fileListContainer');
+                    container.innerHTML = `
+                        <div style="padding: 2rem; text-align: center; color: var(--text-secondary);">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">⚙️</div>
+                            <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">Settings</div>
+                            <div style="font-size: 0.9rem;">Upload settings and preferences will be available here</div>
+                        </div>
+                    `;
+                }
             }
 
             showToast(message, type = 'info') {
@@ -954,33 +1123,43 @@
                 }, 3000);
             }
 
-            loadSampleFiles() {
-                // Add some sample files for demonstration
-                const sampleFiles = [
-                    { name: 'presentation.pdf', size: '2.4 MB', type: 'PDF Document', status: 'success', progress: 100 },
-                    { name: 'report.docx', size: '1.2 MB', type: 'Word Document', status: 'success', progress: 100 },
-                    { name: 'data.xlsx', size: '856 KB', type: 'Excel Spreadsheet', status: 'error', progress: 100 }
-                ];
+            loadHistoryFromStorage() {
+                const stored = localStorage.getItem('fileUploadHistory');
+                return stored ? JSON.parse(stored) : [];
+            }
 
-                sampleFiles.forEach(sample => {
-                    this.files.push({
-                        id: Date.now() + Math.random(),
-                        name: sample.name,
-                        size: sample.size,
-                        type: sample.type,
-                        status: sample.status,
-                        progress: sample.progress,
-                        preview: null,
-                        file: { size: 0 } // Mock file object
-                    });
-                });
+            saveToHistory(fileObj) {
+                const history = this.loadHistoryFromStorage();
+                const historyItem = {
+                    ...fileObj,
+                    uploadDate: new Date().toISOString(),
+                    completedAt: new Date().toLocaleString()
+                };
+                
+                // Remove the actual file object to avoid storage issues
+                delete historyItem.file;
+                
+                history.unshift(historyItem);
+                
+                // Keep only last 100 items to prevent storage overflow
+                if (history.length > 100) {
+                    history.splice(100);
+                }
+                
+                localStorage.setItem('fileUploadHistory', JSON.stringify(history));
+            }
 
-                this.updateFileDisplay();
+            clearHistory() {
+                localStorage.removeItem('fileUploadHistory');
+                if (this.currentPage === 'history') {
+                    this.updateFileDisplay();
+                }
+                this.showToast('Upload history cleared', 'success');
             }
         }
 
         // Initialize the dashboard
         const dashboard = new FileUploadDashboard();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97cc427612bb03b9',t:'MTc1NzQ3OTM1Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97cc4a5360b903b9',t:'MTc1NzQ3OTY3OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
