@@ -42,7 +42,15 @@
             background-color: var(--bg-secondary);
             padding: 2rem 0;
             border-right: 1px solid var(--border);
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 100;
+        }
+
+        .sidebar.collapsed {
+            width: 0;
+            padding: 0;
+            overflow: hidden;
         }
 
         .logo {
@@ -93,6 +101,32 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+        }
+
+        .top-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .sidebar-toggle {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-toggle:hover {
+            background-color: var(--accent-orange);
         }
 
         .search-bar {
@@ -418,14 +452,20 @@
                 position: fixed;
                 height: 100vh;
                 z-index: 1000;
+                width: 250px !important;
+                padding: 2rem 0 !important;
             }
 
             .sidebar.open {
                 transform: translateX(0);
             }
 
+            .sidebar.collapsed {
+                transform: translateX(-100%);
+            }
+
             .search-bar {
-                width: 200px;
+                width: 150px;
             }
 
             .file-item {
@@ -548,7 +588,10 @@
         <div class="main-content">
             <!-- Top Bar -->
             <header class="top-bar">
-                <input type="search" class="search-bar" placeholder="Search files...">
+                <div class="top-bar-left">
+                    <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+                    <input type="search" class="search-bar" placeholder="Search files...">
+                </div>
                 <div class="user-section">
                     <button class="theme-toggle" id="themeToggle">🌙</button>
                     <div class="user-avatar">JD</div>
@@ -619,6 +662,7 @@
                 this.files = [];
                 this.currentSort = 'name';
                 this.isDarkTheme = true;
+                this.sidebarCollapsed = false;
                 this.init();
             }
 
@@ -663,6 +707,9 @@
 
                 // Theme toggle
                 document.getElementById('themeToggle').addEventListener('click', () => this.toggleTheme());
+
+                // Sidebar toggle
+                document.getElementById('sidebarToggle').addEventListener('click', () => this.toggleSidebar());
 
                 // Sort buttons
                 document.querySelectorAll('.sort-btn').forEach(btn => {
@@ -864,6 +911,19 @@
                 document.getElementById('themeToggle').textContent = this.isDarkTheme ? '🌙' : '☀️';
             }
 
+            toggleSidebar() {
+                this.sidebarCollapsed = !this.sidebarCollapsed;
+                const sidebar = document.getElementById('sidebar');
+                
+                if (window.innerWidth <= 768) {
+                    // Mobile behavior - show/hide with overlay
+                    sidebar.classList.toggle('open', !this.sidebarCollapsed);
+                } else {
+                    // Desktop behavior - collapse/expand
+                    sidebar.classList.toggle('collapsed', this.sidebarCollapsed);
+                }
+            }
+
             switchPage(page) {
                 // Update active nav item
                 document.querySelectorAll('.nav-item').forEach(item => {
@@ -922,5 +982,5 @@
         // Initialize the dashboard
         const dashboard = new FileUploadDashboard();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97cc3db720d903b9',t:'MTc1NzQ3OTE2MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97cc427612bb03b9',t:'MTc1NzQ3OTM1Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
