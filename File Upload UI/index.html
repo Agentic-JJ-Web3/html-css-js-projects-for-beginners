@@ -385,11 +385,20 @@
             padding: 0.5rem;
             border-radius: 4px;
             transition: all 0.3s ease;
+            font-size: 1rem;
         }
 
         .action-btn:hover {
             background-color: var(--bg-card);
             color: var(--text-primary);
+        }
+
+        .view-btn:hover {
+            color: var(--accent-orange);
+        }
+
+        .download-btn:hover {
+            color: var(--success);
         }
 
         .remove-btn:hover {
@@ -794,6 +803,193 @@
 
         #profilePictureInput {
             display: none;
+        }
+
+        /* File Viewer Modal */
+        .file-viewer-modal {
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            padding: 0;
+            width: 95%;
+            max-width: 1200px;
+            max-height: 95vh;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-overlay.active .file-viewer-modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .file-viewer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border);
+            background-color: var(--bg-secondary);
+        }
+
+        .file-viewer-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+            flex: 1;
+            margin-right: 1rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .file-viewer-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .viewer-btn {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .viewer-btn:hover {
+            background-color: var(--accent-orange);
+            border-color: var(--accent-orange);
+            color: white;
+        }
+
+        .file-viewer-content {
+            flex: 1;
+            overflow: auto;
+            background-color: var(--bg-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+        }
+
+        .image-viewer {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .document-viewer {
+            width: 100%;
+            height: 100%;
+            min-height: 600px;
+            border: none;
+            background-color: white;
+        }
+
+        .text-viewer {
+            width: 100%;
+            height: 100%;
+            padding: 2rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-card);
+            border: none;
+            resize: none;
+            overflow: auto;
+        }
+
+        .unsupported-viewer {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .unsupported-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .unsupported-text {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .unsupported-subtext {
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        .download-suggestion {
+            background-color: var(--accent-orange);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .download-suggestion:hover {
+            background-color: var(--accent-orange-hover);
+        }
+
+        /* Loading spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border);
+            border-radius: 50%;
+            border-top-color: var(--accent-orange);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive file viewer */
+        @media (max-width: 768px) {
+            .file-viewer-modal {
+                width: 100%;
+                height: 100%;
+                max-width: none;
+                max-height: none;
+                border-radius: 0;
+            }
+
+            .file-viewer-header {
+                padding: 1rem;
+            }
+
+            .file-viewer-title {
+                font-size: 1rem;
+            }
+
+            .viewer-btn {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .text-viewer {
+                padding: 1rem;
+                font-size: 0.8rem;
+            }
         }
 
         /* Settings Styles */
@@ -1293,6 +1489,24 @@
         </div>
     </div>
 
+    <!-- File Viewer Modal -->
+    <div class="modal-overlay" id="fileViewerModal">
+        <div class="file-viewer-modal">
+            <div class="file-viewer-header">
+                <h3 class="file-viewer-title" id="viewerFileName">File Viewer</h3>
+                <div class="file-viewer-actions">
+                    <button class="viewer-btn" id="downloadFileBtn">
+                        <span>💾</span> Download
+                    </button>
+                    <button class="close-btn" id="closeFileViewer">✕</button>
+                </div>
+            </div>
+            <div class="file-viewer-content" id="fileViewerContent">
+                <!-- File content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
     <script>
         class FileUploadDashboard {
             constructor() {
@@ -1456,6 +1670,17 @@
                 document.getElementById('profileModal').addEventListener('click', (e) => {
                     if (e.target.id === 'profileModal') {
                         this.closeProfileModal();
+                    }
+                });
+
+                // File viewer modal
+                document.getElementById('closeFileViewer').addEventListener('click', () => this.closeFileViewer());
+                document.getElementById('downloadFileBtn').addEventListener('click', () => this.downloadCurrentFile());
+                
+                // Close file viewer on overlay click
+                document.getElementById('fileViewerModal').addEventListener('click', (e) => {
+                    if (e.target.id === 'fileViewerModal') {
+                        this.closeFileViewer();
                     }
                 });
             }
@@ -1763,7 +1988,13 @@
                                 </div>
                             </div>
                             <div class="file-actions">
-                                <button class="action-btn remove-btn" onclick="dashboard.removeFromHistory('${file.id}')">
+                                <button class="action-btn view-btn" onclick="dashboard.viewFile('${file.id}', true)" title="View file">
+                                    👁️
+                                </button>
+                                <button class="action-btn download-btn" onclick="dashboard.downloadFile('${file.id}', true)" title="Download file">
+                                    💾
+                                </button>
+                                <button class="action-btn remove-btn" onclick="dashboard.removeFromHistory('${file.id}')" title="Remove from history">
                                     ✖
                                 </button>
                             </div>
@@ -1808,7 +2039,15 @@
                                 </div>
                             </div>
                             <div class="file-actions">
-                                <button class="action-btn remove-btn" onclick="dashboard.removeFile('${file.id}')">
+                                ${file.status === 'success' ? `
+                                    <button class="action-btn view-btn" onclick="dashboard.viewFile('${file.id}', false)" title="View file">
+                                        👁️
+                                    </button>
+                                    <button class="action-btn download-btn" onclick="dashboard.downloadFile('${file.id}', false)" title="Download file">
+                                        💾
+                                    </button>
+                                ` : ''}
+                                <button class="action-btn remove-btn" onclick="dashboard.removeFile('${file.id}')" title="Remove file">
                                     ✖
                                 </button>
                             </div>
@@ -2519,10 +2758,183 @@
                 this.updateProfileDisplay();
                 this.closeProfileModal();
             }
+
+            // File Viewer Methods
+            viewFile(fileId, isFromHistory = false) {
+                let file;
+                
+                if (isFromHistory) {
+                    const history = this.loadHistoryFromStorage();
+                    file = history.find(f => f.id == fileId);
+                } else {
+                    file = this.files.find(f => f.id == fileId);
+                }
+                
+                if (!file) {
+                    this.showToast('File not found', 'error');
+                    return;
+                }
+
+                this.currentViewingFile = file;
+                this.openFileViewer(file);
+            }
+
+            openFileViewer(file) {
+                const modal = document.getElementById('fileViewerModal');
+                const fileName = document.getElementById('viewerFileName');
+                const content = document.getElementById('fileViewerContent');
+                
+                fileName.textContent = file.name;
+                content.innerHTML = '<div class="loading-spinner"></div>';
+                
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                
+                // Load file content based on type
+                setTimeout(() => {
+                    this.loadFileContent(file, content);
+                }, 100);
+            }
+
+            loadFileContent(file, container) {
+                const fileType = file.type;
+                const fileName = file.name.toLowerCase();
+                
+                // For current uploads, we have the actual file object
+                const actualFile = this.files.find(f => f.id === file.id)?.file;
+                
+                if (file.preview && (fileType === 'Image' || fileName.match(/\.(jpg|jpeg|png|gif|bmp|webp)$/))) {
+                    // Display image
+                    container.innerHTML = `
+                        <img src="${file.preview}" alt="${file.name}" class="image-viewer">
+                    `;
+                } else if (actualFile && actualFile.type.startsWith('image/')) {
+                    // Load image from file object
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        container.innerHTML = `
+                            <img src="${e.target.result}" alt="${file.name}" class="image-viewer">
+                        `;
+                    };
+                    reader.readAsDataURL(actualFile);
+                } else if (actualFile && actualFile.type.startsWith('text/')) {
+                    // Load text file
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        container.innerHTML = `
+                            <textarea class="text-viewer" readonly>${e.target.result}</textarea>
+                        `;
+                    };
+                    reader.readAsText(actualFile);
+                } else if (actualFile && fileName.match(/\.(txt|md|json|xml|csv|log)$/)) {
+                    // Load text-based files
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        container.innerHTML = `
+                            <textarea class="text-viewer" readonly>${e.target.result}</textarea>
+                        `;
+                    };
+                    reader.readAsText(actualFile);
+                } else if (actualFile && actualFile.type === 'application/pdf') {
+                    // Display PDF using object tag
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        container.innerHTML = `
+                            <object data="${e.target.result}" type="application/pdf" class="document-viewer">
+                                <div class="unsupported-viewer">
+                                    <div class="unsupported-icon">📄</div>
+                                    <div class="unsupported-text">PDF Preview Not Available</div>
+                                    <div class="unsupported-subtext">Your browser doesn't support PDF preview</div>
+                                    <button class="download-suggestion" onclick="dashboard.downloadCurrentFile()">
+                                        Download to View
+                                    </button>
+                                </div>
+                            </object>
+                        `;
+                    };
+                    reader.readAsDataURL(actualFile);
+                } else {
+                    // Unsupported file type
+                    const icon = this.getFileIcon(fileType);
+                    container.innerHTML = `
+                        <div class="unsupported-viewer">
+                            <div class="unsupported-icon">${icon}</div>
+                            <div class="unsupported-text">Preview Not Available</div>
+                            <div class="unsupported-subtext">This file type cannot be previewed in the browser</div>
+                            <button class="download-suggestion" onclick="dashboard.downloadCurrentFile()">
+                                Download File
+                            </button>
+                        </div>
+                    `;
+                }
+            }
+
+            closeFileViewer() {
+                const modal = document.getElementById('fileViewerModal');
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+                this.currentViewingFile = null;
+            }
+
+            downloadFile(fileId, isFromHistory = false) {
+                let file;
+                
+                if (isFromHistory) {
+                    const history = this.loadHistoryFromStorage();
+                    file = history.find(f => f.id == fileId);
+                } else {
+                    file = this.files.find(f => f.id == fileId);
+                }
+                
+                if (!file) {
+                    this.showToast('File not found', 'error');
+                    return;
+                }
+
+                this.downloadFileContent(file);
+            }
+
+            downloadCurrentFile() {
+                if (this.currentViewingFile) {
+                    this.downloadFileContent(this.currentViewingFile);
+                }
+            }
+
+            downloadFileContent(file) {
+                // For current uploads, we have the actual file object
+                const actualFile = this.files.find(f => f.id === file.id)?.file;
+                
+                if (actualFile) {
+                    // Download the actual file
+                    const url = URL.createObjectURL(actualFile);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = file.name;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    this.showToast(`Downloading ${file.name}`, 'success');
+                } else if (file.preview && file.type === 'Image') {
+                    // Download image from preview data
+                    const a = document.createElement('a');
+                    a.href = file.preview;
+                    a.download = file.name;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    
+                    this.showToast(`Downloading ${file.name}`, 'success');
+                } else {
+                    // File no longer available for download
+                    this.showToast('File is no longer available for download', 'error');
+                }
+            }
         }
 
         // Initialize the dashboard
         const dashboard = new FileUploadDashboard();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97cc772a2301de7d',t:'MTc1NzQ4MTUxNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97cc7da560bfde7d',t:'MTc1NzQ4MTc4MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
