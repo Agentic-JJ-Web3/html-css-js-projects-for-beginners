@@ -2256,6 +2256,12 @@
                 const sortControls = document.querySelector('.sort-controls');
                 const fileListSection = document.querySelector('.file-list');
                 
+                // Always hide settings container first
+                const settingsContainer = document.getElementById('settingsContainer');
+                if (settingsContainer) {
+                    settingsContainer.style.display = 'none';
+                }
+                
                 if (page === 'history') {
                     // Show file list section
                     fileListSection.style.display = 'block';
@@ -2272,6 +2278,12 @@
                         clearBtn.addEventListener('click', () => this.clearHistory());
                         sortControls.appendChild(clearBtn);
                     }
+                    
+                    // Remove clear history button from other pages
+                    const clearBtn = document.getElementById('clearHistoryBtn');
+                    if (clearBtn && page !== 'history') {
+                        clearBtn.remove();
+                    }
                 } else if (page === 'uploads') {
                     // Show file list section
                     fileListSection.style.display = 'block';
@@ -2282,7 +2294,7 @@
                         clearBtn.remove();
                     }
                 } else if (page === 'settings') {
-                    // Hide file list section and show settings
+                    // Hide file list section completely for settings
                     fileListSection.style.display = 'none';
                     
                     // Remove clear history button if exists
@@ -2300,15 +2312,14 @@
                         fileListSection.parentNode.insertBefore(settingsContainer, fileListSection.nextSibling);
                     }
                     
-                    // Show settings content
+                    // Show settings content only for settings page
                     settingsContainer.style.display = 'block';
                     this.renderSettingsPage();
-                } else {
-                    // Hide settings container if it exists
-                    const settingsContainer = document.getElementById('settingsContainer');
-                    if (settingsContainer) {
-                        settingsContainer.style.display = 'none';
-                    }
+                }
+                
+                // Ensure file list is visible for non-settings pages
+                if (page !== 'settings') {
+                    fileListSection.style.display = 'block';
                 }
             }
 
@@ -2559,38 +2570,78 @@
 
             saveToHistory(fileObj) {
                 const history = this.loadHistoryFromStorage();
-                const historyItem = {
-                    id: fileObj.id,
-                    name: fileObj.name,
-                    size: fileObj.size,
-                    type: fileObj.type,
-                    status: fileObj.status,
-                    progress: 100,
-                    uploadDate: new Date().toISOString(),
-                    completedAt: new Date().toLocaleString(),
-                    preview: fileObj.preview || null
+                
+                // Convert file to base64 for storage and download
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const historyItem = {
+                        id: fileObj.id,
+                        name: fileObj.name,
+                        size: fileObj.size,
+                        type: fileObj.type,
+                        status: fileObj.status,
+                        progress: 100,
+                        uploadDate: new Date().toISOString(),
+                        completedAt: new Date().toLocaleString(),
+                        preview: fileObj.preview || null,
+                        fileData: e.target.result, // Store file as base64
+                        mimeType: fileObj.file.type
+                    };
+                    
+                    history.unshift(historyItem);
+                    
+                    // Keep only max items from settings
+                    if (history.length > this.settings.maxHistoryItems) {
+                        history.splice(this.settings.maxHistoryItems);
+                    }
+                    
+                    try {
+                        localStorage.setItem('fileUploadHistory', JSON.stringify(history));
+                        console.log('File saved to history:', historyItem.name);
+                    } catch (error) {
+                        console.error('Failed to save to localStorage:', error);
+                        // If storage fails due to size, try without file data
+                        if (historyItem.fileData) {
+                            historyItem.fileData = null;
+                            try {
+                                localStorage.setItem('fileUploadHistory', JSON.stringify(history));
+                                this.showToast(`${historyItem.name} saved to history (file too large for download)`, 'success');
+                            } catch (e) {
+                                console.error('Failed to save even without file data:', e);
+                            }
+                        }
+                    }
                 };
                 
-                history.unshift(historyItem);
-                
-                // Keep only max items from settings
-                if (history.length > this.settings.maxHistoryItems) {
-                    history.splice(this.settings.maxHistoryItems);
-                }
-                
-                try {
-                    localStorage.setItem('fileUploadHistory', JSON.stringify(history));
-                    console.log('File saved to history:', historyItem.name);
-                } catch (error) {
-                    console.error('Failed to save to localStorage:', error);
-                    // If storage fails due to size, try without preview
-                    if (historyItem.preview) {
-                        historyItem.preview = null;
-                        try {
-                            localStorage.setItem('fileUploadHistory', JSON.stringify(history));
-                        } catch (e) {
-                            console.error('Failed to save even without preview:', e);
-                        }
+                // Read file as data URL for storage
+                if (fileObj.file) {
+                    reader.readAsDataURL(fileObj.file);
+                } else {
+                    // Fallback without file data
+                    const historyItem = {
+                        id: fileObj.id,
+                        name: fileObj.name,
+                        size: fileObj.size,
+                        type: fileObj.type,
+                        status: fileObj.status,
+                        progress: 100,
+                        uploadDate: new Date().toISOString(),
+                        completedAt: new Date().toLocaleString(),
+                        preview: fileObj.preview || null,
+                        fileData: null,
+                        mimeType: null
+                    };
+                    
+                    history.unshift(historyItem);
+                    
+                    if (history.length > this.settings.maxHistoryItems) {
+                        history.splice(this.settings.maxHistoryItems);
+                    }
+                    
+                    try {
+                        localStorage.setItem('fileUploadHistory', JSON.stringify(history));
+                    } catch (error) {
+                        console.error('Failed to save to localStorage:', error);
                     }
                 }
             }
@@ -2804,9 +2855,14 @@
                 const actualFile = this.files.find(f => f.id === file.id)?.file;
                 
                 if (file.preview && (fileType === 'Image' || fileName.match(/\.(jpg|jpeg|png|gif|bmp|webp)$/))) {
-                    // Display image
+                    // Display image from preview
                     container.innerHTML = `
                         <img src="${file.preview}" alt="${file.name}" class="image-viewer">
+                    `;
+                } else if (file.fileData && (fileType === 'Image' || fileName.match(/\.(jpg|jpeg|png|gif|bmp|webp)$/))) {
+                    // Display image from stored file data
+                    container.innerHTML = `
+                        <img src="${file.fileData}" alt="${file.name}" class="image-viewer">
                     `;
                 } else if (actualFile && actualFile.type.startsWith('image/')) {
                     // Load image from file object
@@ -2817,8 +2873,21 @@
                         `;
                     };
                     reader.readAsDataURL(actualFile);
+                } else if (file.fileData && (file.mimeType && file.mimeType.startsWith('text/') || fileName.match(/\.(txt|md|json|xml|csv|log)$/))) {
+                    // Load text from stored file data
+                    try {
+                        // Convert base64 to text
+                        const base64Data = file.fileData.split(',')[1];
+                        const textContent = atob(base64Data);
+                        container.innerHTML = `
+                            <textarea class="text-viewer" readonly>${textContent}</textarea>
+                        `;
+                    } catch (error) {
+                        console.error('Error loading text content:', error);
+                        this.showUnsupportedViewer(container, fileType);
+                    }
                 } else if (actualFile && actualFile.type.startsWith('text/')) {
-                    // Load text file
+                    // Load text file from actual file
                     const reader = new FileReader();
                     reader.onload = (e) => {
                         container.innerHTML = `
@@ -2827,7 +2896,7 @@
                     };
                     reader.readAsText(actualFile);
                 } else if (actualFile && fileName.match(/\.(txt|md|json|xml|csv|log)$/)) {
-                    // Load text-based files
+                    // Load text-based files from actual file
                     const reader = new FileReader();
                     reader.onload = (e) => {
                         container.innerHTML = `
@@ -2835,8 +2904,22 @@
                         `;
                     };
                     reader.readAsText(actualFile);
+                } else if (file.fileData && (file.mimeType === 'application/pdf' || fileName.endsWith('.pdf'))) {
+                    // Display PDF from stored data
+                    container.innerHTML = `
+                        <object data="${file.fileData}" type="application/pdf" class="document-viewer">
+                            <div class="unsupported-viewer">
+                                <div class="unsupported-icon">📄</div>
+                                <div class="unsupported-text">PDF Preview Not Available</div>
+                                <div class="unsupported-subtext">Your browser doesn't support PDF preview</div>
+                                <button class="download-suggestion" onclick="dashboard.downloadCurrentFile()">
+                                    Download to View
+                                </button>
+                            </div>
+                        </object>
+                    `;
                 } else if (actualFile && actualFile.type === 'application/pdf') {
-                    // Display PDF using object tag
+                    // Display PDF using object tag from actual file
                     const reader = new FileReader();
                     reader.onload = (e) => {
                         container.innerHTML = `
@@ -2855,18 +2938,22 @@
                     reader.readAsDataURL(actualFile);
                 } else {
                     // Unsupported file type
-                    const icon = this.getFileIcon(fileType);
-                    container.innerHTML = `
-                        <div class="unsupported-viewer">
-                            <div class="unsupported-icon">${icon}</div>
-                            <div class="unsupported-text">Preview Not Available</div>
-                            <div class="unsupported-subtext">This file type cannot be previewed in the browser</div>
-                            <button class="download-suggestion" onclick="dashboard.downloadCurrentFile()">
-                                Download File
-                            </button>
-                        </div>
-                    `;
+                    this.showUnsupportedViewer(container, fileType);
                 }
+            }
+
+            showUnsupportedViewer(container, fileType) {
+                const icon = this.getFileIcon(fileType);
+                container.innerHTML = `
+                    <div class="unsupported-viewer">
+                        <div class="unsupported-icon">${icon}</div>
+                        <div class="unsupported-text">Preview Not Available</div>
+                        <div class="unsupported-subtext">This file type cannot be previewed in the browser</div>
+                        <button class="download-suggestion" onclick="dashboard.downloadCurrentFile()">
+                            Download File
+                        </button>
+                    </div>
+                `;
             }
 
             closeFileViewer() {
@@ -2916,7 +3003,17 @@
                     URL.revokeObjectURL(url);
                     
                     this.showToast(`Downloading ${file.name}`, 'success');
-                } else if (file.preview && file.type === 'Image') {
+                } else if (file.fileData) {
+                    // Download from stored base64 data (for history files)
+                    const a = document.createElement('a');
+                    a.href = file.fileData;
+                    a.download = file.name;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    
+                    this.showToast(`Downloading ${file.name}`, 'success');
+                } else if (file.preview && (file.type === 'Image' || file.name.toLowerCase().match(/\.(jpg|jpeg|png|gif|bmp|webp)$/))) {
                     // Download image from preview data
                     const a = document.createElement('a');
                     a.href = file.preview;
@@ -2927,8 +3024,8 @@
                     
                     this.showToast(`Downloading ${file.name}`, 'success');
                 } else {
-                    // File no longer available for download
-                    this.showToast('File is no longer available for download', 'error');
+                    // File data not available for download
+                    this.showToast('File data is no longer available for download (file may have been too large to store)', 'error');
                 }
             }
         }
@@ -2936,5 +3033,5 @@
         // Initialize the dashboard
         const dashboard = new FileUploadDashboard();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97cc7da560bfde7d',t:'MTc1NzQ4MTc4MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97cc868f3437de7d',t:'MTc1NzQ4MjE0NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
