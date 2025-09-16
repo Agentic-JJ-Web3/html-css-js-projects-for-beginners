@@ -51,12 +51,33 @@
             padding: 0 2rem 2rem;
             border-bottom: 1px solid var(--border);
             margin-bottom: 2rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         .logo h1 {
             color: var(--accent-orange);
             font-size: 1.5rem;
             font-weight: 700;
+        }
+
+        .sidebar-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .sidebar-close:hover {
+            background-color: var(--bg-card);
+            color: var(--text-primary);
         }
 
         .nav-item {
@@ -475,6 +496,10 @@
                 transform: translateX(-100%);
             }
 
+            .sidebar-close {
+                display: block !important;
+            }
+
             .main-content {
                 width: 100%;
             }
@@ -767,6 +792,10 @@
 
             .sidebar.collapsed {
                 transform: translateX(-100%);
+            }
+
+            .sidebar-close {
+                display: block !important;
             }
 
             .top-bar {
@@ -1945,4 +1974,3 @@
                 flex-direction: column;
             }
         }
-    

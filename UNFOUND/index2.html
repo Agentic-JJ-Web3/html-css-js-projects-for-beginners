@@ -258,7 +258,8 @@
     <!-- Filter Categories -->
     <section class="bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700 transition-colors duration-300 fade-in-delay-3">
         <div class="container mx-auto px-4 py-6">
-            <div class="flex flex-wrap justify-center gap-3">
+            <!-- Category Filters -->
+            <div class="flex flex-wrap justify-center gap-3 mb-4">
                 <button class="category-filter active bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition-colors" data-category="all">
                     All Solutions
                 </button>
@@ -280,6 +281,19 @@
                 <button class="category-filter bg-gray-200 text-gray-700 px-4 py-2 rounded-full hover:bg-gray-300 transition-colors" data-category="ecommerce">
                     🛒 E-commerce
                 </button>
+            </div>
+            
+            <!-- Sort Dropdown -->
+            <div class="flex justify-center">
+                <div class="relative">
+                    <select id="sortSelect" class="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-4 py-2 pr-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors appearance-none cursor-pointer">
+                        <option value="latest">📅 Sort by Latest Added</option>
+                        <option value="alphabetical">🔤 Sort Alphabetically</option>
+                    </select>
+                    <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                        <i class="fas fa-chevron-down text-gray-400 text-sm"></i>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -621,6 +635,7 @@
         const noResults = document.getElementById('noResults');
         const resultsCounter = document.getElementById('resultsCounter');
         const categoryFilters = document.querySelectorAll('.category-filter');
+        const sortSelect = document.getElementById('sortSelect');
 
         // Initialize the page
         function init() {
@@ -643,6 +658,9 @@
             categoryFilters.forEach(filter => {
                 filter.addEventListener('click', handleCategoryFilter);
             });
+
+            // Sort dropdown
+            sortSelect.addEventListener('change', handleSort);
         }
 
         // Handle search functionality
@@ -659,6 +677,9 @@
                     startup.location.toLowerCase().includes(searchTerm)
                 );
             }
+            
+            // Apply current sort
+            applySorting();
             
             renderStartups(filteredStartups);
         }
@@ -694,7 +715,28 @@
                 );
             }
             
+            // Apply current sort
+            applySorting();
+            
             renderStartups(filteredStartups);
+        }
+
+        // Handle sorting
+        function handleSort() {
+            applySorting();
+            renderStartups(filteredStartups);
+        }
+
+        // Apply sorting to filtered startups
+        function applySorting() {
+            const sortValue = sortSelect.value;
+            
+            if (sortValue === 'alphabetical') {
+                filteredStartups.sort((a, b) => a.name.localeCompare(b.name));
+            } else if (sortValue === 'latest') {
+                // Sort by ID (assuming higher ID means more recently added)
+                filteredStartups.sort((a, b) => b.id - a.id);
+            }
         }
 
         // Render startup cards
@@ -738,7 +780,7 @@
                                 Visit Website →
                             </a>
                             <button onclick="shareStartup('${startup.name}', '${startup.website}')" class="text-gray-500 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-colors">
-                                📤 Share
+                                <i class="fas fa-share-alt mr-1"></i> Share
                             </button>
                         </div>
                     </div>
@@ -785,5 +827,5 @@
         // Initialize the application
         init();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97a8e714e09ebee4',t:'MTc1NzEwODYxMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97ca789090b8cd86',t:'MTc1NzQ2MDYwMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
