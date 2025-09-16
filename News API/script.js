@@ -40,7 +40,7 @@
                 loadingIndicator.classList.remove('hidden');
                 
                 // Build URL with parameters
-                let url = `${BASE_URL}?apikey=${API_KEY}&language=en`;
+                let url = `${BASE_URL}?apikey=${API_KEY}&language=en&size=10`;
                 if (query) {
                     url += `&q=${encodeURIComponent(query)}`;
                 } else if (category) {
