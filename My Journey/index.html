@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Activity Tracker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+            color: #c9d1d9;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            color: #58a6ff;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #8b949e;
+            margin-bottom: 20px;
+        }
+        
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .card {
+            background: #21262d;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card h2 {
+            color: #58a6ff;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-content {
+            min-height: 120px;
+        }
+        
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background: #58a6ff;
+            color: #0d1117;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .activity-tracker {
+            background: #21262d;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(30px, 1fr));
+            gap: 5px;
+        }
+        
+        .activity-day {
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            background: #161b22;
+            transition: background 0.3s ease;
+        }
+        
+        .activity-day.active {
+            background: #238636;
+        }
+        
+        .activity-day.low {
+            background: #0e4429;
+        }
+        
+        .activity-day.medium {
+            background: #006d32;
+        }
+        
+        .activity-day.high {
+            background: #238636;
+        }
+        
+        .script-example {
+            background: #161b22;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+        
+        pre {
+            color: #c9d1d9;
+            font-family: 'Consolas', monospace;
+            line-height: 1.5;
+        }
+        
+        .code-comment {
+            color: #8b949e;
+        }
+        
+        .code-keyword {
+            color: #ff7b72;
+        }
+        
+        .code-function {
+            color: #d2a8ff;
+        }
+        
+        .code-string {
+            color: #a5d6ff;
+        }
+        
+        .code-variable {
+            color: #ffa657;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #8b949e;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .cards {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>GitHub Activity Tracker</h1>
+            <p class="subtitle">A guide to creating repositories and maintaining consistent activity</p>
+        </header>
+        
+        <div class="cards">
+            <div class="card">
+                <h2><span class="step-number">1</span> Create Repository</h2>
+                <div class="card-content">
+                    <p>Create a new repository on GitHub with a clear name and description. Initialize with a README and choose an appropriate license.</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2><span class="step-number">2</span> Plan Your Project</h2>
+                <div class="card-content">
+                    <p>Outline your project structure, create issues for features and bugs, and use projects or milestones to track progress.</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2><span class="step-number">3</span> Regular Commits</h2>
+                <div class="card-content">
+                    <p>Make small, frequent commits with clear messages. Work on different features in separate branches and use pull requests.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="activity-tracker">
+            <div class="activity-header">
+                <h2>Activity Simulation</h2>
+                <button id="simulate-activity" style="background: #238636; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;">Simulate 30 Days</button>
+            </div>
+            <p>This simulates a GitHub contribution graph. Green squares represent activity.</p>
+            <div class="activity-grid" id="activity-grid">
+                <!-- Activity grid will be generated by JavaScript -->
+            </div>
+            
+            <div class="script-example">
+                <h3>Example Automation Script</h3>
+                <pre><code><span class="code-comment">#!/bin/bash</span>
+
+<span class="code-comment"># Simple script to automate git commits</span>
+<span class="code-keyword">for</span> i <span class="code-keyword">in</span> {1..7}
+<span class="code-keyword">do</span>
+    <span class="code-comment"># Make a small change to a file</span>
+    <span class="code-function">echo</span> <span class="code-string">"Commit on $(date)"</span> &gt;&gt; <span class="code-variable">log.txt</span>
+    
+    <span class="code-comment"># Add and commit the change</span>
+    <span class="code-function">git</span> add <span class="code-variable">log.txt</span>
+    <span class="code-function">git</span> commit -m <span class="code-string">"Daily commit #<span class="code-variable">$i</span>"</span>
+    
+    <span class="code-comment"># Wait for a day before next commit</span>
+    <span class="code-function">sleep</span> 1
+<span class="code-keyword">done</span>
+
+<span class="code-function">git</span> push origin main</code></pre>
+            </div>
+        </div>
+        
+        <div class="cards">
+            <div class="card">
+                <h2><i class="fas fa-server"></i> Server Scripts</h2>
+                <div class="card-content">
+                    <p>Create scripts to automate server tasks, testing, and deployment. Use cron jobs or CI/CD pipelines for regular execution.</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2><i class="fas fa-code-branch"></i> Branch Strategy</h2>
+                <div class="card-content">
+                    <p>Use a consistent branch strategy like GitFlow. Keep the main branch stable and use feature branches for development.</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2><i class="fas fa-tasks"></i> Issue Tracking</h2>
+                <div class="card-content">
+                    <p>Use GitHub Issues to track tasks, bugs, and feature requests. Reference issues in your commits for better organization.</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Created as a guide for maintaining consistent GitHub activity | 2023</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const activityGrid = document.getElementById('activity-grid');
+            const simulateButton = document.getElementById('simulate-activity');
+            
+            // Generate initial activity grid (7x52 for a year)
+            function generateActivityGrid() {
+                activityGrid.innerHTML = '';
+                for (let i = 0; i < 365; i++) {
+                    const day = document.createElement('div');
+                    day.className = 'activity-day';
+                    // Randomly set some days as active for initial display
+                    if (Math.random() > 0.7) {
+                        const level = ['low', 'medium', 'high'][Math.floor(Math.random() * 3)];
+                        day.classList.add('active', level);
+                    }
+                    activityGrid.appendChild(day);
+                }
+            }
+            
+            // Simulate 30 days of activity
+            simulateButton.addEventListener('click', function() {
+                const days = activityGrid.querySelectorAll('.activity-day');
+                
+                // Clear all existing activity
+                days.forEach(day => {
+                    day.className = 'activity-day';
+                });
+                
+                // Generate new activity for the last 30 days
+                for (let i = 0; i < 30; i++) {
+                    const index = 365 - 30 + i;
+                    const level = ['low', 'medium', 'high'][Math.floor(Math.random() * 3)];
+                    days[index].classList.add('active', level);
+                }
+                
+                // Show notification
+                alert('Simulated 30 days of GitHub activity!');
+            });
+            
+            // Initialize the activity grid
+            generateActivityGrid();
+        });
+    </script>
+</body>
+</html>
