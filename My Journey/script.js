@@ -1,4 +1,4 @@
- <script>
+
         document.addEventListener('DOMContentLoaded', function() {
             const activityGrid = document.getElementById('activity-grid');
             const simulateButton = document.getElementById('simulate-activity');
@@ -41,4 +41,4 @@
             // Initialize the activity grid
             generateActivityGrid();
         });
-    </script>
+   
