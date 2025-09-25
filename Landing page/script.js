@@ -65,9 +65,9 @@
         window.addEventListener('scroll', () => {
             const header = document.querySelector('.header');
             if (window.scrollY > 100) {
-                header.style.background = `${getComputedStyle(document.documentElement).getPropertyValue('--bg-primary')}95`;
+                header.style.background = `${getComputedStyle(header).getPropertyValue('--bg-primary')}95`;
             } else {
-                header.style.background = getComputedStyle(document.documentElement).getPropertyValue('--bg-primary');
+                header.style.background = getComputedStyle(header).getPropertyValue('--bg-primary');
             }
         });
         
